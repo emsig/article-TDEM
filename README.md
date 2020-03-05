@@ -29,8 +29,13 @@ figures with the provided notebooks the modules `IPython`, `Jupyter`, and
 Start `Jupyter` and navigate to the notebooks-folder. The notebooks to
 reproduce the figures in the article are:
 
-1. **bla.ipynb**: Figure x.
-
+- **Frequency-Selection.ipynb**: Figures 1, 2, and 3.
+- **Fullspace.ipynb**: Figures 4 and 5.
+- **1D-Model.ipynb**: Figures 6 and 7.
+- **1D-Model-wrong-x-y.ipynb**: Figure 8.
+- **3D-Model.ipynb**: Figures 9 and 10.
+- **3D-Model-double.ipynb**: As `3D-Model.ipynb`, but doubled cells in each
+  direction.
 
 ## Note
 
