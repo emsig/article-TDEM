@@ -1,10 +1,11 @@
 # Fast time-domain electromagnetic modelling in the frequency domain
 
 > Werthmüller, D., W.A. Mulder, and E.C. Slob, 2020, Fast time-domain
-> electromagnetic modelling in the frequency domain.
+> electromagnetic modelling in the frequency domain: Submitted to Geophysical
+> Journal International.
 
 
-## Manuscript for Geophysical Prospecting paper
+## Manuscript for Geophysical Journal International paper
 
 Directory contains the LaTeX source of the manuscript as well as the notebooks
 to reproduce all the figures.
@@ -12,36 +13,36 @@ to reproduce all the figures.
 
 ## History
 
-1. First submitted 2020-03-05 to Geophysical Prospecting.
-   GP rejected it on 2020-04-27. We are of the opinion that:
-
-   1. The review process was not properly conducted.
-   2. The deputy editor simply takes the recommendation from the associate
-      editor (AE) and does not identify derogatory remarks in the reviews, nor
-      opinions rather than substantiated scientific critiques, and neither
-      errors by the AE and reviewer.
-   3. The AE makes several false statements and incorrect remarks (we do not
-      want to speculate why this occurs, but it is not a good sign) and
-      therefore we do not trust that the final decision was based on
-      scientific arguments.
-   4. The (only) reviewer provides opinions rather than a critically
-      constructive review, as he hardly ever gives substantiated scientific
-      arguments for what is wrong with the manuscript. The review also
-      contains erroneous comments.
-
-   We filed an official complaint to the editor in chief on 2020-05-20.
-   Our decision to file an official complaint did not come easy. But all in all
-   we found this to be a serious breach in the integrity and ethical standards
-   of the journal. However, the editor in chief decided to protect his deputy
-   and associate editors without going into the details of our complaint.
+1. Submitted 2020-06-?? to Geophysical Journal International.
 
 
-## Requirements
+## Requirements and Environment
 
-Required are Python version 3.6 or higher and the modules `emg3d`,
+Required are Python version 3.7 or higher and the modules `emg3d`,
 `discretize`, and `SimPEG` (for the 3D model comparison). To reproduce the
-figures with the provided notebooks the modules `IPython`, `Jupyter`, and
-`matplotlib` are required additionally.
+figures with the provided notebooks the modules `Jupyter`, and `matplotlib` are
+required additionally.
+
+We provide an `environment.yml` to ensure everything can be reproduced.
+
+To create the environment simply run
+```bash
+conda env create -f environment.yml
+```
+This will create a new conda environment called `tdem`.
+
+To activate and deactivate the environment run
+```bash
+conda activate tdem
+conda deactivate
+```
+
+To completely remove the environment run
+```bash
+conda remove --name tdem --all
+```
+
+`emg3d` requires at least Python 3.7.
 
 
 ## Reproducing
@@ -59,4 +60,4 @@ reproduce the figures in the article are:
 
 ## Note
 
-The final edited version will probably be &copy; by the Journal.
+The final edited version will be &copy; Geophysical Journal International.

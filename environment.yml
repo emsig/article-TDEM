@@ -1,0 +1,15 @@
+name: tdem
+
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - emg3d
+  - discretize
+  - matplotlib
+  - jupyter
+  - SimPEG
+  - scooby
+  - pip
+  - pip:
+      - pymatsolver
