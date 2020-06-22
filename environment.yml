@@ -11,3 +11,4 @@ dependencies:
   - pymatsolver
   - scooby
   - ipykernel
+  - h5py
