@@ -48,27 +48,6 @@ class InteractiveFrequency(emg3d.utils.Fourier):
             Anisotropies lambda = sqrt(rho_v/rho_h) (-); #aniso = #res.
             Defaults to ones.
 
-        ft : {'sin', 'cos'}, optional
-            Flag to choose either the Sine or Cosine Digital Linear Filter
-            method.  Defaults to 'sin'.
-            If signal is < 0, it is set to cosine. If signal > 0, it is set to
-            sine. Both can be used for signal = 0.
-
-        ftarg : dict or list, optional
-            [fftfilt, pts_per_dec]:
-
-            - fftfilt: string of filter name in ``empymod.filters`` or the
-                       filter method itself. (Default:
-                       ``empymod.filters.key_201_CosSin_2012()``)
-            - pts_per_dec: points per decade; (default: 4)
-                - If 0: Standard DLF.
-                - If < 0: Lagged Convolution DLF.
-                - If > 0: Splined DLF
-
-            The values can be provided as dict with the keywords, or as list.
-            However, if provided as list, you have to follow the order given
-            above.
-
         **kwargs : Optional parameters:
 
             - ``fmin`` : float
@@ -80,8 +59,8 @@ class InteractiveFrequency(emg3d.utils.Fourier):
             - ``off`` : float
               Initial offset. Default is 500.
 
-            - ``ft`` : str {'sin', 'cos', 'fftlog'}
-              Initial Fourier transform method. Default is 'sin'.
+            - ``ft`` : str {'dlf', 'fftlog'}
+              Initial Fourier transform method. Default is 'dlf'.
 
             - ``ftarg`` : dict
               Initial Fourier transform arguments corresponding to ``ft``.
@@ -104,7 +83,7 @@ class InteractiveFrequency(emg3d.utils.Fourier):
         fmin = kwargs.pop('fmin', 1e-3)
         fmax = kwargs.pop('fmax', 1e1)
         off = kwargs.pop('off', 5000)
-        ft = kwargs.pop('ft', 'sin')
+        ft = kwargs.pop('ft', 'dlf')
         ftarg = kwargs.pop('ftarg', None)
         self.pts_per_dec = kwargs.pop('pts_per_dec', 5)
         self.linlog = kwargs.pop('linlog', 'linear')
@@ -136,8 +115,8 @@ class InteractiveFrequency(emg3d.utils.Fourier):
         """Create the figure."""
 
         # Create figure and all axes
-        fig = plt.figure(f"Interactive frequency selection for the Fourier "
-                         f"Transform.", figsize=(9, 4))
+        fig = plt.figure("Interactive frequency selection for the Fourier "
+                         "Transform.", figsize=(9, 4))
         plt.subplots_adjust(hspace=0.03, wspace=0.04, bottom=0.15, top=0.9)
         # plt.tight_layout(rect=[0, 0, 1, 0.95])  # Leave space for suptitle.
         ax1 = plt.subplot2grid((3, 2), (0, 0), rowspan=2)
@@ -274,7 +253,7 @@ class InteractiveFrequency(emg3d.utils.Fourier):
             if self.ft == 'fftlog':
                 return self.ft
             else:
-                return self.ftarg[0].savename
+                return self.ftarg['dlf'].savename
 
         ftfilt = widgets.interactive(
             self.update_ftfilt,
@@ -436,9 +415,9 @@ class InteractiveFrequency(emg3d.utils.Fourier):
         if isinstance(ftfilt, str):
             fftlog = ftfilt == 'fftlog'
         else:
-            if hasattr(ftfilt[0], 'savename'):
+            if 'dlf' in ftfilt:
                 fftlog = False
-                ftfilt = ftfilt[0].savename
+                ftfilt = ftfilt['dlf'].savename
             else:
                 fftlog = True
 
@@ -455,7 +434,7 @@ class InteractiveFrequency(emg3d.utils.Fourier):
                     lmin, lmax, int(self.pts_per_dec*np.ceil(lmax-lmin)))
 
             self.fourier_arguments(
-                    'sin', {'fftfilt': ftfilt, 'pts_per_dec': -1})
+                    'dlf', {'dlf': ftfilt, 'pts_per_dec': -1})
 
         # Dense frequencies for comparison reasons
         self.freq_dense = np.logspace(np.log10(self.freq_req.min()),

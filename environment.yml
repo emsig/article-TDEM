@@ -1,15 +1,13 @@
-name: tdem
+name: article-tdem
 
 channels:
   - conda-forge
   - defaults
 dependencies:
   - emg3d
-  - discretize
+  - simpeg
   - matplotlib
   - jupyter
-  - SimPEG
+  - pymatsolver
   - scooby
-  - pip
-  - pip:
-      - pymatsolver
+  - ipykernel

@@ -46,6 +46,7 @@
 \newcommand{\emg}[2]{\texttt{emg#1#2}\xspace}
 \newcommand{\empymod}{\texttt{empymod}\xspace}
 \newcommand{\simpeg}{\texttt{SimPEG}\xspace}
+\newcommand{\custem}{\texttt{custEM}\xspace}
 
 % Remove once done
 \newcommand{\itodo}[1]{\todo[color=blue!40!white, inline]{\sffamily #1}}
@@ -71,7 +72,7 @@ Stevinweg 1 / PO-box 5048,
 \footnotemark[2]Shell Global Solutions International BV,
 Grasweg 31, 1031 HW Amsterdam;\\
 E-mail: \href{mailto:Dieter@Werthmuller.org}{Dieter@Werthmuller.org};\\
-\textbf{Keywords}: CSEM, Fourier transforms, 3D modelling.
+\textbf{Keywords}: Fourier transforms, CSEM, 3D modelling.
 }
 
 
@@ -105,16 +106,16 @@ this requirement, but any other robust solver will do.
 %
 The method should require as few frequencies as possible while remaining
 robust. As the frequency range spans many orders of magnitude, the required
-frequencies are ideally equally spaced on a logarithmic scale, as is the case
-for, e.g., the digital linear filter method or the logarithmic fast Fourier
-transform. With careful selection of frequencies and interpolation, 15 to 20
-frequencies are enough to cover a wide range of offsets in one-dimensional test
-models.
+frequencies are ideally equally spaced on a logarithmic scale. We present a
+fast frequency-to-time domain method using either the digital linear filter
+method or the logarithmic fast Fourier transform together with careful
+selection of frequencies and interpolation. 15 to 20 frequencies are generally
+enough with this methodology to cover a wide range of offsets in
+one-dimensional test models.
 %
-The gridding should be frequency-dependent, which is generally accomplished by
-making it a function of skin depth. Optimising for the least number of required
-cells for a given frequency should be combined with optimising for
-computational speed.
+The gridding should be frequency-dependent, which is accomplished by making it
+a function of skin depth. Optimising for the least number of required cells for
+a given frequency should be combined with optimising for computational speed.
 %
 Looking carefully at these three points results in much faster computation
 times with speedup-factors of ten and more over previous results. A
@@ -136,7 +137,11 @@ shallow marine environment and on land. One of the main reasons is the
 dominance of the airwave in shallow marine and terrestrial measurements, which
 can be better separated in the time domain.
 
-Acquired CSEM data are often analysed (modelled and inverted for) in their
+CSEM is usually divided into frequency- and time-domain methods, depending
+whether the source signal is a continuous waveform, such as a sine, or a finite
+waveform, such as a pseudo-random binary sequence (PRBS). A numerical
+comparison of the two methods is given in \cite{GP.13.Conell}. Acquired CSEM
+data are subsequently often analysed (modelled and inverted for) in their
 respective domain, either the frequency or time domain. Modellers of layered
 media usually exploit the horizontal shift-invariance by computing the
 responses in the wavenumber-frequency domain followed by a 2D inverse spatial
@@ -145,20 +150,21 @@ and a regular inverse Fourier transform if time-domain data are required
 \citep[e.g., ][]{GEO.15.Hunziker}.
 
 CSEM codes for 2D and 3D computations, on the other hand, mostly compute their
-responses directly in the required domain, either frequency or time. However,
-under certain conditions it can be competitive to model time-domain data with a
-frequency-domain code, as shown by \cite{GEO.08.Mulder}. The conditions are: a
-sufficiently powerful solver, appropriate frequency selection and
-interpolation, and an automated gridding, for which they used the
-multi-frequency CSEM approach presented by \cite{GEO.07.Plessix}. We build upon
-these results but improve the run time from hours to minutes. The main reasons
-for this significant speed-up are an adaptive, frequency-dependent gridding
-scheme that minimizes the required cells in each dimension, and a logarithmic
-Fourier transform such as digital linear filters \citep[DLF, ][]{GP.71.Ghosh}
-or the logarithmic fast Fourier transform \citep[FFTLog, ][]{RAS.00.Hamilton}
-to go from the frequency to the time domain. The latter makes it also possible
-to only use the imaginary part of the frequency-domain response, which has
-advantages when it comes to interpolation.
+responses directly in the required domain, either frequency or time (see,
+e.g., \cite{SG.10.Borner, SG.05.Avdeev} for comprehensive overviews of CSEM
+codes). However, under certain conditions it can be competitive to model
+time-domain data with a frequency-domain code, as shown by
+\cite{GEO.08.Mulder}. The conditions are: a sufficiently powerful solver,
+appropriate frequency selection and interpolation, and an automated gridding,
+for which they used the multi-frequency CSEM approach presented by
+\cite{GEO.07.Plessix}. We build upon these results but improve the run time
+from hours to minutes. The main reasons for this significant speed-up are an
+adaptive, frequency-dependent gridding scheme that minimizes the required cells
+in each dimension, and a logarithmic Fourier transform such as digital linear
+filters \citep[DLF, ][]{GP.71.Ghosh} or the logarithmic fast Fourier transform
+\citep[FFTLog, ][]{RAS.00.Hamilton} to go from the frequency to the time
+domain. The latter makes it also possible to only use the imaginary part of the
+frequency-domain response, which has advantages when it comes to interpolation.
 
 In the next section, we briefly review the methods and highlight their
 advantages and shortcomings. This is followed by an outline of our changes to
@@ -167,19 +173,27 @@ efficiency of the approach with some numerical results.
 
 \section{Motivation}
 
-Time-domain modelling with a frequency-domain code requires the computation of
-a relatively wide range of frequencies for the Fourier transform. However, the
-required computation grids for low frequencies (in our case in the order of
-0.001\,Hz) and high frequencies (around 100\,Hz) are hugely different. Low
-frequencies can be computed on a coarser grid, but they require a much larger
-domain in order to avoid boundary effects. High frequencies, on the other hand,
-require denser gridding, but they are much more limited in reach. An adaptive
-gridding scheme is therefore required. We build our approach upon
-\cite{GEO.07.Plessix}, who presented such an adaptive gridding for
-multi-frequency (and multi-source) CSEM modelling.
+Being able to model CSEM data both in the frequency-domain and in the
+time-domain can be desirable, as both domains have advantages and
+disadvantages. One way to achieve this is to implement Maxwell's equation in
+both domains, as it is done, for instance, in \simpeg \citep{CAG.15.Cockett}.
+Another method is to have Maxwell's equation only implemented in one domain,
+and use Fourier transforms to go to the other domain. However, this approach
+can be costly, as many frequencies over a wide range are required to go from
+the time domain to the frequency domain, or many times over a wide range for
+the opposite direction. We present a methodology which significantly reduces
+the amount and range of the required frequencies, which translates into a
+significant faster computation times. The required computation grids for low
+frequencies (in our case in the order of 0.001\,Hz) and high frequencies
+(around 100\,Hz) are hugely different. Low frequencies can be computed on a
+coarser grid, but they require a much larger domain in order to avoid boundary
+effects. High frequencies, on the other hand, require denser gridding, but they
+are much more limited in reach. An adaptive gridding scheme is therefore
+required. We build our approach upon \cite{GEO.07.Plessix}, who presented such
+an adaptive gridding for multi-frequency (and multi-source) CSEM modelling.
 
 An adaptive grid in the frequency domain is naturally based on the skin depth,
-which is the distance after with the amplitude of the electromagnetic field is
+which is the distance after which the amplitude of the electromagnetic field is
 decayed by $1/e\approx 37\,\%$. The skin depth $\delta$ is a function of
 conductivity and frequency, and for the diffusive approximation of Maxwell's
 equation in an isotropic, homogeneous medium is given by \citep[e.g.,][
@@ -238,7 +252,13 @@ hampers the parallelization over frequencies.
 We present improvements to both the adaptive gridding and the transform from
 frequency domain to time domain, which makes time-domain modelling with a
 frequency-domain code even more competitive in comparison with time-domain
-codes.
+codes. It is important to note that while we show the transform from frequency
+to time domain, the conclusions regarding the Fourier transform can equally
+well be applied to the transform from time to frequency domain data for a code
+that solves Maxwell's equations in the time domain. A variation of our method
+was implemented, for instance, by \custem \cite{GEO.19.Rochlitz} to obtain
+frequency-domain data from time-domain computations (Rochlitz, personal
+communication).
 
 \section{Methodology}
 
@@ -723,7 +743,10 @@ directly in the time domain. A principal difference between \simpeg and \emg3d
 is that the former has various direct solvers implemented, whereas the latter
 is an iterative multigrid solver. The 3D model is therefore a rather small
 example in order to be able to run it on our test machine, as the memory
-requirement by the direct solver would otherwise be too high.
+requirement by the direct solver would otherwise be too high. There are not
+many options out there of open-source time-domain 3D codes, \simpeg being the
+one we found to be suitable. A step-off response was chosen as this is the
+response currently implemented in \simpeg.
 
 The model was discretised with $100\times100\times100\,$m cells in the survey
 domain $D_\mr{s}$. For the \simpeg model, 14 cells in $x$-direction and 12
@@ -775,16 +798,22 @@ scenario, \emg3d was about eight times faster (single thread).
 
 \section{Conclusions}
 
-We have shown that time-domain CSEM modelling with a frequency-domain code can
-be competitive given a robust frequency-domain solver, a frequency-dependent
-gridding function that minimizes the required cells, and a Fourier transform
-that works on a logarithmic scale. Fast layered modelling can be used to design
-the required frequency range, as the Fourier transform does not know about the
-dimensionality of the underlying model. Twenty frequencies or less are usually
-sufficient for a wide range of offsets. We believe that our proposed
-improvements to the previously published methods make time-domain CSEM
-modelling with a frequency-domain code even more attractive than it was already
-before.
+We have shown a method to minimize the required frequencies and their range for
+the computation of time-domain CSEM data with a frequency-domain code. This can
+significantly reduce the computation time and makes time-domain CSEM modelling
+with a frequency-domain code competitive given a robust frequency-domain
+solver, a frequency-dependent gridding function that minimizes the required
+cells, and a Fourier transform that works on a logarithmic scale. Fast layered
+modelling can be used to design the required frequency range, as the Fourier
+transform does not know about the dimensionality of the underlying model.
+Twenty frequencies or less are usually sufficient for a wide range of offsets.
+We believe that our proposed improvements to the previously published methods
+make time-domain CSEM modelling with a frequency-domain code even more
+attractive than it was already before. We have demonstrated the idea of our
+Fourier transform method on CSEM data transformed from the frequency to the
+time domain. However, it could equally be applied to the transform from the
+time to the frequency domain and to other methods with similar
+characteristics.
 
 \section{Acknowledgment}
 

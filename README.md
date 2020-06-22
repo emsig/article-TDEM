@@ -29,17 +29,24 @@ To create the environment simply run
 ```bash
 conda env create -f environment.yml
 ```
-This will create a new conda environment called `tdem`.
+This will create a new conda environment called `article-tdem`.
 
 To activate and deactivate the environment run
 ```bash
-conda activate tdem
+conda activate article-tdem
 conda deactivate
 ```
 
+To use this environment in the Jupyter notebook, you have to register it first:
+```bash
+python -m ipykernel install --user --name article-tdem
+```
+Then, in Jupyter, you can select it by going to `Kernel`->`Change kernel` and
+select `article-tdem`.
+
 To completely remove the environment run
 ```bash
-conda remove --name tdem --all
+conda remove --name article-tdem --all
 ```
 
 `emg3d` requires at least Python 3.7.
