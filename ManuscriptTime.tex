@@ -106,41 +106,40 @@ this requirement, but any other robust solver will do.
 %
 The method should require as few frequencies as possible while remaining
 robust. As the frequency range spans many orders of magnitude, the required
-frequencies are ideally equally spaced on a logarithmic scale. We present a
-fast frequency-to-time domain method using either the digital linear filter
-method or the logarithmic fast Fourier transform together with careful
-selection of frequencies and interpolation. 15 to 20 frequencies are generally
-enough with this methodology to cover a wide range of offsets in
-one-dimensional test models.
+frequencies are ideally equally spaced on a logarithmic scale. The fast
+frequency-to-time domain method uses either the digital linear filter method
+or the logarithmic fast Fourier transform together with a careful selection of
+frequencies and interpolation. This methodology requires typically 15 to 20
+frequencies to cover a wide range of offsets in one-dimensional test models.
 %
 The gridding should be frequency-dependent, which is accomplished by making it
 a function of skin depth. Optimising for the least number of required cells for
 a given frequency should be combined with optimising for computational speed.
 %
-Looking carefully at these three points results in much faster computation
-times with speedup-factors of ten and more over previous results. A
+Looking carefully at these three points results in much smaller computation
+times with speedup factors of ten or more over previous results. A
 frequency-domain computation of time-domain data can therefore be competitive
-to time-domain solvers if the required frequencies and their corresponding
-grids are carefully chosen.
+to time-domain solvers if the required frequencies and the corresponding grids
+are carefully chosen.
 %
 \end{abstract}
 
 \section{Introduction}
 
 The controlled-source electromagnetic (CSEM) method is one of the common
-non-seismic tools in exploration geophysics, not just in hydrocarbon
+non-seismic tools in exploration geophysics, not only in hydrocarbon
 exploration \citep{GEO.10.Constable}, but also in the search for sulfides
-\citep{GRL.19.Gehrmann}, water \citep{GEO.05.Pedersen}, or geothermal sources
-\citep{WGC.15.Girard}. While in the deep marine environment current sources
-with few frequencies are used, transient measurements are more common in the
-shallow marine environment and on land. One of the main reasons is the
-dominance of the airwave in shallow marine and terrestrial measurements, which
-can be better separated in the time domain.
-
+\citep{GRL.19.Gehrmann}, water \citep{GEO.05.Pedersen}, geothermal sources
+\citep{WGC.15.Girard}, or geological purposes \citep{NAT.19.Johanson}. While
+current sources with a few frequencies are used in the deep marine environment,
+transient measurements are more common in the shallow marine environment and on
+land \citep[e.g., ][]{GEO.07.Ziolkowski, SEG.07.Andreis, SEG.07.Avdeeva}. One
+of the main reasons is the dominance of the airwave in shallow marine and
+terrestrial measurements, which can be better separated in the time domain.
 CSEM is usually divided into frequency- and time-domain methods, depending
 whether the source signal is a continuous waveform, such as a sine, or a finite
 waveform, such as a pseudo-random binary sequence (PRBS). A numerical
-comparison of the two methods is given in \cite{GP.13.Conell}. Acquired CSEM
+comparison of the two methods is given by \cite{GP.13.Conell}. Acquired CSEM
 data are subsequently often analysed (modelled and inverted for) in their
 respective domain, either the frequency or time domain. Modellers of layered
 media usually exploit the horizontal shift-invariance by computing the
@@ -150,26 +149,44 @@ and a regular inverse Fourier transform if time-domain data are required
 \citep[e.g., ][]{GEO.15.Hunziker}.
 
 CSEM codes for 2D and 3D computations, on the other hand, mostly compute their
-responses directly in the required domain, either frequency or time (see,
-e.g., \cite{SG.10.Borner, SG.05.Avdeev} for comprehensive overviews of CSEM
-codes). However, under certain conditions it can be competitive to model
-time-domain data with a frequency-domain code, as shown by
-\cite{GEO.08.Mulder}. The conditions are: a sufficiently powerful solver,
-appropriate frequency selection and interpolation, and an automated gridding,
-for which they used the multi-frequency CSEM approach presented by
-\cite{GEO.07.Plessix}. We build upon these results but improve the run time
-from hours to minutes. The main reasons for this significant speed-up are an
-adaptive, frequency-dependent gridding scheme that minimizes the required cells
-in each dimension, and a logarithmic Fourier transform such as digital linear
-filters \citep[DLF, ][]{GP.71.Ghosh} or the logarithmic fast Fourier transform
-\citep[FFTLog, ][]{RAS.00.Hamilton} to go from the frequency to the time
-domain. The latter makes it also possible to only use the imaginary part of the
-frequency-domain response, which has advantages when it comes to interpolation.
+responses directly in the required domain, either frequency or time. There is a
+wealth of 3D electromagnetic codes, with a first boom in the 1990's, with a
+good state of the art provided by \cite{B.SEG.99.Oristaglio}. A second wave
+occurred during the CSEM boom in the hydrocarbon industry in the early 21th
+century, see, e.g., \cite{SG.05.Avdeev} and \cite{SG.10.Borner} for
+comprehensive overviews. Recent publications span the width of numerical
+methods from integral equation codes \citep{MGS.17.Kruglyakov} and differential
+equation methods such as finite differences \citep{CAG.13.Sommer}, finite
+elements \citep{GJI.13.Grayver}, and finite volumes \citep{GEO.14.Jahandari}.
+Besides the different methods there are also many different types of
+discretisation. Commonly used, besides rectilinear Yee grids
+\citep{IEEE.66.Yee} as used by our code, are Lebedev grids
+\citep{CMMP.64.Lebedev} but also unstructured grids using, for instance,
+tetrahedral \citep{CAG.17.Cai}. The computational requirement to model CSEM
+data also depends heavily on the technique which is used to solve the system,
+where there are direct solvers \citep{GEO.15.Grayver}, indirect solvers
+\citep{GJI.15.Jaysaval}, and more recently also hybrid solvers
+\citep{GEO.18.Liu}.
 
-In the next section, we briefly review the methods and highlight their
-advantages and shortcomings. This is followed by an outline of our changes to
-the Fourier transform and the adaptive gridding. Finally, we demonstrate the
-efficiency of the approach with some numerical results.
+Under certain conditions it can be competitive to model time-domain data with a
+frequency-domain code, as shown by \cite{GEO.08.Mulder}. The conditions are: a
+sufficiently powerful solver, appropriate frequency selection and
+interpolation, and an automated gridding, for which they used the
+multi-frequency CSEM approach presented by \cite{GEO.07.Plessix}. We build upon
+these results but improve the run time from hours to minutes. The main reasons
+for this significant speed-up are an adaptive, frequency-dependent gridding
+scheme that minimizes the required cells in each dimension, and a logarithmic
+Fourier transform such as digital linear filters \citep[DLF, ][]{GP.71.Ghosh}
+or the logarithmic fast Fourier transform \citep[FFTLog, ][]{RAS.00.Hamilton}
+to go from the frequency to the time domain. The latter makes it also possible
+to only use the imaginary part of the frequency-domain response, which has
+advantages when it comes to interpolation.
+
+In the next section, we briefly review the methodology as introduced by
+\cite{GEO.07.Plessix} and \cite{GEO.08.Mulder} and highlight their advantages
+and shortcomings. This is followed by an outline of our changes to the Fourier
+transform and the adaptive gridding. Finally, we demonstrate the efficiency of
+the approach with some numerical results.
 
 \section{Motivation}
 
@@ -177,13 +194,13 @@ Being able to model CSEM data both in the frequency-domain and in the
 time-domain can be desirable, as both domains have advantages and
 disadvantages. One way to achieve this is to implement Maxwell's equation in
 both domains, as it is done, for instance, in \simpeg \citep{CAG.15.Cockett}.
-Another method is to have Maxwell's equation only implemented in one domain,
-and use Fourier transforms to go to the other domain. However, this approach
-can be costly, as many frequencies over a wide range are required to go from
-the time domain to the frequency domain, or many times over a wide range for
-the opposite direction. We present a methodology which significantly reduces
-the amount and range of the required frequencies, which translates into a
-significant faster computation times. The required computation grids for low
+Another approach is to have Maxwell's equation only implemented in one domain,
+and use Fourier transforms to go to the other. However, this approach can be
+costly, as many frequencies over a wide range are required to go from the time
+domain to the frequency domain, or many times over a wide range for the
+opposite direction. We present a methodology which significantly reduces the
+amount and range of the required frequencies, translating into a significant
+reduction in computation time. The required computation grids for low
 frequencies (in our case in the order of 0.001\,Hz) and high frequencies
 (around 100\,Hz) are hugely different. Low frequencies can be computed on a
 coarser grid, but they require a much larger domain in order to avoid boundary
@@ -215,11 +232,12 @@ $\mu_0=4\pi\times10^{-7}\,$H/m.
 
 \cite{GEO.07.Plessix} define the minimum cell width $\Delta_\mathrm{min}$ as a
 fraction of the minimum skin depth $\delta_\mathrm{min}$, where
-$\delta_\mathrm{min}$ should be $2-3$ times bigger than $\Delta_\mathrm{min}$.
-The smallest cells have to be around the source; in the marine case the minimum
-skin depth is therefore defined by the conductivity of seawater. However, this
-yields quite large cells for low frequencies, so special care has to be taken
-around the source. The grid dimension, on the other hand, is defined as a
+$\delta_\mathrm{min}$ should be 2--3 times bigger than $\Delta_\mathrm{min}$.
+The cells have to be smallest around the source; in the marine case, the
+minimum skin depth is therefore defined by the conductivity of seawater.
+However, this yields quite large cells for low frequencies, so special care has
+to be taken around the source by defining a maximum allowed
+$\Delta_\mathrm{min}$. The grid dimension, on the other hand, is defined as a
 function of the skin depth for the average conductivity of the background,
 $\delta_\mathrm{ave}$. They use four times $\delta_\mathrm{ave}$ for the $x$-,
 $y$-, and downward $z$-directions, and a fixed 50\,km for the upward
@@ -244,7 +262,7 @@ Testing the stability of the obtained response by removing a single
 frequency-value at a time their scheme decides if more frequencies in-between
 the already computed ones are required. In this way frequencies are only added
 if required, hence if certain criteria of response stability are not met. While
-this method is good and effective for a single offset, it looses all its
+this method is good and effective for a single offset, it loses all its
 advantages if one tries to compute different offsets within one computation, as
 each offset requires a different set of adaptive frequencies. Additionally, it
 hampers the parallelization over frequencies.
@@ -256,9 +274,9 @@ codes. It is important to note that while we show the transform from frequency
 to time domain, the conclusions regarding the Fourier transform can equally
 well be applied to the transform from time to frequency domain data for a code
 that solves Maxwell's equations in the time domain. A variation of our method
-was implemented, for instance, by \custem \cite{GEO.19.Rochlitz} to obtain
-frequency-domain data from time-domain computations (Rochlitz, personal
-communication).
+was implemented, for instance, by \custem \citep{GEO.19.Rochlitz} to obtain
+frequency-domain data from time-domain computations (Rochlitz, private
+communication, 2020).
 
 \section{Methodology}
 
@@ -279,7 +297,7 @@ the second-order differential equation of the electric field,
 \end{equation}
 %
 where $\mathbf{E}$ is the electric field (V/m) and $\mathbf{J}_\mathrm{s}$ the
-current source (A/m$^2$); time convention is $\exp(\mathrm{i}\omega t)$. The
+current source (A/m$^2$); time dependence is $\exp(\mathrm{i}\omega t)$. The
 standard multigrid approach fails for severe stretching or strong anisotropy,
 for which \emg3d has implemented known improvements such as line-relaxation and
 semicoarsening \citep{ECCFD.06.Jonsthovel}, with a non-standard Cholesky
@@ -297,7 +315,7 @@ use the open-source (Apache License 2.0) code \empymod
 
 An important factor in terms of speed and accuracy for time-domain responses
 obtained from frequency-domain computations is the selection of the required
-frequencies. The fewer frequencies required, the faster we obtain the
+frequencies. The fewer frequencies required, the quicker we obtain the
 time-domain result. We decided to use a regular spacing of frequencies on a
 log-scale, rather than an adaptive scheme. This approach is favourable if a
 wide range of offsets is needed, as the required frequencies change with offset
@@ -322,10 +340,9 @@ in comparison with the standard FFT: the required input frequencies are equally
 spaced on a logarithmic scale, and they only require either the real or the
 imaginary part of the frequency-domain response. We can take advantage of that
 by using only the imaginary part of the frequency-domain response. The
-imaginary part has the characteristics that its value goes to zero when the
-frequency goes to zero or to infinity, with the advantage that knowing the
-endpoints makes it possible to convert the extrapolation of missing frequencies
-into interpolation.
+imaginary part goes to zero when the frequency goes to zero or to infinity,
+with the advantage that knowing the endpoints makes it possible to convert the
+extrapolation of missing frequencies into interpolation.
 
 There are three key-parameters that have to be defined: Minimum and maximum
 frequency ($f_\mr{min}, f_\mr{max}$) and the number of frequencies per decade
@@ -338,14 +355,14 @@ Figure~\ref{fig:GUI-FFTLog-lin}.
 \plot{GUI-FFTLog-lin}{width=\tcwidth}{
   Interactive frequency selection for a user-provided layered model (the shown
   model parameters are described in the text). This example shows the impulse
-  response at an offset of 5\,km, for which it uses FFTlog from 0.001\,Hz to
+  response at an offset of 5\,km, for which it uses FFTLog from 0.001\,Hz to
   10\,Hz with five frequencies per decade. Note that the error is clipped for
   values smaller than 0.01\,\% and bigger than 100\,\%.
 }
 %
 The example model is a marine scenario with 1\,km water depth of resistivity
 $\rho=0.3\,\Omega$\,m ($\rho = \sigma^{-1}$) and a 100\,m thick target of
-100\,$\Omega$\,m 1\,km below the seafloor in a background of 1\,$\Omega$\,m.
+100\,$\Omega$\,m at 1\,km below the seafloor in a background of 1\,$\Omega$\,m.
 The source is 50\,m above the seafloor, the receiver is on the seafloor, and
 the response is the inline $x$-directed $E$-field. The left subplot shows the
 imaginary part in the frequency domain and the right plot the corresponding
@@ -397,15 +414,17 @@ the frequencies required for the Fourier transform. For the FFTLog only
 extrapolation for higher and lower frequencies is required. The EM response
 becomes highly oscillatory for high frequencies, which makes it very hard to
 extrapolate the response to frequencies $f>f_\mathrm{max}$. However, if
-$f_\mathrm{max}$ is chosen appropriately, the importance of higher frequencies
+$f_\mathrm{max}$ is chosen judiciously, the importance of higher frequencies
 for the Fourier transform can be neglected and we can set those responses to
 zero. The extrapolation of frequencies $f<f_\mathrm{min}$ can be changed to an
-interpolation by assuming a zero imaginary response at a very low frequency,
-and we then use PCHIP to interpolate the missing frequencies. In the case of
-the DLF method we also have to interpolate in between the computed frequencies,
-for which we found it better to use a cubic spline. As can be seen from Figures
-\ref{fig:GUI-FFTLog-lin} and \ref{fig:GUI-DLF-lin}, using the FFTLog or the DLF
-with the same actually computed frequencies results in very similar responses.
+interpolation by assuming a zero imaginary response at zero frequency, and we
+then use PCHIP to interpolate the missing frequencies (as we work on a
+logarithmic scale we cannot choose 0\,Hz, but instead take $10^{-100}$\,Hz). In
+the case of the DLF method we also have to interpolate in between the computed
+frequencies, for which we found it better to use a cubic spline. As can be seen
+from Figures \ref{fig:GUI-FFTLog-lin} and \ref{fig:GUI-DLF-lin}, using the
+FFTLog or the DLF with the same actually computed frequencies results in very
+similar responses.
 
 The changes to the Fourier transform in comparison with \cite{GEO.08.Mulder}
 can be summarized in three points: (1) regular log-scale spacing for the
@@ -563,7 +582,7 @@ we would need to adjust our Fourier transform parameters.
 %
 Note that for the gridding we chose $n_\delta=12$, which is very dense. This
 was necessary because we are relatively close to the source. If the offsets of
-interest are larger this factor can be lowered considerably; $3-4$ is often
+interest are larger this factor can be lowered considerably; 3--4 is often
 enough.
 
 This model corresponds to the one presented in Table 1 and in Figures 3 and 4
@@ -580,7 +599,7 @@ between 3 and 15\,s to run.
 This massive speed-up has a couple of reasons. Computers have become more
 powerful in the last twelve years, and the codes were run on different
 computers. A quick test with the old scripts on our test machine shows that it
-would roughly run 2-3 times faster, therefore somewhere between 1 and 2 hours.
+would roughly run 2--3 times faster, therefore somewhere between 1 and 2 hours.
 The more important facts besides different hardware are: (1) we only used 14
 frequencies instead of the 26 frequencies between 0.01 and 100\,Hz of the
 original; (2) our adaptive gridding used significantly less cells
@@ -754,7 +773,7 @@ cells in $y$- and $z$-directions were used on both sides with a stretching of
 1.3 for the total computation domain $D_\mr{c}$, which yields a mesh of
 \num{58344} cells. The time-steps start at 0.1\,s and are: $21\times0.01\,$s,
 $23\times0.03\,$s, $21\times0.1\,$s, $23\times0.3\,$s, covering exactly the
-desired range of $0.1-10\,$s. For \emg3d, the mesh is generated
+desired range of 0.1--10\,s. For \emg3d, the mesh is generated
 frequency-dependent as in the previous examples, with a maximum stretching of
 $\alpha_\mr{c}=1.5$. This results in meshes between \num{18432} cells for the
 highest frequencies and \num{76800} cells for the lowest frequencies. The
@@ -820,6 +839,7 @@ characteristics.
 This research was conducted within the Gitaro.JIM project funded through
 MarTERA as part of Horizon 2020, a funding scheme of the European Research Area
 (ERA-NET Cofund, \href{https://www.martera.eu}{martera.eu}).
+An early idea of this manuscript was presented at \cite{EAGE.20.Werthmuller}.
 
 \section{Data Availability Statement}
 
@@ -828,7 +848,7 @@ at \href{https://zenodo.org/badge/DOI/10.5281/zenodo.???????}{doi:
 10.5281/zenodo.???????}. The data includes the scripts and instructions to
 reproduce all results and figures.
 
-\emph{Note to editors and reviewers: The data is NOT YET on Zenodo, we will
+\emph{Note to editors and reviewers: The data are NOT YET on Zenodo, we will
   upload there the final versions and link the right DOI for the final
   manuscript. Until then everything can be found on GitHub at
   \href{https://github.com/empymod/article-TDEM}%
