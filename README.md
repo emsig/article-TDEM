@@ -13,7 +13,7 @@ to reproduce all the figures.
 
 ## History
 
-1. Submitted 2020-06-?? to Geophysical Journal International.
+1. Submitted 2020-06-30 to Geophysical Journal International.
 
 
 ## Requirements and Environment
