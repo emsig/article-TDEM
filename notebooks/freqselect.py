@@ -454,7 +454,7 @@ class InteractiveFrequency(emg3d.utils.Fourier):
         if linlog == 'log':
             sym_dec = 10  # Number of decades to show on symlog
             lty = int(max(np.log10(abs(self.reim(self.f_dense))))-sym_dec)
-            self.axs[0].set_yscale('symlog', linthreshy=10**lty, linscaley=0.7)
+            self.axs[0].set_yscale('symlog', linthresh=10**lty, linscaley=0.7)
 
             # Remove the zero line becouse of the overlapping ticklabels.
             nticks = len(self.axs[0].get_yticks())//2
