@@ -1,6 +1,6 @@
 __pycache__/
 .ipynb_checkpoints/
-uncommitted/
+uncommitted
 *-Copy*.ipynb
 *.aux
 *.bbl

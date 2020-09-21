@@ -3,7 +3,7 @@
     manuscript,
 %     twocolumn,
 %     twoside,
-%     revised,
+    revised,
   ]{geophysics}
 
 % Remove once done
@@ -800,9 +800,10 @@ better at early times. We cannot compare the errors for the response that
 includes the target for lack of an analytical solution. The background model
 from \empymod is only included to show that there is a significant response
 from the target. We therefore show the normalized difference (ND) between the
-two 3D codes as a percentage, where $\mr{ND}=
-200|\simpeg-\emg3d|/(|\simpeg|+|\emg3d|)$. The ND between the two codes is
-below 1\,\% everywhere except for early times.
+two 3D codes as a percentage, where
+\old{$\mr{ND}= 50|(\simpeg-\emg3d)/(\simpeg+\emg3d)|$.}
+\new{$\mr{ND}= 200|\simpeg-\emg3d|/(|\simpeg|+|\emg3d|)$.}
+The ND between the two codes is below 1\,\% everywhere except for early times.
 
 Both codes took a little over 7 minutes to compute the two models (single
 thread). However, in this particular comparison, the main difference in runtime
