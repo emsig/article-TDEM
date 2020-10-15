@@ -72,7 +72,6 @@ Stevinweg 1 / PO-box 5048,
 \footnotemark[2]Shell Global Solutions International BV,
 Grasweg 31, 1031 HW Amsterdam;\\
 E-mail: \href{mailto:Dieter@Werthmuller.org}{Dieter@Werthmuller.org};\\
-\textbf{Keywords}: Fourier transforms, CSEM, 3D modelling.
 }
 
 
@@ -116,13 +115,17 @@ The gridding should be frequency-dependent, which is accomplished by making it
 a function of skin depth. Optimising for the least number of required cells for
 a given frequency should be combined with optimising for computational speed.
 %
-Looking carefully at these three points results in much smaller computation
-times with speedup factors of ten or more over previous results. A
+Looking carefully at these three \new{key} points results in much smaller
+computation times with speedup factors of ten or more over previous results. A
 frequency-domain computation of time-domain data can therefore be competitive
 to time-domain solvers if the required frequencies and the corresponding grids
 are carefully chosen.
 %
+\\[1cm] \textbf{Keywords}: Controlled source electromagnetics (CSEM); Numerical
+modelling; Fourier analysis.
 \end{abstract}
+
+
 
 \section{Introduction}
 
@@ -193,15 +196,15 @@ the approach with some numerical results.
 Being able to model CSEM data both in the frequency-domain and in the
 time-domain can be desirable, as both domains have advantages and
 disadvantages. One way to achieve this is to implement Maxwell's equation in
-both domains, as it is done, for instance, in \simpeg \citep{CAG.15.Cockett}.
-Another approach is to have Maxwell's equation only implemented in one domain,
-and use Fourier transforms to go to the other. However, this approach can be
-costly, as many frequencies over a wide range are required to go from the time
-domain to the frequency domain, or many times over a wide range for the
-opposite direction. We present a methodology which significantly reduces the
-amount and range of the required frequencies, translating into a significant
-reduction in computation time. The required computation grids for low
-frequencies (in our case in the order of 0.001\,Hz) and high frequencies
+both domains\old{, as it is done, for instance, in \simpeg (Cockett et al.,
+2015)}. Another approach is to have Maxwell's equation only implemented in one
+domain, and use Fourier transforms to go to the other. However, this approach
+can be costly, as many frequencies over a wide range are required to go from
+the time domain to the frequency domain, or many times over a wide range for
+the opposite direction. We present a methodology which significantly reduces
+the amount and range of the required frequencies, translating into a
+significant reduction in computation time. The required computation grids for
+low frequencies (in our case in the order of 0.001\,Hz) and high frequencies
 (around 100\,Hz) are hugely different. Low frequencies can be computed on a
 coarser grid, but they require a much larger domain in order to avoid boundary
 effects. High frequencies, on the other hand, require denser gridding, but they
@@ -299,17 +302,17 @@ the second-order differential equation of the electric field,
 where $\mathbf{E}$ is the electric field (V/m) and $\mathbf{J}_\mathrm{s}$ the
 current source (A/m$^2$); time dependence is $\exp(\mathrm{i}\omega t)$. The
 standard multigrid approach fails for severe stretching or strong anisotropy,
-for which \emg3d has implemented known improvements such as line-relaxation and
-semicoarsening \citep{ECCFD.06.Jonsthovel}, with a non-standard Cholesky
-decomposition to speed up the computation \citep{GEO.08.Mulder}. One of the big
-advantages of the multigrid method is that it scales linearly (optimal) with
-the grid size in both CPU and RAM usage \citep{B.Springer.20.Mulder}. This
-makes it feasible to run even big models on standard computers, without the
-need for big clusters. All the examples in this article are run on a laptop
-with an i7-6600U\,CPU\,@\,2.6\,GHz (x4) and 16\,GB of memory, using Ubuntu
-18.04 and Python 3.7. For the semi-analytical computations of layered models we
-use the open-source (Apache License 2.0) code \empymod
-\citep{GEO.17.Werthmuller}.
+for which \old{\emg3d has implemented }known improvements such as
+line-relaxation and semicoarsening \citep{ECCFD.06.Jonsthovel} \new{are
+implemented}, with a non-standard Cholesky decomposition to speed up the
+computation \citep{GEO.08.Mulder}. One of the big advantages of the multigrid
+method is that it scales linearly (optimal) with the grid size in both CPU and
+RAM usage \citep{B.Springer.20.Mulder}. This makes it feasible to run even big
+models on standard computers, without the need for big clusters. All the
+examples in this article are run on a laptop with an i7-6600U\,CPU\,@\,2.6\,GHz
+(x4) and 16\,GB of memory, using Ubuntu 18.04 and Python 3.7. For the
+semi-analytical computations of layered models we use the open-source (Apache
+License 2.0) code \empymod \citep{GEO.17.Werthmuller}.
 
 \section{Frequency selection}
 
@@ -366,11 +369,11 @@ $\rho=0.3\,\Omega$\,m ($\rho = \sigma^{-1}$) and a 100\,m thick target of
 The source is 50\,m above the seafloor, the receiver is on the seafloor, and
 the response is the inline $x$-directed $E$-field. The left subplot shows the
 imaginary part in the frequency domain and the right plot the corresponding
-impulse response in the time domain. The red lines are the precise results
-obtained from \empymod. The blue circles indicate the actually computed
-responses and the black dots the frequencies which are interpolated or set to
-zero. The resulting time-domain response has a relative error of less than
-1\,\% everywhere except for very early times.
+impulse response in the time domain. The red lines are the \new{semi-analytical
+responses}\old{precise results obtained from \empymod}. The blue circles
+indicate the actually computed responses and the black dots the frequencies
+which are interpolated or set to zero. The resulting time-domain response has a
+relative error of less than 1\,\% everywhere except for very early times.
 
 Figure \ref{fig:GUI-FFTLog-log} shows exactly the same on a logarithmic scale,
 without the interactive GUI-related elements. It can be seen that with the
@@ -408,23 +411,23 @@ $r=1.5,3,6$, and 12\,km.
 
 The shortest offset defines the highest required frequency, and the largest
 offset the lowest required frequency. So the more one can restrict the
-necessary offset range, the less frequencies are needed. Another important
-factor is how to interpolate and extrapolate from the computed frequencies to
-the frequencies required for the Fourier transform. For the FFTLog only
-extrapolation for higher and lower frequencies is required. The EM response
-becomes highly oscillatory for high frequencies, which makes it very hard to
-extrapolate the response to frequencies $f>f_\mathrm{max}$. However, if
-$f_\mathrm{max}$ is chosen judiciously, the importance of higher frequencies
-for the Fourier transform can be neglected and we can set those responses to
-zero. The extrapolation of frequencies $f<f_\mathrm{min}$ can be changed to an
-interpolation by assuming a zero imaginary response at zero frequency, and we
-then use PCHIP to interpolate the missing frequencies (as we work on a
-logarithmic scale we cannot choose 0\,Hz, but instead take $10^{-100}$\,Hz). In
-the case of the DLF method we also have to interpolate in between the computed
-frequencies, for which we found it better to use a cubic spline. As can be seen
-from Figures \ref{fig:GUI-FFTLog-lin} and \ref{fig:GUI-DLF-lin}, using the
-FFTLog or the DLF with the same actually computed frequencies results in very
-similar responses.
+necessary offset range, the \old{less}\new{fewer} frequencies are needed.
+Another important factor is how to interpolate and extrapolate from the
+computed frequencies to the frequencies required for the Fourier transform. For
+the FFTLog only extrapolation for higher and lower frequencies is required. The
+EM response becomes highly oscillatory for high frequencies, which makes it
+very hard to extrapolate the response to frequencies $f>f_\mathrm{max}$.
+However, if $f_\mathrm{max}$ is chosen judiciously, the importance of higher
+frequencies for the Fourier transform can be neglected and we can set those
+responses to zero. The extrapolation of frequencies $f<f_\mathrm{min}$ can be
+changed to an interpolation by assuming a zero imaginary response at zero
+frequency, and we then use PCHIP to interpolate the missing frequencies (as we
+work on a logarithmic scale we cannot choose 0\,Hz, but instead take
+$10^{-100}$\,Hz). In the case of the DLF method we also have to interpolate in
+between the computed frequencies, for which we found it better to use a cubic
+spline. As can be seen from Figures \ref{fig:GUI-FFTLog-lin} and
+\ref{fig:GUI-DLF-lin}, using the FFTLog or the DLF with the same actually
+computed frequencies results in very similar responses.
 
 The changes to the Fourier transform in comparison with \cite{GEO.08.Mulder}
 can be summarized in three points: (1) regular log-scale spacing for the
@@ -483,10 +486,10 @@ where we usually fix $\alpha_\mr{s}=1$ or keep it at least below 1.05, and let
 $\alpha_\mr{c}$ be anything between $[1, 1.5]$. The minimum cell width
 $\Delta_\mr{min}$ can further be restricted by a user-defined range. Given
 these inputs the adaptive gridding will search for the smallest possible number
-of cells which fulfils these criteria. The multigrid method implemented in
-\emg3d puts some constraints on the number of cells, of which the adaptive
-gridding takes care (the number of cells have to be powers of two multiplied by
-a low prime, e.g., $\{2,3,5\}\cdot2^n$).
+of cells which fulfils these criteria. The \new{implemented} multigrid method
+\old{implemented in \emg3d} puts some constraints on the number of cells, of
+which the adaptive gridding takes care (the number of cells have to be powers
+of two multiplied by a low prime, e.g., $\{2,3,5\}\cdot2^n$).
 
 The main difference with \cite{GEO.08.Mulder} is that their adaptive gridding
 searches for the optimal stretching factor $\alpha$ fulfilling certain
@@ -558,20 +561,21 @@ interpolated values or the values set to zero.
 \plot*{fullspace}{width=\textwidth}{
   (a) Frequency- and (b) time-domain results for the homogeneous space model.
   The red lines are the analytical solutions, the blue circles are the actually
-  computed responses with \emg3d, the black dots are the interpolated
+  computed responses\old{ with \emg3d}, the black dots are the interpolated
   responses, and the dashed black line the obtained time-domain response. The
   errors are clipped for values smaller than 0.1\,\% and bigger than 100\,\%.
 }
 %
-Most of the computed values stay below a relative error of 1\,\%, our
-chosen adaptive gridding only starts to generate considerable errors at higher
+Most of the computed values stay below a relative error of 1\,\%, our chosen
+adaptive gridding only starts to generate considerable errors at higher
 frequencies. Figure \ref{fig:fullspace}(b) shows the corresponding time-domain
-result, where the dashed black line is the result from \emg3d, on top of the
-red line which is the analytical result. The relative error is mostly below
-1\,\%, except for early times. However, for practical reasons that is more than
-enough. Figure~\ref{fig:fullspace-log} shows the same on a logarithmic scale,
-with times up to 10 seconds. It clearly shows that if later times are required,
-we would need to adjust our Fourier transform parameters.
+result, where the dashed black line is the result \old{from
+\emg3d}\new{obtained by transformation of the frequency-domain response}, on
+top of the red line which is the analytical result. The relative error is
+mostly below 1\,\%, except for early times. However, for practical reasons that
+is more than enough. Figure~\ref{fig:fullspace-log} shows the same on a
+logarithmic scale, with times up to 10 seconds. It clearly shows that if later
+times are required, we would need to adjust our Fourier transform parameters.
 %
 \plot{fullspace-log}{width=\cwidth}{
   Same as in Figure~\ref{fig:fullspace} (b), but on a logarithmic scale. To
@@ -753,27 +757,29 @@ receiver is at an offset of 2\,km. The dimension of the target cube is
 $1.1\times1.0\times0.4$\,km, located 300\,m below the seafloor in the centre
 between source and receiver.
 
-For the comparison we use the open-source code \simpeg \citep{CAG.15.Cockett}.
-\simpeg is a framework for modelling and inversion of geophysical data such as
-gravity, magnetics, and CSEM. It has Maxwell's equations implemented in both
-the frequency and time domain. As such we can compare our result computed in
-the frequency domain followed by a Fourier transform to a result computed
-directly in the time domain. A principal difference between \simpeg and \emg3d
-is that the former has various direct solvers implemented, whereas the latter
-is an iterative multigrid solver. The 3D model is therefore a rather small
-example in order to be able to run it on our test machine, as the memory
-requirement by the direct solver would otherwise be too high. There are not
-many options out there of open-source time-domain 3D codes, \simpeg being the
-one we found to be suitable. A step-off response was chosen as this is the
-response currently implemented in \simpeg.
+For the comparison we use the open-source code \simpeg
+\citep{CAG.15.Cockett}\old{. \simpeg}\new{, which} is a framework for modelling
+and inversion of geophysical data such as gravity, magnetics, and CSEM. It has
+Maxwell's equations implemented in both the frequency and time domain. As such
+we can compare our result computed in the frequency domain followed by a
+Fourier transform to a result computed directly in the time domain. A principal
+difference between \simpeg and \emg3d is that the former has various direct
+solvers implemented, whereas the latter is an iterative multigrid solver. The
+3D model is therefore a rather small example in order to be able to run it on
+our test machine, as the memory requirement by the direct solver would
+otherwise be too high. There are not many options out there of open-source
+time-domain 3D codes, \simpeg being the one we found to be suitable. A step-off
+response was chosen as this is the response currently implemented in \new{the
+framework}\old{\simpeg}.
 
 The model was discretised with $100\times100\times100\,$m cells in the survey
-domain $D_\mr{s}$. For the \simpeg model, 14 cells in $x$-direction and 12
-cells in $y$- and $z$-directions were used on both sides with a stretching of
-1.3 for the total computation domain $D_\mr{c}$, which yields a mesh of
-\num{58344} cells. The time-steps start at 0.1\,s and are: $21\times0.01\,$s,
-$23\times0.03\,$s, $21\times0.1\,$s, $23\times0.3\,$s, covering exactly the
-desired range of 0.1--10\,s. For \emg3d, the mesh is generated
+domain $D_\mr{s}$. For the \old{\simpeg}\new{time-domain} model, 14 cells in
+$x$-direction and 12 cells in $y$- and $z$-directions were used on both sides
+with a stretching of 1.3 for the total computation domain $D_\mr{c}$, which
+yields a mesh of \num{58344} cells. The time-steps start at 0.1\,s and are:
+$21\times0.01\,$s, $23\times0.03\,$s, $21\times0.1\,$s, $23\times0.3\,$s,
+covering exactly the desired range of 0.1--10\,s. For
+\old{\emg3d}\new{frequency-domain model}, the mesh is generated
 frequency-dependent as in the previous examples, with a maximum stretching of
 $\alpha_\mr{c}=1.5$. This results in meshes between \num{18432} cells for the
 highest frequencies and \num{76800} cells for the lowest frequencies. The
@@ -783,27 +789,32 @@ transform was carried out with the 201-point sine-cosine filter from
 \cite{GEO.09.Key}.
 
 The results are shown in Figure~\ref{fig:3d-result}: In (a) the 1D background
-responses and the relative error using the semi-analytical result obtained from
-\empymod, and in (b) the responses including the target.
+responses and the relative error using the semi-analytical result\old{obtained
+from \empymod}, and in (b) the responses including the target.
 %
 \plot{3d-result}{width=\textwidth}{
-  Responses for the model outlined in Figure~\ref{fig:3d-model} using \simpeg
-  and \emg3d, and for the layered background also \empymod. In the lower plot
-  of (a) the relative error (\%) in comparison to \empymod is shown, and in (b)
-  the normalized difference (\%) between the two 3D codes. The results of these
-  plots are clipped for values smaller than 0.1\,\% and bigger than 10\,\%.
+  Responses for the model outlined in Figure~\ref{fig:3d-model} using
+  \new{time-domain}\old{\simpeg} and \new{frequency-domain
+  computations}\old{\emg3d}, and for the layered background also \new{the
+  semi-analytical result}\old{\empymod}. In the lower plot of (a) the relative
+  error (\%) \new{is shown} in comparison to \new{the semi-analytical
+  result}\old{\empymod is shown}, and in (b) the normalized difference (\%)
+  between the two 3D codes. The results of these plots are clipped for values
+  smaller than 0.1\,\% and bigger than 10\,\%.
 }
 %
 The background comparison shows that both 3D codes do an acceptable job having
-a relative error of a few percents at most; the result for \emg3d seems to be
-better at early times. We cannot compare the errors for the response that
-includes the target for lack of an analytical solution. The background model
-from \empymod is only included to show that there is a significant response
-from the target. We therefore show the normalized difference (ND) between the
-two 3D codes as a percentage, where
-\old{$\mr{ND}= 50|(\simpeg-\emg3d)/(\simpeg+\emg3d)|$.}
-\new{$\mr{ND}= 200|\simpeg-\emg3d|/(|\simpeg|+|\emg3d|)$.}
-The ND between the two codes is below 1\,\% everywhere except for early times.
+a relative error of a few percents at most; the result \new{obtained through
+transformation}\old{for \emg3d} seems to be better at early times. We cannot
+compare the errors for the response that includes the target for lack of an
+analytical solution. The \new{semi-analytical} background model \old{from
+\empymod }is only included to show that there is a significant response from
+the target. We therefore show the normalized difference (\old{ND}\new{NRMSD})
+between the two \old{3D codes}\new{responses $R_1$ and $R_2$} as a percentage,
+where \old{$\mr{ND}= 50|(\simpeg-\emg3d)/(\simpeg+\emg3d)|$.}
+\new{$\mr{NRMSD~(\%)} = 200|R_1 - R_2|/(|R_1| + |R_2|)$.} The
+\old{ND}\new{NRMSD} between the two codes is below 1\,\% everywhere except for
+early times.
 
 Both codes took a little over 7 minutes to compute the two models (single
 thread). However, in this particular comparison, the main difference in runtime
@@ -811,10 +822,11 @@ is not frequency-domain computation vs. time-domain computation, but iterative
 solver vs. direct solver. For a test we doubled the number of cells in each
 direction by using 50\,m for the minimum cell width instead of 100\,m, and
 taking also half of the stretching, which results then in a mesh of
-\num{466752} cells for \simpeg and meshes between \num{102400} and \num{614400}
-for \emg3d. Because the memory of our test machine was not large enough for the
-direct solver of \simpeg, the last model had to be run on a cluster. In this
-scenario, \emg3d was about eight times faster (single thread).
+\num{466752} cells \old{for \simpeg}\new{in the time domain} and meshes between
+\num{102400} and \num{614400} \old{for \emg3d}\new{in the frequency domain}.
+Because the memory of our test machine was not large enough for the direct
+solver of \simpeg, the last model had to be run on a cluster. In this scenario,
+\emg3d was about eight times faster (single thread).
 
 \section{Conclusions}
 
