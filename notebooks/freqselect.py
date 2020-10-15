@@ -319,13 +319,19 @@ class InteractiveFrequency(emg3d.utils.Fourier):
         else:
             self.axs[1].set_xlim([min(self.time), max(self.time)])
 
-    def print_suptitle(self):
+    def print_legend(self):
         """Update suptitle."""
-        plt.suptitle(
-            f"Offset = {np.squeeze(self.model['rec'][0])/1000} km;    "
-            f"No. freq. coarse: {self.freq_calc.size};    No. freq. full: "
-            f"{self.freq_req.size}  ({self.freq_req.min():.1e} $-$ "
-            f"{self.freq_req.max():.1e} Hz)")
+        # plt.suptitle(
+        #     f"Offset = {np.squeeze(self.model['rec'][0])/1000} km;    "
+        #     f"No. freq. coarse: {self.freq_calc.size};    No. freq. full: "
+        #     f"{self.freq_req.size}  ({self.freq_req.min():.1e} $-$ "
+        #     f"{self.freq_req.max():.1e} Hz)")
+        self.clear_handle(['f_legend', ])
+        self.h_f_legend = self.axs[0].legend(
+            handles=[self.h_f_inti, self.h_f_int],
+            labels=[f"req. ({self.freq_req.size})",
+                    f"comp. ({self.freq_calc.size})"]
+        )
 
     def plot_base_model(self):
         """Update smooth, 'correct' model."""
@@ -375,8 +381,8 @@ class InteractiveFrequency(emg3d.utils.Fourier):
         self.h_t_int, = self.axs[1].plot(self.time, t_int, 'k--')
         self.h_t_inte, = self.axs[3].plot(self.time, t_error, 'k.')
 
-        # Update suptitle
-        self.print_suptitle()
+        # Update legend
+        self.print_legend()
 
     # Interactive routines
     def update_off(self, off):
@@ -454,7 +460,7 @@ class InteractiveFrequency(emg3d.utils.Fourier):
         if linlog == 'log':
             sym_dec = 10  # Number of decades to show on symlog
             lty = int(max(np.log10(abs(self.reim(self.f_dense))))-sym_dec)
-            self.axs[0].set_yscale('symlog', linthresh=10**lty, linscaley=0.7)
+            self.axs[0].set_yscale('symlog', linthresh=10**lty, linscale=0.7)
 
             # Remove the zero line becouse of the overlapping ticklabels.
             nticks = len(self.axs[0].get_yticks())//2

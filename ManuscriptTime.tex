@@ -387,10 +387,10 @@ the corresponding time-domain response is comparable, so either FFTLog or DLF
 can be used.
 %
 \multiplot{2}{GUI-FFTLog-log,GUI-DLF-lin}{width=\tcwidth}
-{(a) Same as Figure \ref{fig:GUI-FFTLog-lin}, but on a logarithmic scale.
-(b) Using DLF instead of FFTLog, but computing the same frequencies as for the
-FFTLog. The resulting time domain response has comparable accuracy (compare the
-error to the error in Figure \ref{fig:GUI-FFTLog-lin}).
+{(a) Same as Figure \ref{fig:GUI-FFTLog-lin}, but on a logarithmic scale. (b)
+Using DLF instead of FFTLog, but computing the same frequenc\old{ies}\new{y
+range} as for the FFTLog. The resulting time domain response has comparable
+accuracy (compare the error to the error in Figure \ref{fig:GUI-FFTLog-lin}).
 }
 %
 In the above example we used 20 frequencies, but that many would not be
@@ -839,11 +839,17 @@ cells, and a Fourier transform that works on a logarithmic scale. Fast layered
 modelling can be used to design the required frequency range, as the Fourier
 transform does not know about the dimensionality of the underlying model.
 Twenty frequencies or less are usually sufficient for a wide range of offsets.
-We believe that our proposed improvements to the previously published methods
-make time-domain CSEM modelling with a frequency-domain code even more
-attractive than it was already before. We have demonstrated the idea of our
-Fourier transform method on CSEM data transformed from the frequency to the
-time domain. However, it could equally be applied to the transform from the
+\new{The values for lower frequencies can be interpolated using PCHIP knowing
+that the imaginary part goes to zero for zero frequency. The values for higher
+frequencies can be set to zero, as we can neglect their influence. And values
+for frequencies in-between the computed ones are best obtained with a spline
+interpolation. The actual transform can be made with either the DLF method or
+FFTLog, where the latter one requires usually much fewer frequencies to be
+interpolated.} We believe that our proposed improvements to the previously
+published methods make time-domain CSEM modelling with a frequency-domain code
+even more attractive than it was already before. We have demonstrated the idea
+of our Fourier transform method on CSEM data transformed from the frequency to
+the time domain. However, it could equally be applied to the transform from the
 time to the frequency domain and to other methods with similar
 characteristics.
 
