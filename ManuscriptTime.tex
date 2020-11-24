@@ -13,6 +13,7 @@
 \usepackage{xspace}
 \usepackage{graphicx}
 \usepackage{subfig}
+\usepackage{ifthen}
 \usepackage[draft, addedmarkup=bf]{changes}
 % \usepackage[final]{changes}
 \usepackage[pdftex, final, allcolors=blue, colorlinks=true]{hyperref}
@@ -29,11 +30,36 @@
 \let\zz@tabarray\@tabarray
 \makeatother
 
+% Figures
+% To print widths put this in text:
+% \the\textwidth
+% \the\columnwidth
+%
+% Widths:   textwidth  columnwidth  tablewidth
+%       1-c   504pt        252pt       504pt
+%       2-c   504pt        240pt       240pt
+%       ref   468pt        234pt       468pt
+%
+\ifthenelse{\boolean{GJ@referee}}{%
+  \newcommand{\cwidth}{234pt}%
+  \newcommand{\fwidth}{468pt}%
+  \newcommand{\twidth}{468pt}}{%
+  \newcommand{\fwidth}{504pt}%
+  \ifthenelse{\boolean{@twocolumn}}{%
+    \newcommand{\cwidth}{240pt}%
+    \newcommand{\twidth}{240pt}}{%
+    \newcommand{\cwidth}{252pt}%
+    \newcommand{\twidth}{504pt}%
+  }
+}
+\graphicspath{{./figures/}}
+
 % Change default colour of «changes» package
 \definecolor{myred}{rgb}{.8,0,0}
 \definecolor{mygreen}{rgb}{0,.5,0}
+% \setaddedmarkup{\color{myred}{#1}}
 \setaddedmarkup{\color{myred}{#1}}
-\setdeletedmarkup{\color{mygreen}{\itshape \sout{#1}}}
+\setdeletedmarkup{\color{mygreen}{\sout{#1}}}
 
 \let\tablenum\relax
 \usepackage{siunitx}
@@ -378,7 +404,7 @@ Figure~\ref{fig:GUI-FFTLog-lin}.
 %
 \begin{figure}
   \centering
-  \includegraphics[width=\linewidth]{figures/GUI-FFTLog-lin}
+  \includegraphics[width=\cwidth]{GUI-FFTLog-lin}
   \caption{Interactive frequency selection for a user-provided layered model
     (the shown model parameters are described in the text). This example shows
     the impulse response at an offset of 5\,km, for which it uses FFTLog from
@@ -414,9 +440,9 @@ can be used.
 %
 \begin{figure*}
   \centering
-  \subfloat[]{{\includegraphics[width=.5\linewidth]{figures/GUI-FFTLog-log}}%
+  \subfloat[]{{\includegraphics[width=\cwidth]{GUI-FFTLog-log}}%
   \label{fig:GUI-FFTLog-log}}\hfill
-  \subfloat[]{{\includegraphics[width=.5\linewidth]{figures/GUI-DLF-lin}}%
+  \subfloat[]{{\includegraphics[width=\cwidth]{GUI-DLF-lin}}%
   \label{fig:GUI-DLF-lin}}\\
   \caption{(a) Same as Figure \ref{fig:GUI-FFTLog-lin}, but on a logarithmic
   scale. (b) Using DLF instead of FFTLog, but computing the same
@@ -435,7 +461,7 @@ $r=1.5,3,6$, and 12\,km.
 %
 \begin{figure}
   \centering
-  \includegraphics[width=.8\linewidth]{figures/multi-offset}
+  \includegraphics[width=\cwidth]{multi-offset}
   \caption{Normalized (a) frequency- and (b) time-domain responses for offsets
     $r=1.5,3,6$, and 12\,km using the parameters defined in Figure
     \ref{fig:GUI-FFTLog-lin}. The coloured circles are the actually computed
@@ -563,7 +589,7 @@ stretching factor are listed in Table~\ref{tbl:timefull}. The total run time to
 compute this model was less than two minutes.
 %
 \begin{table}
-\begin{minipage}{\columnwidth}
+\begin{minipage}{\twidth}
   \centering
   \caption{Run times per frequency for the homogeneous space example, with the
     corresponding number of cells and minimum cell width as well as the
@@ -572,7 +598,7 @@ compute this model was less than two minutes.
   \begin{tabular}{S[table-format=2.4]rrrr}
     \toprule
     %
-    {freq.} & time & nx$\times$ny$\times$nz & $\Delta_\mr{min}$ & $\alpha_\mr{c}$ \\
+    {Frequency} & Time & nx$\times$ny$\times$nz & $\Delta_\mr{min}$ & $\alpha_\mr{c}$ \\
     {(Hz)}  & (s) &  & (m) & \\
     \midrule
     %
@@ -603,7 +629,7 @@ interpolated values or the values set to zero.
 %
 \begin{figure*}
   \centering
-  \includegraphics[width=\linewidth]{figures/fullspace}
+  \includegraphics[width=\fwidth]{fullspace}
   \caption{(a) Frequency- and (b) time-domain results for the homogeneous space
     model. The red lines are the analytical solutions, the blue circles are the
     actually computed responses\deleted{ with \emg3d}, the black dots are the
@@ -626,7 +652,7 @@ times are required, we would need to adjust our Fourier transform parameters.
 %
 \begin{figure}
   \centering
-  \includegraphics[width=\linewidth]{figures/fullspace-log}
+  \includegraphics[width=\cwidth]{fullspace-log}
   \caption{Same as in Figure~\ref{fig:fullspace} (b), but on a logarithmic
     scale. To improve later times we would have to compute lower frequencies;
     to improve earlier times we would have to compute more frequencies per
@@ -683,7 +709,7 @@ direction. This yielded grids between \num{204800} (higher frequencies) and
 their corresponding parameters are listed in Table~\ref{tbl:timemarine}.
 %
 \begin{table}
-\begin{minipage}{\columnwidth}
+\begin{minipage}{\twidth}
   \centering
   \caption{Run times per frequency for the marine 1D example, with the
     corresponding number of cells and minimum cell width as well as the
@@ -692,7 +718,7 @@ their corresponding parameters are listed in Table~\ref{tbl:timemarine}.
   \begin{tabular}{S[table-format=2.5]rrrr}
     \toprule
     %
-    {freq.} & time & nx$\times$ny$\times$nz & $\Delta_\mr{min}$ & $\alpha_\mr{c}$ \\
+    {Frequency} & time & nx$\times$ny$\times$nz & $\Delta_\mr{min}$ & $\alpha_\mr{c}$ \\
     {(Hz)}  & (s) &  & (m) & \\
     \midrule
     %
@@ -730,7 +756,7 @@ compute a few additional lower frequencies if we want to improve it.
 %
 \begin{figure*}
   \centering
-  \includegraphics[width=.8\linewidth]{figures/marine}
+  \includegraphics[width=\fwidth]{marine}
   \caption{Electric inline response at an offset of 5\,km for a shallow marine,
     layered scenario. (a) Frequency-domain, where the blue circles are computed
     responses and the black dots are interpolated responses or responses set to
@@ -754,7 +780,7 @@ frequencies could be added to improve late-time values.
 %
 \begin{figure}
   \centering
-  \includegraphics[width=\linewidth]{figures/marine-multioffset}
+  \includegraphics[width=\cwidth]{marine-multioffset}
   \caption{Time-domain responses for offsets of 3, 5, and 7\,km for the same
     model as shown in Figure~\ref{fig:marine}.}
   \label{fig:marine-multioffset}
@@ -786,7 +812,7 @@ domain shows that it is the airwave whose amplitude is heavily overestimated.
 %
 \begin{figure*}
   \centering
-  \includegraphics[width=.8\linewidth]{figures/marine-wrong-x-y}
+  \includegraphics[width=\fwidth]{marine-wrong-x-y}
   \caption{Same model as used for Figure~\ref{fig:marine}, but with the
     horizontal boundaries not far enough. Although the resulting time-domain
     result looks plausible, the comparison with the 1D result shows that it
@@ -813,7 +839,7 @@ halfspace is the background with $\rho_\mr{bg}=1\,\Omega\,$m.
 %
 \begin{figure}
   \centering
-  \includegraphics[width=\linewidth]{figures/3d-model}
+  \includegraphics[width=\cwidth]{3d-model}
   \caption{Three-dimensional block embedded in the lower of two halfspaces. The
     100-m long, $x$-directed dipole source is located 50\,m above the seafloor
     at the origin, and the receiver is on the seafloor at an offset of 2\,km.}
@@ -864,7 +890,7 @@ target.
 %
 \begin{figure*}
   \centering
-  \includegraphics[width=.8\linewidth]{figures/3d-result}
+  \includegraphics[width=\fwidth]{3d-result}
   \caption{Responses for the model outlined in Figure~\ref{fig:3d-model} using
     \replaced{time-domain}{\simpeg} and \replaced{frequency-domain
     computations}{\emg3d}, and for the layered background also \replaced{the
