@@ -1,45 +1,50 @@
-\documentclass[
-%     paper,
-    manuscript,
-%     twocolumn,
-%     twoside,
-    revised,
-  ]{geophysics}
+% \documentclass[onecolumn,extra,referee,camera]{gji}
+% \documentclass[onecolumn,extra,camera]{gji}
+\documentclass[twocolumn,extra,camera]{gji}
+\usepackage{timet}
 
-% Remove once done
-\usepackage[textsize=footnotesize, textwidth=2.8cm]{todonotes}
-
-% Additional packages to geophysics.cls
-\usepackage[UKenglish]{babel}
+% Additional packages
+% \usepackage[UKenglish]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
-
 \usepackage{amssymb, amsmath, amsfonts}
-\usepackage{upquote}
-\usepackage[strings]{underscore}
-\usepackage{siunitx}                % SI conform commands (eg \num)
-\usepackage{tabularx}
-\usepackage{colortbl}
 \usepackage{booktabs}
 \usepackage{xspace}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage[draft, addedmarkup=bf]{changes}
+% \usepackage[final]{changes}
+\usepackage[pdftex, final, allcolors=blue, colorlinks=true]{hyperref}
 
-\usepackage[pdftex, final]{hyperref}
-% \usepackage[pdftex, hidelinks]{hyperref}
-\hypersetup{allcolors=blue, allbordercolors={0 0 .5}, colorlinks=true}
 
-% Figures
-\DeclareGraphicsExtensions{.pdf,.png,.jpg}
-\renewcommand{\figdir}{./figures}
-\ifthenelse{\boolean{@twoc}}{%
-  \newcommand{\cwidth}{250pt}}{%
-  \newcommand{\cwidth}{240pt}}
+% workaround siunitx clashes unfortunately with gji
+% https://tex.stackexchange.com/a/412886
+\makeatletter
+\let\zz@tabular\@tabular
+\let\zzendtabular\endtabular
+\let\zz@xtabularcr\@xtabularcr
+\let\zz@tabclassz\@tabclassz
+\let\zz@tabclassiv \@tabclassiv 
+\let\zz@tabarray\@tabarray
+\makeatother
 
-\ifthenelse{\boolean{@twoc}}{%
-  \newcommand{\acwidth}{250pt}%
-  \newcommand{\tcwidth}{250pt}}{%
-  \newcommand{\acwidth}{240pt}%
-  \newcommand{\tcwidth}{312pt}}
+% Change default colour of «changes» package
+\definecolor{myred}{rgb}{.8,0,0}
+\definecolor{mygreen}{rgb}{0,.5,0}
+\setaddedmarkup{\color{myred}{#1}}
+\setdeletedmarkup{\color{mygreen}{\itshape \sout{#1}}}
+
+\let\tablenum\relax
+\usepackage{siunitx}
+\usepackage{tabularx}
+
+% To fix clash of gji with hyperref
+% https://tex.stackexchange.com/a/384969
+\AtBeginDocument{
+  \label{CorrectFirstPageLabel}
+  \def\fpage{\pageref{CorrectFirstPageLabel}}
+}
 
 % Own commands
 \newcommand{\mr}[1]{\mathrm{#1}}
@@ -56,39 +61,50 @@
 \newcommand{\ul}[1]{\underline{#1}}
 \newcommand{\rmk}[1]{{\color{red}{#1}}}
 
+\title[Time-domain CSEM]{Fast time-domain electromagnetic modelling in the frequency domain}
+
+\author[D. Werthmüller \emph{et al.}]
+  {\Large Dieter Werthmüller$^1$,        % orcid: 0000-0002-8575-2484
+   Wim A. Mulder$^{1,2}$ and          % orcid: 0000-0001-7020-9297
+   Evert C. Slob$^1$              % orcid: 0000-0002-4529-1134
+   \\
+   \footnotesize
+  $^1$ TU Delft, Building 23, Stevinweg 1 / PO-box 5048, 2628 CN Delft (NL).
+  E-mail: \href{mailto:Dieter@Werthmuller.org}{Dieter@Werthmuller.org}\\[-.3em]
+   \footnotesize
+  $^2$ Shell Global Solutions International BV, Grasweg 31, 1031 HW Amsterdam(NL)
+  }
+
+\date{Received 202Y MMMM DD; in original form 2020 June 30}
+\pagerange{\pageref{firstpage}--\pageref{lastpage}}
+\volume{VVV}
+\pubyear{202Y}
+
+
+% Authors with AMS fonts and mssymb.tex can comment out the following
+% line to get the correct symbol for Geophysical Journal International.
+\let\leqslant=\leq
+
+\newtheorem{theorem}{Theorem}[section]
+
 \begin{document}
 
-\title{Fast time-domain electromagnetic modelling in the frequency domain}
+\label{firstpage}
 
-\renewcommand{\thefootnote}{\fnsymbol{footnote}}
-
-\ms{}  % ARTICLE-ID
-
-\address{
-\footnotemark[1]TU Delft,
-Building 23,
-Stevinweg 1 / PO-box 5048,
-2628 CN Delft;\\
-\footnotemark[2]Shell Global Solutions International BV,
-Grasweg 31, 1031 HW Amsterdam;\\
-E-mail: \href{mailto:Dieter@Werthmuller.org}{Dieter@Werthmuller.org};\\
-}
-
-
-\author{%
-Dieter Werthmüller\footnotemark[1], %            orcid: 0000-0002-8575-2484
-Wim A.\ Mulder\footnotemark[1]\footnotemark[2], % orcid: 0000-0001-7020-9297
-and Evert C.\ Slob\footnotemark[1] %             orcid: 0000-0002-4529-1134
-}
-
-\footer{}
-\lefthead{Werthmüller et al.}
-\righthead{Time-domain CSEM}
-
+% workaround siunitx clashes unfortunately with gji
+% https://tex.stackexchange.com/a/412886
+{\makeatletter
+\let\@tabular\zz@tabular
+\let\endtabular\zzendtabular
+\let\@xtabularcr\zz@xtabularcr
+\let\@tabclassz\zz@tabclassz
+\let\@tabclassiv \zz@tabclassiv 
+\let\@tabarray\zz@tabarray
 \maketitle
+}
+% \maketitle
 
-%%fakesection ===    ABSTRACT    ===
-\begin{abstract}
+\begin{summary}
 %
 Modelling three-dimensional time-domain controlled-source electromagnetic data
 with frequency-domain solvers is an alternative to time-domain solvers. It
@@ -115,19 +131,20 @@ The gridding should be frequency-dependent, which is accomplished by making it
 a function of skin depth. Optimising for the least number of required cells for
 a given frequency should be combined with optimising for computational speed.
 %
-Looking carefully at these three \new{key} points results in much smaller
+Looking carefully at these three \added{key} points results in much smaller
 computation times with speedup factors of ten or more over previous results. A
 frequency-domain computation of time-domain data can therefore be competitive
 to time-domain solvers if the required frequencies and the corresponding grids
 are carefully chosen.
 %
-\\[1cm] \textbf{Keywords}: Controlled source electromagnetics (CSEM); Numerical
-modelling; Fourier analysis.
-\end{abstract}
+\end{summary}
 
+% https://academic.oup.com/DocumentLibrary/GJI/gji%20keyword%20list%20updated2017.pdf
+\begin{keywords}
+  Controlled source electromagnetics (CSEM); Numerical modelling; Fourier analysis.
+\end{keywords}
 
-
-\section{Introduction}
+\section{Introduction}  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
 The controlled-source electromagnetic (CSEM) method is one of the common
 non-seismic tools in exploration geophysics, not only in hydrocarbon
@@ -191,12 +208,13 @@ and shortcomings. This is followed by an outline of our changes to the Fourier
 transform and the adaptive gridding. Finally, we demonstrate the efficiency of
 the approach with some numerical results.
 
-\section{Motivation}
+
+\section{Motivation}  % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
 Being able to model CSEM data both in the frequency-domain and in the
 time-domain can be desirable, as both domains have advantages and
 disadvantages. One way to achieve this is to implement Maxwell's equation in
-both domains\old{, as it is done, for instance, in \simpeg (Cockett et al.,
+both domains\deleted{, as it is done, for instance, in \simpeg (Cockett et al.,
 2015)}. Another approach is to have Maxwell's equation only implemented in one
 domain, and use Fourier transforms to go to the other. However, this approach
 can be costly, as many frequencies over a wide range are required to go from
@@ -282,7 +300,8 @@ was implemented, for instance, by \custem \citep{GEO.19.Rochlitz} to obtain
 frequency-domain data from time-domain computations (Rochlitz, private
 communication, 2020).
 
-\section{Methodology}
+
+\section{Methodology} % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
 For the numerical computations we use the open-source (Apache License 2.0) code
 \emg3d \citep{JOSS.19.Werthmuller}, a multigrid solver based on
@@ -303,8 +322,8 @@ the second-order differential equation of the electric field,
 where $\mathbf{E}$ is the electric field (V/m) and $\mathbf{J}_\mathrm{s}$ the
 current source (A/m$^2$); time dependence is $\exp(\mathrm{i}\omega t)$. The
 standard multigrid approach fails for severe stretching or strong anisotropy,
-for which \old{\emg3d has implemented }known improvements such as
-line-relaxation and semicoarsening \citep{ECCFD.06.Jonsthovel} \new{are
+for which \deleted{\emg3d has implemented }known improvements such as
+line-relaxation and semicoarsening \citep{ECCFD.06.Jonsthovel} \added{are
 implemented}, with a non-standard Cholesky decomposition to speed up the
 computation \citep{GEO.08.Mulder}. One of the big advantages of the multigrid
 method is that it scales linearly (optimal) with the grid size in both CPU and
@@ -315,7 +334,8 @@ examples in this article are run on a laptop with an i7-6600U\,CPU\,@\,2.6\,GHz
 semi-analytical computations of layered models we use the open-source (Apache
 License 2.0) code \empymod \citep{GEO.17.Werthmuller}.
 
-\section{Frequency selection}
+
+\section{Frequency selection} % % % % % % % % % % % % % % % % % % % % % % % % %
 
 An important factor in terms of speed and accuracy for time-domain responses
 obtained from frequency-domain computations is the selection of the required
@@ -356,25 +376,30 @@ However, a simplified, layered model for the required survey setup and a fast
 we created a graphical, interactive tool using \empymod, as shown in
 Figure~\ref{fig:GUI-FFTLog-lin}.
 %
-\plot{GUI-FFTLog-lin}{width=\tcwidth}{
-  Interactive frequency selection for a user-provided layered model (the shown
-  model parameters are described in the text). This example shows the impulse
-  response at an offset of 5\,km, for which it uses FFTLog from 0.001\,Hz to
-  10\,Hz with five frequencies per decade. Note that the error is clipped for
-  values smaller than 0.01\,\% and bigger than 100\,\%.
-}
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{figures/GUI-FFTLog-lin}
+  \caption{Interactive frequency selection for a user-provided layered model
+    (the shown model parameters are described in the text). This example shows
+    the impulse response at an offset of 5\,km, for which it uses FFTLog from
+    0.001\,Hz to 10\,Hz with five frequencies per decade. Note that the error
+    is clipped for values smaller than 0.01\,\% and bigger than 100\,\%.}
+  \label{fig:GUI-FFTLog-lin}
+\end{figure}
 %
+
 The example model is a marine scenario with 1\,km water depth of resistivity
 $\rho=0.3\,\Omega$\,m ($\rho = \sigma^{-1}$) and a 100\,m thick target of
 100\,$\Omega$\,m at 1\,km below the seafloor in a background of 1\,$\Omega$\,m.
 The source is 50\,m above the seafloor, the receiver is on the seafloor, and
 the response is the inline $x$-directed $E$-field. The left subplot shows the
 imaginary part in the frequency domain and the right plot the corresponding
-impulse response in the time domain. The red lines are the \new{semi-analytical
-responses}\old{precise results obtained from \empymod}. The blue circles
-indicate the actually computed responses and the black dots the frequencies
-which are interpolated or set to zero. The resulting time-domain response has a
-relative error of less than 1\,\% everywhere except for very early times.
+impulse response in the time domain. The red lines are the
+\replaced{semi-analytical responses}{precise results obtained from \empymod}.
+The blue circles indicate the actually computed responses and the black dots
+the frequencies which are interpolated or set to zero. The resulting
+time-domain response has a relative error of less than 1\,\% everywhere except
+for very early times.
 
 Figure \ref{fig:GUI-FFTLog-log} shows exactly the same on a logarithmic scale,
 without the interactive GUI-related elements. It can be seen that with the
@@ -387,12 +412,19 @@ computed as in the FFTLog case and the missing ones interpolated. The error of
 the corresponding time-domain response is comparable, so either FFTLog or DLF
 can be used.
 %
-\multiplot{2}{GUI-FFTLog-log,GUI-DLF-lin}{width=\tcwidth}
-{(a) Same as Figure \ref{fig:GUI-FFTLog-lin}, but on a logarithmic scale. (b)
-Using DLF instead of FFTLog, but computing the same frequenc\old{ies}\new{y
-range} as for the FFTLog. The resulting time domain response has comparable
-accuracy (compare the error to the error in Figure \ref{fig:GUI-FFTLog-lin}).
-}
+\begin{figure*}
+  \centering
+  \subfloat[]{{\includegraphics[width=.5\linewidth]{figures/GUI-FFTLog-log}}%
+  \label{fig:GUI-FFTLog-log}}\hfill
+  \subfloat[]{{\includegraphics[width=.5\linewidth]{figures/GUI-DLF-lin}}%
+  \label{fig:GUI-DLF-lin}}\\
+  \caption{(a) Same as Figure \ref{fig:GUI-FFTLog-lin}, but on a logarithmic
+  scale. (b) Using DLF instead of FFTLog, but computing the same
+  frequenc\replaced{y range}{ies} as for the FFTLog. The resulting time domain
+  response has comparable accuracy (compare the error to the error in Figure
+  \ref{fig:GUI-FFTLog-lin}).}
+  \label{fig:GUI-log-lin}
+\end{figure*}
 %
 In the above example we used 20 frequencies, but that many would not be
 required for the shown offset of 5\,km, a few of the lower and higher
@@ -401,18 +433,21 @@ model a wide range of offsets. This is shown in Figure \ref{fig:multi-offset},
 where the above parameters were used to model the responses at offsets
 $r=1.5,3,6$, and 12\,km.
 %
-\plot{multi-offset}{width=\tcwidth}{
-  Normalized (a) frequency- and (b) time-domain responses for offsets
-  $r=1.5,3,6$, and 12\,km using the parameters defined in Figure
-  \ref{fig:GUI-FFTLog-lin}. The coloured circles are the actually computed
-  responses, the black dots are the responses which are set to zero or
-  interpolated. The black curves are the analytical responses.
-}
+\begin{figure}
+  \centering
+  \includegraphics[width=.8\linewidth]{figures/multi-offset}
+  \caption{Normalized (a) frequency- and (b) time-domain responses for offsets
+    $r=1.5,3,6$, and 12\,km using the parameters defined in Figure
+    \ref{fig:GUI-FFTLog-lin}. The coloured circles are the actually computed
+    responses, the black dots are the responses which are set to zero or
+    interpolated. The black curves are the analytical responses.}
+  \label{fig:multi-offset}
+\end{figure}
 %
 
 The shortest offset defines the highest required frequency, and the largest
 offset the lowest required frequency. So the more one can restrict the
-necessary offset range, the \old{less}\new{fewer} frequencies are needed.
+necessary offset range, the \replaced{fewer}{less} frequencies are needed.
 Another important factor is how to interpolate and extrapolate from the
 computed frequencies to the frequencies required for the Fourier transform. For
 the FFTLog only extrapolation for higher and lower frequencies is required. The
@@ -439,7 +474,7 @@ takes much longer than the transform itself. What matters is solely how many
 frequencies are required by it in order to be stable, and how long it takes to
 compute the responses for these frequencies.
 
-\section{Gridding}
+\section{Gridding}  % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
 The computation grid consists of a core or survey domain $D_\mr{s}$ which
 should contain all source and receiver positions. The survey domain usually has
@@ -487,8 +522,8 @@ where we usually fix $\alpha_\mr{s}=1$ or keep it at least below 1.05, and let
 $\alpha_\mr{c}$ be anything between $[1, 1.5]$. The minimum cell width
 $\Delta_\mr{min}$ can further be restricted by a user-defined range. Given
 these inputs the adaptive gridding will search for the smallest possible number
-of cells which fulfils these criteria. The \new{implemented} multigrid method
-\old{implemented in \emg3d} puts some constraints on the number of cells, of
+of cells which fulfils these criteria. The \added{implemented} multigrid method
+\deleted{implemented in \emg3d} puts some constraints on the number of cells, of
 which the adaptive gridding takes care (the number of cells have to be powers
 of two multiplied by a low prime, e.g., $\{2,3,5\}\cdot2^n$).
 
@@ -504,9 +539,11 @@ in the subsurface remains the same, it does not consider effective-medium
 theory \citep{GEO.03.Davydycheva}, for instance, the apparent anisotropy from a
 stack of finely layered formations of varying resistivity.
 
-\section{Numerical examples}
 
-\subsection{Homogeneous space}
+\section{Numerical examples}  % % % % % % % % % % % % % % % % % % % % % % % % %
+
+
+\subsection{Homogeneous space}  % % % % % % % % % % % % % % % % % % % % % % % %
 
 The first example is the inline electric field from a source at the origin
 measured by an inline receiver with an offset of 900\,m in a homogeneous space
@@ -525,65 +562,77 @@ the corresponding number of cells, minimum cell width and computation domain
 stretching factor are listed in Table~\ref{tbl:timefull}. The total run time to
 compute this model was less than two minutes.
 %
-\tabl[btp]{timefull}{Run times per frequency for the homogeneous space example,
-  with the corresponding number of cells and minimum cell width as well as the
-  stretching factor in the computation domain; $\alpha_\mr{s}=1$ everywhere.}{
+\begin{table}
+\begin{minipage}{\columnwidth}
   \centering
-\begin{tabular}{S[table-format=2.4]rrrr}
-  \toprule
-  %
-  {freq.} & time & nx$\times$ny$\times$nz & $\Delta_\mr{min}$ & $\alpha_\mr{c}$ \\
-  {(Hz)}  & (s) &  & (m) & \\
-  \midrule
-  %
-  20.0    &  3 & 80$\times$24$\times$24 & 20 & 1.26 \\
-  12.6    &  6 & 96$\times$32$\times$32 & 20 & 1.17 \\
-   7.98   &  8 & 96$\times$32$\times$32 & 20 & 1.20 \\
-   5.03   &  7 & 96$\times$32$\times$32 & 20 & 1.23 \\
-   3.18   &  7 & 80$\times$32$\times$32 & 24 & 1.25 \\
-   2.00   &  5 & 80$\times$32$\times$32 & 30 & 1.21 \\
-   1.26   &  4 & 64$\times$32$\times$32 & 37 & 1.21 \\
-   0.798  &  5 & 64$\times$32$\times$32 & 40 & 1.23 \\
-   0.503  &  5 & 64$\times$32$\times$32 & 40 & 1.26 \\
-   0.318  &  5 & 64$\times$32$\times$32 & 40 & 1.28 \\
-   0.200  & 10 & 64$\times$40$\times$40 & 40 & 1.27 \\
-   0.126  & 10 & 64$\times$40$\times$40 & 40 & 1.30 \\
-   0.0798 & 14 & 80$\times$40$\times$40 & 40 & 1.26 \\
-   0.0503 & 15 & 80$\times$40$\times$40 & 40 & 1.28 \\
-  %
-  \bottomrule
-\end{tabular}}%
+  \caption{Run times per frequency for the homogeneous space example, with the
+    corresponding number of cells and minimum cell width as well as the
+    stretching factor in the computation domain; $\alpha_\mr{s}=1$ everywhere.}
+  \label{tbl:timefull}
+  \begin{tabular}{S[table-format=2.4]rrrr}
+    \toprule
+    %
+    {freq.} & time & nx$\times$ny$\times$nz & $\Delta_\mr{min}$ & $\alpha_\mr{c}$ \\
+    {(Hz)}  & (s) &  & (m) & \\
+    \midrule
+    %
+    20.0    &  3 & 80$\times$24$\times$24 & 20 & 1.26 \\
+    12.6    &  6 & 96$\times$32$\times$32 & 20 & 1.17 \\
+     7.98   &  8 & 96$\times$32$\times$32 & 20 & 1.20 \\
+     5.03   &  7 & 96$\times$32$\times$32 & 20 & 1.23 \\
+     3.18   &  7 & 80$\times$32$\times$32 & 24 & 1.25 \\
+     2.00   &  5 & 80$\times$32$\times$32 & 30 & 1.21 \\
+     1.26   &  4 & 64$\times$32$\times$32 & 37 & 1.21 \\
+     0.798  &  5 & 64$\times$32$\times$32 & 40 & 1.23 \\
+     0.503  &  5 & 64$\times$32$\times$32 & 40 & 1.26 \\
+     0.318  &  5 & 64$\times$32$\times$32 & 40 & 1.28 \\
+     0.200  & 10 & 64$\times$40$\times$40 & 40 & 1.27 \\
+     0.126  & 10 & 64$\times$40$\times$40 & 40 & 1.30 \\
+     0.0798 & 14 & 80$\times$40$\times$40 & 40 & 1.26 \\
+     0.0503 & 15 & 80$\times$40$\times$40 & 40 & 1.28 \\
+    %
+    \bottomrule
+  \end{tabular}
+\end{minipage}
+\end{table}
 %
 
 Figure \ref{fig:fullspace} (a) shows the frequency-domain result, where the
 blue dots are the computed responses and the black dots correspond to the
 interpolated values or the values set to zero.
 %
-\plot*{fullspace}{width=\textwidth}{
-  (a) Frequency- and (b) time-domain results for the homogeneous space model.
-  The red lines are the analytical solutions, the blue circles are the actually
-  computed responses\old{ with \emg3d}, the black dots are the interpolated
-  responses, and the dashed black line the obtained time-domain response. The
-  errors are clipped for values smaller than 0.1\,\% and bigger than 100\,\%.
-}
+\begin{figure*}
+  \centering
+  \includegraphics[width=\linewidth]{figures/fullspace}
+  \caption{(a) Frequency- and (b) time-domain results for the homogeneous space
+    model. The red lines are the analytical solutions, the blue circles are the
+    actually computed responses\deleted{ with \emg3d}, the black dots are the
+    interpolated responses, and the dashed black line the obtained time-domain
+    response. The errors are clipped for values smaller than 0.1\,\% and bigger
+    than 100\,\%.}
+  \label{fig:fullspace}
+\end{figure*}
 %
 Most of the computed values stay below a relative error of 1\,\%, our chosen
 adaptive gridding only starts to generate considerable errors at higher
 frequencies. Figure \ref{fig:fullspace}(b) shows the corresponding time-domain
-result, where the dashed black line is the result \old{from
-\emg3d}\new{obtained by transformation of the frequency-domain response}, on
+result, where the dashed black line is the result \replaced{obtained by
+transformation of the frequency-domain response}{from \emg3d}, on
 top of the red line which is the analytical result. The relative error is
 mostly below 1\,\%, except for early times. However, for practical reasons that
 is more than enough. Figure~\ref{fig:fullspace-log} shows the same on a
 logarithmic scale, with times up to 10 seconds. It clearly shows that if later
 times are required, we would need to adjust our Fourier transform parameters.
 %
-\plot{fullspace-log}{width=\cwidth}{
-  Same as in Figure~\ref{fig:fullspace} (b), but on a logarithmic scale. To
-  improve later times we would have to compute lower frequencies; to improve
-  earlier times we would have to compute more frequencies per decade to get a
-  better resolution.
-}
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{figures/fullspace-log}
+  \caption{Same as in Figure~\ref{fig:fullspace} (b), but on a logarithmic
+    scale. To improve later times we would have to compute lower frequencies;
+    to improve earlier times we would have to compute more frequencies per
+    decade to get a better resolution.}
+  \label{fig:fullspace-log}
+\end{figure}
 %
 Note that for the gridding we chose $n_\delta=12$, which is very dense. This
 was necessary because we are relatively close to the source. If the offsets of
@@ -613,9 +662,10 @@ in the original example. We did not see a significant difference in the speed
 of the actual codes, where the kernel-algorithm of the two implementations is
 the same, but in the original example it is implemented in Matlab/C, whereas
 \emg3d is written in Python/Numba (Numba is a just-in-time compiler for Python
-code, \citealp{Numba}).
+code, \cite{Numba}).
 
-\subsection{1D Model}
+
+\subsection{1D Model} % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
 The second example is a shallow marine, layered model with 200\,m of seawater
 (3\,S/m) above a halfspace of 1\,S/m, an embedded target layer at 2\,km depth,
@@ -632,39 +682,44 @@ direction. This yielded grids between \num{204800} (higher frequencies) and
 \num{245760} (lower frequencies) cells. The run times for each frequency and
 their corresponding parameters are listed in Table~\ref{tbl:timemarine}.
 %
-\tabl[btp]{timemarine}{Run times per frequency for the marine 1D example,
-  with the corresponding number of cells and minimum cell width as well as the
-  stretching factor in the computation domain; $\alpha_\mr{s}=1$ everywhere.}{
+\begin{table}
+\begin{minipage}{\columnwidth}
   \centering
-\begin{tabular}{S[table-format=2.5]rrrr}
-  \toprule
-  %
-  {freq.} & time & nx$\times$ny$\times$nz & $\Delta_\mr{min}$ & $\alpha_\mr{c}$ \\
-  {(Hz)}  & (s) &  & (m) &  \\
-  \midrule
-  %
-  31.8     & 10 & 128$\times$40$\times$40 & 100 & 1.36 \\
-  20.0     &  9 & 128$\times$40$\times$40 & 100 & 1.36 \\
-  12.6     &  9 & 128$\times$40$\times$40 & 100 & 1.36 \\
-   7.98    & 17 & 128$\times$40$\times$40 & 100 & 1.36 \\
-   5.03    & 21 & 128$\times$40$\times$40 & 100 & 1.44 \\
-   3.18    & 20 & 128$\times$40$\times$40 & 100 & 1.48 \\
-   2.00    & 18 & 128$\times$40$\times$40 & 100 & 1.49 \\
-   1.26    & 22 & 128$\times$40$\times$48 & 100 & 1.36 \\
-   0.798   & 26 & 128$\times$40$\times$48 & 100 & 1.36 \\
-   0.503   & 29 & 128$\times$40$\times$48 & 100 & 1.36 \\
-   0.318   & 42 & 128$\times$40$\times$48 & 100 & 1.36 \\
-   0.200   & 41 & 128$\times$40$\times$48 & 100 & 1.38 \\
-   0.126   & 48 & 128$\times$40$\times$48 & 100 & 1.40 \\
-   0.0798  & 54 & 128$\times$40$\times$48 & 100 & 1.41 \\
-   0.0503  & 59 & 128$\times$40$\times$48 & 100 & 1.44 \\
-   0.0318  & 74 & 128$\times$40$\times$48 & 100 & 1.44 \\
-   0.0200  & 81 & 128$\times$40$\times$48 & 100 & 1.47 \\
-   0.0126  & 96 & 128$\times$40$\times$48 & 100 & 1.48 \\
-   0.00798 & 93 & 128$\times$40$\times$48 & 100 & 1.49 \\
-  %
-  \bottomrule
-\end{tabular}}%
+  \caption{Run times per frequency for the marine 1D example, with the
+    corresponding number of cells and minimum cell width as well as the
+    stretching factor in the computation domain; $\alpha_\mr{s}=1$ everywhere.}
+  \label{tbl:timemarine}
+  \begin{tabular}{S[table-format=2.5]rrrr}
+    \toprule
+    %
+    {freq.} & time & nx$\times$ny$\times$nz & $\Delta_\mr{min}$ & $\alpha_\mr{c}$ \\
+    {(Hz)}  & (s) &  & (m) & \\
+    \midrule
+    %
+    31.8     & 10 & 128$\times$40$\times$40 & 100 & 1.36 \\
+    20.0     &  9 & 128$\times$40$\times$40 & 100 & 1.36 \\
+    12.6     &  9 & 128$\times$40$\times$40 & 100 & 1.36 \\
+     7.98    & 17 & 128$\times$40$\times$40 & 100 & 1.36 \\
+     5.03    & 21 & 128$\times$40$\times$40 & 100 & 1.44 \\
+     3.18    & 20 & 128$\times$40$\times$40 & 100 & 1.48 \\
+     2.00    & 18 & 128$\times$40$\times$40 & 100 & 1.49 \\
+     1.26    & 22 & 128$\times$40$\times$48 & 100 & 1.36 \\
+     0.798   & 26 & 128$\times$40$\times$48 & 100 & 1.36 \\
+     0.503   & 29 & 128$\times$40$\times$48 & 100 & 1.36 \\
+     0.318   & 42 & 128$\times$40$\times$48 & 100 & 1.36 \\
+     0.200   & 41 & 128$\times$40$\times$48 & 100 & 1.38 \\
+     0.126   & 48 & 128$\times$40$\times$48 & 100 & 1.40 \\
+     0.0798  & 54 & 128$\times$40$\times$48 & 100 & 1.41 \\
+     0.0503  & 59 & 128$\times$40$\times$48 & 100 & 1.44 \\
+     0.0318  & 74 & 128$\times$40$\times$48 & 100 & 1.44 \\
+     0.0200  & 81 & 128$\times$40$\times$48 & 100 & 1.47 \\
+     0.0126  & 96 & 128$\times$40$\times$48 & 100 & 1.48 \\
+     0.00798 & 93 & 128$\times$40$\times$48 & 100 & 1.49 \\
+    %
+    \bottomrule
+  \end{tabular}
+\end{minipage}
+\end{table}
 %
 
 Figure~\ref{fig:marine} shows the result for an offset of 5\,km, in (a) the
@@ -673,12 +728,15 @@ captures the airwave (first peak) and the subsurface (second peak) very
 accurately. At later times the error starts to increase. We would need to
 compute a few additional lower frequencies if we want to improve it.
 %
-\plot*{marine}{width=\textwidth}{
-  Electric inline response at an offset of 5\,km for a shallow marine, layered
-  scenario. (a) Frequency-domain, where the blue circles are computed responses
-  and the black dots are interpolated responses or responses set to zero. (b)
-  Time-domain response.
-}
+\begin{figure*}
+  \centering
+  \includegraphics[width=.8\linewidth]{figures/marine}
+  \caption{Electric inline response at an offset of 5\,km for a shallow marine,
+    layered scenario. (a) Frequency-domain, where the blue circles are computed
+    responses and the black dots are interpolated responses or responses set to
+    zero. (b) Time-domain response.}
+  \label{fig:marine}
+\end{figure*}
 %
 In the frequency-domain plot, it can be seen that the high frequencies are not
 computed very accurately, but without too much influence on the time-domain
@@ -694,13 +752,17 @@ it handles any offset between 3 and 7\,km. It can be seen that the chosen
 frequency selection is sufficient for this offset range; again, more low
 frequencies could be added to improve late-time values.
 %
-\plot{marine-multioffset}{width=\cwidth}{
-  Time-domain responses for offsets of 3, 5, and 7\,km for the same model as
-  shown in Figure~\ref{fig:marine}.
-}
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{figures/marine-multioffset}
+  \caption{Time-domain responses for offsets of 3, 5, and 7\,km for the same
+    model as shown in Figure~\ref{fig:marine}.}
+  \label{fig:marine-multioffset}
+\end{figure}
 %
 
-\subsection{Horizontal extent of the computation domain}
+
+\subsection{Horizontal extent of the computation domain}  % % % % % % % % % % %
 
 The skin-depth approach fails for the air layer, as explained in the Section
 \emph{Gridding}. The reason is that the EM field in the air travels at the
@@ -722,12 +784,15 @@ horizontal directions leads to worse results for most frequencies and entirely
 wrong results for high frequencies. Comparison with the 1D result in the time
 domain shows that it is the airwave whose amplitude is heavily overestimated.
 %
-\plot*{marine-wrong-x-y}{width=\textwidth}{
-  Same model as used for Figure~\ref{fig:marine}, but with the horizontal
-  boundaries not far enough. Although the resulting time-domain result looks
-  plausible, the comparison with the 1D result shows that it significantly
-  overestimates the amplitude of the airwave.
-}
+\begin{figure*}
+  \centering
+  \includegraphics[width=.8\linewidth]{figures/marine-wrong-x-y}
+  \caption{Same model as used for Figure~\ref{fig:marine}, but with the
+    horizontal boundaries not far enough. Although the resulting time-domain
+    result looks plausible, the comparison with the 1D result shows that it
+    significantly overestimates the amplitude of the airwave.}
+  \label{fig:marine-wrong-x-y}
+\end{figure*}
 %
 It can be difficult to spot these errors in the time-domain result, as the
 response looks plausible and only comparing it with the 1D result reveals that
@@ -738,7 +803,7 @@ can assume that the boundary is far enough. Another possibility is to look at
 the amplitudes close to the boundaries and ensure that they are small enough.
 
 
-\subsection{3D Model}
+\subsection{3D Model} % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
 The final example consists of a resistive, three-dimensional block embedded in
 the lower of two halfspaces, as depicted in Figure~\ref{fig:3d-model}. The
@@ -746,11 +811,14 @@ target has resistivity $\rho_\mr{tg}=100\,\Omega\,$m, the upper halfspace
 corresponds to seawater with $\rho_\mr{sea}=0.3\,\Omega\,$m, and the lower
 halfspace is the background with $\rho_\mr{bg}=1\,\Omega\,$m.
 %
-\plot{3d-model}{width=\cwidth}{
-  Three-dimensional block embedded in the lower of two halfspaces. The 100-m
-  long, $x$-directed dipole source is located 50\,m above the seafloor at the
-  origin, and the receiver is on the seafloor at an offset of 2\,km.
-}
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{figures/3d-model}
+  \caption{Three-dimensional block embedded in the lower of two halfspaces. The
+    100-m long, $x$-directed dipole source is located 50\,m above the seafloor
+    at the origin, and the receiver is on the seafloor at an offset of 2\,km.}
+  \label{fig:3d-model}
+\end{figure}
 %
 The source is a 100-m long, $x$-directed dipole at the origin, 50\,m above the
 seafloor, and we are using a step-off source function. The $x$-directed inline
@@ -759,7 +827,7 @@ $1.1\times1.0\times0.4$\,km, located 300\,m below the seafloor in the centre
 between source and receiver.
 
 For the comparison we use the open-source code \simpeg
-\citep{CAG.15.Cockett}\old{. \simpeg}\new{, which} is a framework for modelling
+\citep{CAG.15.Cockett}\replaced{, which}{. \simpeg} is a framework for modelling
 and inversion of geophysical data such as gravity, magnetics, and CSEM. It has
 Maxwell's equations implemented in both the frequency and time domain. As such
 we can compare our result computed in the frequency domain followed by a
@@ -770,17 +838,17 @@ solvers implemented, whereas the latter is an iterative multigrid solver. The
 our test machine, as the memory requirement by the direct solver would
 otherwise be too high. There are not many options out there of open-source
 time-domain 3D codes, \simpeg being the one we found to be suitable. A step-off
-response was chosen as this is the response currently implemented in \new{the
-framework}\old{\simpeg}.
+response was chosen as this is the response currently implemented in
+\replaced{the framework}{\simpeg}.
 
 The model was discretised with $100\times100\times100\,$m cells in the survey
-domain $D_\mr{s}$. For the \old{\simpeg}\new{time-domain} model, 14 cells in
+domain $D_\mr{s}$. For the \replaced{time-domain}{\simpeg} model, 14 cells in
 $x$-direction and 12 cells in $y$- and $z$-directions were used on both sides
 with a stretching of 1.3 for the total computation domain $D_\mr{c}$, which
 yields a mesh of \num{58344} cells. The time-steps start at 0.1\,s and are:
 $21\times0.01\,$s, $23\times0.03\,$s, $21\times0.1\,$s, $23\times0.3\,$s,
 covering exactly the desired range of 0.1--10\,s. For
-\old{\emg3d}\new{frequency-domain model}, the mesh is generated
+\replaced{the frequency-domain model}{\emg3d}, the mesh is generated
 frequency-dependent as in the previous examples, with a maximum stretching of
 $\alpha_\mr{c}=1.5$. This results in meshes between \num{18432} cells for the
 highest frequencies and \num{76800} cells for the lowest frequencies. The
@@ -790,31 +858,35 @@ transform was carried out with the 201-point sine-cosine filter from
 \cite{GEO.09.Key}.
 
 The results are shown in Figure~\ref{fig:3d-result}: In (a) the 1D background
-responses and the relative error using the semi-analytical result\old{obtained
-from \empymod}, and in (b) the responses including the target.
+responses and the relative error using the semi-analytical
+result\deleted{obtained from \empymod}, and in (b) the responses including the
+target.
 %
-\plot{3d-result}{width=\textwidth}{
-  Responses for the model outlined in Figure~\ref{fig:3d-model} using
-  \new{time-domain}\old{\simpeg} and \new{frequency-domain
-  computations}\old{\emg3d}, and for the layered background also \new{the
-  semi-analytical result}\old{\empymod}. In the lower plot of (a) the relative
-  error (\%) \new{is shown} in comparison to \new{the semi-analytical
-  result}\old{\empymod is shown}, and in (b) the normalized difference (\%)
-  between the two 3D codes. The results of these plots are clipped for values
-  smaller than 0.1\,\% and bigger than 10\,\%.
-}
+\begin{figure*}
+  \centering
+  \includegraphics[width=.8\linewidth]{figures/3d-result}
+  \caption{Responses for the model outlined in Figure~\ref{fig:3d-model} using
+    \replaced{time-domain}{\simpeg} and \replaced{frequency-domain
+    computations}{\emg3d}, and for the layered background also \replaced{the
+    semi-analytical result}{\empymod}. In the lower plot of (a) the relative
+    error (\%) \added{is shown} in comparison to \replaced{the semi-analytical
+    result}{\empymod is shown}, and in (b) the normalized difference (\%)
+    between the two 3D codes. The results of these plots are clipped for values
+    smaller than 0.1\,\% and bigger than 10\,\%.}
+  \label{fig:3d-result}
+\end{figure*}
 %
 The background comparison shows that both 3D codes do an acceptable job having
-a relative error of a few percents at most; the result \new{obtained through
-transformation}\old{for \emg3d} seems to be better at early times. We cannot
-compare the errors for the response that includes the target for lack of an
-analytical solution. The \new{semi-analytical} background model \old{from
-\empymod }is only included to show that there is a significant response from
-the target. We therefore show the normalized difference (\old{ND}\new{NRMSD})
-between the two \old{3D codes}\new{responses $R_1$ and $R_2$} as a percentage,
-where \old{$\mr{ND}= 50|(\simpeg-\emg3d)/(\simpeg+\emg3d)|$.}
-\new{$\mr{NRMSD~(\%)} = 200|R_1 - R_2|/(|R_1| + |R_2|)$.} The
-\old{ND}\new{NRMSD} between the two codes is below 1\,\% everywhere except for
+a relative error of a few percents at most; the result \replaced{obtained
+through transformation}{for \emg3d} seems to be better at early times. We
+cannot compare the errors for the response that includes the target for lack of
+an analytical solution. The \added{semi-analytical} background model
+\deleted{from \empymod }is only included to show that there is a significant
+response from the target. We therefore show the normalized difference
+(\replaced{NRMSD}{ND}) between the two \replaced{responses $R_1$ and $R_2$}{3D
+codes} as a percentage, where \replaced{$\mr{NRMSD~(\%)} = 200|R_1 -
+R_2|/(|R_1| + |R_2|)$.}{$\mr{ND}= 50|(\simpeg-\emg3d)/(\simpeg+\emg3d)|$.} The
+\replaced{NRMSD}{ND} between the two codes is below 1\,\% everywhere except for
 early times.
 
 Both codes took a little over 7 minutes to compute the two models (single
@@ -823,13 +895,14 @@ is not frequency-domain computation vs. time-domain computation, but iterative
 solver vs. direct solver. For a test we doubled the number of cells in each
 direction by using 50\,m for the minimum cell width instead of 100\,m, and
 taking also half of the stretching, which results then in a mesh of
-\num{466752} cells \old{for \simpeg}\new{in the time domain} and meshes between
-\num{102400} and \num{614400} \old{for \emg3d}\new{in the frequency domain}.
-Because the memory of our test machine was not large enough for the direct
-solver of \simpeg, the last model had to be run on a cluster. In this scenario,
-\emg3d was about eight times faster (single thread).
+\num{466752} cells \replaced{in the time domain}{for \simpeg} and meshes
+between \num{102400} and \num{614400} \replaced{in the frequency domain}{for
+\emg3d}. Because the memory of our test machine was not large enough for the
+direct solver of \simpeg, the last model had to be run on a cluster. In this
+scenario, \emg3d was about eight times faster (single thread).
 
-\section{Conclusions}
+
+\section{Conclusions} % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
 We have shown a method to minimize the required frequencies and their range for
 the computation of time-domain CSEM data with a frequency-domain code. This can
@@ -840,7 +913,7 @@ cells, and a Fourier transform that works on a logarithmic scale. Fast layered
 modelling can be used to design the required frequency range, as the Fourier
 transform does not know about the dimensionality of the underlying model.
 Twenty frequencies or less are usually sufficient for a wide range of offsets.
-\new{The values for lower frequencies can be interpolated using PCHIP knowing
+\added{The values for lower frequencies can be interpolated using PCHIP knowing
 that the imaginary part goes to zero for zero frequency. The values for higher
 frequencies can be set to zero, as we can neglect their influence. And values
 for frequencies in-between the computed ones are best obtained with a spline
@@ -854,14 +927,8 @@ the time domain. However, it could equally be applied to the transform from the
 time to the frequency domain and to other methods with similar
 characteristics.
 
-\section{Acknowledgment}
 
-This research was conducted within the Gitaro.JIM project funded through
-MarTERA as part of Horizon 2020, a funding scheme of the European Research Area
-(ERA-NET Cofund, \href{https://www.martera.eu}{martera.eu}).
-An early idea of this manuscript was presented at \cite{EAGE.20.Werthmuller}.
-
-\section{Data Availability Statement}
+\section{Data Availability Statement} % % % % % % % % % % % % % % % % % % % % %
 
 The data that support the findings of this study are openly available at Zenodo
 at \href{https://zenodo.org/badge/DOI/10.5281/zenodo.???????}{doi:
@@ -874,9 +941,19 @@ reproduce all results and figures.
   \href{https://github.com/empymod/article-TDEM}%
   {github.com/empymod/article-TDEM}.}
 
-% REFERENCES
 
-\bibliographystyle{Refs}          % Modified SEG bibliography style.
+\begin{acknowledgments} % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+This research was conducted within the Gitaro.JIM project funded through
+MarTERA as part of Horizon 2020, a funding scheme of the European Research Area
+(ERA-NET Cofund, \href{https://www.martera.eu}{martera.eu}).
+An early idea of this manuscript was presented at \cite{EAGE.20.Werthmuller}.
+\end{acknowledgments}
+
+
+% REFERENCES
+\bibliographystyle{gji}
 \bibliography{Refs}
+
+\label{lastpage}
 
 \end{document}

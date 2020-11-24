@@ -10,3 +10,5 @@ uncommitted
 *.lot
 *.out
 *.tdo
+*.loc
+*.soc
