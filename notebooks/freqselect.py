@@ -329,8 +329,8 @@ class InteractiveFrequency(emg3d.utils.Fourier):
         self.clear_handle(['f_legend', ])
         self.h_f_legend = self.axs[0].legend(
             handles=[self.h_f_inti, self.h_f_int],
-            labels=[f"req. ({self.freq_req.size})",
-                    f"comp. ({self.freq_calc.size})"]
+            labels=[f"required ({self.freq_req.size})",
+                    f"computed ({self.freq_calc.size})"]
         )
 
     def plot_base_model(self):
