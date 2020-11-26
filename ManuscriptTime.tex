@@ -1,6 +1,6 @@
-% \documentclass[onecolumn,extra,referee,camera]{gji}
+\documentclass[onecolumn,extra,referee,camera]{gji}
 % \documentclass[onecolumn,extra,camera]{gji}
-\documentclass[twocolumn,extra,camera]{gji}
+% \documentclass[twocolumn,extra,camera]{gji}
 \usepackage{timet}
 
 % Additional packages
@@ -12,7 +12,7 @@
 \usepackage{booktabs}
 \usepackage{xspace}
 \usepackage{graphicx}
-\usepackage{subfig}
+\usepackage[position=top]{subfig}
 \usepackage{ifthen}
 \usepackage[draft, addedmarkup=bf]{changes}
 % \usepackage[final]{changes}
@@ -40,26 +40,28 @@
 %       2-c   504pt        240pt       240pt
 %       ref   468pt        234pt       468pt
 %
+\newlength{\fwidth}
+\newlength{\cwidth}
+\newlength{\twidth}
 \ifthenelse{\boolean{GJ@referee}}{%
-  \newcommand{\cwidth}{234pt}%
-  \newcommand{\fwidth}{468pt}%
-  \newcommand{\twidth}{468pt}}{%
-  \newcommand{\fwidth}{504pt}%
+  \setlength{\cwidth}{234pt}%
+  \setlength{\fwidth}{468pt}%
+  \setlength{\twidth}{468pt}}{%
+  \setlength{\fwidth}{504pt}%
   \ifthenelse{\boolean{@twocolumn}}{%
-    \newcommand{\cwidth}{240pt}%
-    \newcommand{\twidth}{240pt}}{%
-    \newcommand{\cwidth}{252pt}%
-    \newcommand{\twidth}{504pt}%
+    \setlength{\cwidth}{240pt}%
+    \setlength{\twidth}{240pt}}{%
+    \setlength{\cwidth}{252pt}%
+    \setlength{\twidth}{504pt}%
   }
 }
 \graphicspath{{./figures/}}
 
 % Change default colour of «changes» package
-\definecolor{myred}{rgb}{.8,0,0}
-\definecolor{mygreen}{rgb}{0,.5,0}
-% \setaddedmarkup{\color{myred}{#1}}
-\setaddedmarkup{\color{myred}{#1}}
-\setdeletedmarkup{\color{mygreen}{\sout{#1}}}
+\definecolor{alizarin}{rgb}{0.82, 0.1, 0.26}
+\definecolor{mygreen}{rgb}{0, .5, 0}
+\setaddedmarkup{\color{mygreen}{\uline{#1}}}
+\setdeletedmarkup{\color{alizarin}{\uwave{#1}}}
 
 \let\tablenum\relax
 \usepackage{siunitx}
@@ -86,19 +88,25 @@
 \newcommand{\dul}[1]{\underline{\underline{#1}}}
 \newcommand{\ul}[1]{\underline{#1}}
 \newcommand{\rmk}[1]{{\color{red}{#1}}}
+\newcommand{\ohmm}{\ensuremath{\Omega\,}\text{m}\xspace}
 
-\title[Time-domain CSEM]{Fast time-domain electromagnetic modelling in the frequency domain}
+\title[\replaced{Transform for expensive EM kernels}{Time-domain CSEM}]{
+  \replaced{Fast Fourier transformation of electromagnetic data for expensive kernels}{Fast time-domain electromagnetic modelling in the frequency domain}}
 
 \author[D. Werthmüller \emph{et al.}]
-  {\Large Dieter Werthmüller$^1$,        % orcid: 0000-0002-8575-2484
-   Wim A. Mulder$^{1,2}$ and          % orcid: 0000-0001-7020-9297
-   Evert C. Slob$^1$              % orcid: 0000-0002-4529-1134
+  {\Large
+   Dieter Werthmüller$^1$,     % orcid: 0000-0002-8575-2484
+   Wim A. Mulder$^{1,2}$ and   % orcid: 0000-0001-7020-9297
+   Evert C. Slob$^1$           % orcid: 0000-0002-4529-1134
    \\
-   \footnotesize
-  $^1$ TU Delft, Building 23, Stevinweg 1 / PO-box 5048, 2628 CN Delft (NL).
-  E-mail: \href{mailto:Dieter@Werthmuller.org}{Dieter@Werthmuller.org}\\[-.3em]
-   \footnotesize
-  $^2$ Shell Global Solutions International BV, Grasweg 31, 1031 HW Amsterdam(NL)
+   {\footnotesize
+    $^1$ TU Delft, Building 23, Stevinweg 1 / PO-box 5048, 2628 CN Delft (NL).
+    E-mail: \href{mailto:Dieter@Werthmuller.org}{Dieter@Werthmuller.org}
+   }\\[-.3em]
+   {\footnotesize
+    $^2$ Shell Global Solutions International BV, Grasweg 31, 1031 HW
+    Amsterdam(NL)
+   }
   }
 
 \date{Received 202Y MMMM DD; in original form 2020 June 30}
@@ -114,6 +122,7 @@
 \newtheorem{theorem}{Theorem}[section]
 
 \begin{document}
+\large %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TODO %%%
 
 \label{firstpage}
 
@@ -151,13 +160,14 @@ frequencies are ideally equally spaced on a logarithmic scale. The fast
 frequency-to-time domain method uses either the digital linear filter method
 or the logarithmic fast Fourier transform together with a careful selection of
 frequencies and interpolation. This methodology requires typically 15 to 20
-frequencies to cover a wide range of offsets in one-dimensional test models.
+frequencies to cover a wide range of offsets\deleted{in one-dimensional test
+models}.
 %
 The gridding should be frequency-dependent, which is accomplished by making it
 a function of skin depth. Optimising for the least number of required cells for
 a given frequency should be combined with optimising for computational speed.
 %
-Looking carefully at these three \added{key} points results in much smaller
+Looking carefully at these \deleted{three} points results in much smaller
 computation times with speedup factors of ten or more over previous results. A
 frequency-domain computation of time-domain data can therefore be competitive
 to time-domain solvers if the required frequencies and the corresponding grids
@@ -233,6 +243,114 @@ In the next section, we briefly review the methodology as introduced by
 and shortcomings. This is followed by an outline of our changes to the Fourier
 transform and the adaptive gridding. Finally, we demonstrate the efficiency of
 the approach with some numerical results.
+
+
+{\color{alizarin}
+\verb!v v v REMOVE COMMENTS v v v REMOVE COMMENTS v v v REMOVE COMMENTS v v v!
+}
+{\color{mygreen}
+\begin{itemize}
+  \item Too generic; more references
+  \item what are the methodological advantages with respect to other
+    approaches.
+\end{itemize}
+
+Redo intro: Focus on transform, not on frequency- or time-domain EM.
+
+\begin{itemize}
+  \item Wim: Include perhaps (one of) explicitly, instead of implicitly:
+    Druskin, V. L., and L. A. Knizhnerman, 1994, Spectral approach to solving
+    three-dimensional Maxwell’s diffusion equations in the time and frequency
+    domains, Radio Science, 29, 937--953. doi: 10.1029/94RS00747 Druskin, V.
+    L., L. A. Knizhnerman, and P. Lee, 1999, New spectral Lanczos decomposition
+    method for induction modeling in arbitrary 3D geometry, Geophysics, 64,
+    701--706. doi: 10.1190/1.1444579.
+  \item Evert: I also think we should respond a bit more accommodating the
+    reviewer's request. Mulder 2008 is quite old now and papers were published
+    after that dealing with solutions directly in time domain. We can write
+    that in this paper we include only papers that were not reference in Mulder
+    et al. (2008) and refer to that for earlier papers. New are Mittet 2010
+    (FDTD of waves and correspondence principle, GPY), Um et al. 2010 (Finite
+    element, SEG abstract) and Zhou et al. 2020 TGRS
+    (10.1109/TGRS.2020.2979798). In terms of number of references, you can
+    decide to not worry to much about that, or remove some others. You have
+    several references to works on the differences between measuring/analysing
+    data in time or frequency domain. That could go out, e.g.
+  \item Evert: i think you can group separate points under the recommendation
+    that comes from his first concern. I understand his recommendation as:
+    "Write an introduction that is more focused on time domain CSEM modeling."
+    That should be done in a comprehensive way and include direct time domain
+    methods such as Krylov subspace, Simpeg, FDTD of waves and use
+    correspondence principle. It can be interesting to also include more
+    arbitrary source time functions and not only step switch on or off and
+    impulse response. For the filter approach, in principle, all FD codes are
+    suitable to be used. His second concern phrased as a recommendation: "Show
+    results from a more complex model." after that the specific points come.
+  \item Evert: I think that Commer wanted to refer to Druskin and Knihznerman
+    (i am sure spelling is not correct) in radio science 1994, which is most
+    likely the older version of the code he mentions. We refer to that 1994
+    paper in Mulder 2008.
+  \item Evert: The main issue is that the Druskin work it is what Commer uses.
+    This is the principal issue. This comes back at point 9. Perhaps now you
+    can include it in the introduction as a motivation to work on this topic.
+  \item Evert: So let us make an explicit sentence in the introduction to
+    clarify this. We also may need to change the text in the introduction to
+    avoid making our life difficult by selecting some papers while not
+    selecting others. This can be done by only selecting review papers on the
+    topic and write that that is our choice here.
+  \item Wim: Is that different from doi 10.1190/1.1801936 (mentioned in
+    Mulder,Wirianto,Slob)? Then also include Haber from that paper, or just all
+    references of section 2 (complexity) in that paper?
+  \item Evert: This all belongs to one concern: The introduction is too general
+    and insufficiently addresses the actual topic of obtaining time domain data
+    by CSEM modeling. That does not mean you need to repeat everything. You
+    could start by writing that we will only discuss new developments since
+    2008, and refer to Mulder 2008 for older works that relate to the topic of
+    time domain CSEM data modeling. I don't think Commer actually wants an
+    extensive review of the literature and include his work. He writes that the
+    introduction should be more focused on the topic of the paper.
+  \item Evert: i have no problem with mentioning in the paper that our idea
+    grid coarsening can be used in the method of Commer and Newman (2005). In
+    that case no further response is necessary, we tick it off by saying, we
+    refer to Commer and Newman (2005) on grid-coarsening. i would limit
+    references to Commer to this paper then. I don't think we say anywhere that
+    our method is the best in any sense. It seems this reviewer is in
+    competition. I don't think we should be in competition. We work for the
+    public domain. We put forward our ideas. We leave to the readers to decide
+    which options they prefer. We should not be forced need to sell our method.
+    Of course, my personal opinion does not change the reality that the AE has
+    written that he wants to see the majority of the reviewers comments
+    implemented in our revision. We should accept that.
+  \item Evert: If we judge this is part of the majorty to be implemented as the
+    Associate Editor says, it means the AE agrees with Commer and we should do
+    it. No need to add references. In the introduction, just add a summary of
+    the order analysis given in Mulder 2008 where some order analysis was
+    done.
+  \item References provided by Commer:
+    \begin{itemize}
+      \item Commer \& Newman, 2005, An accelerated time domain finite
+        difference simulation scheme for three-dimensional transient
+        electromagnetic modeling using geometric multigrid concepts, Radio
+        Science, 41, RS3007.
+      \item Commer et al., 2006, New results on the resistivity structure of
+        Merapi Volcano(Indonesia), derived from three-dimensional restricted
+        inversion of long-offset transient electromagnetic data, GJI.
+      \item Druskin \& Zaslavsky, 2011, Solution of 3D time-domain
+        electromagnetic problems using optimal subspace projection,
+        Geophysics.
+      \item Weiland, T., 1996, Time domain EM field computation with finite
+        difference methods, Int. J. Num. Mod., 9, 295-319.
+      \item Yuji Mitsuhata, Toshihiro Uchida, Yutaka Murakami, Hiroshi Amano,
+        The Fourier transform of controlled-source time-domain electromagnetic
+        data by smooth spectrum inversion, Geophysical Journal International,
+        144, January 2001, 123-135.
+    \end{itemize}
+\end{itemize}
+
+}
+{\color{alizarin}
+\verb!^ ^ ^ REMOVE COMMENTS ^ ^ ^ REMOVE COMMENTS ^ ^ ^ REMOVE COMMENTS ^ ^ ^!
+}
 
 
 \section{Motivation}  % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
@@ -356,17 +474,22 @@ method is that it scales linearly (optimal) with the grid size in both CPU and
 RAM usage \citep{B.Springer.20.Mulder}. This makes it feasible to run even big
 models on standard computers, without the need for big clusters. All the
 examples in this article are run on a laptop with an i7-6600U\,CPU\,@\,2.6\,GHz
-(x4) and 16\,GB of memory, using Ubuntu 18.04 and Python 3.7. For the
-semi-analytical computations of layered models we use the open-source (Apache
-License 2.0) code \empymod \citep{GEO.17.Werthmuller}.
-
+(x4) and 16\,GB of memory, using Ubuntu \replaced{20.04}{18.04} and Python
+\replaced{3.8}{3.7}. \added{All examples were run using a single thread, but
+parallelization over frequencies is straight forward.} For the semi-analytical
+computations of layered models we use the open-source (Apache License 2.0) code
+\empymod \citep{GEO.17.Werthmuller}.
 
 \section{Frequency selection} % % % % % % % % % % % % % % % % % % % % % % % % %
 
 An important factor in terms of speed and accuracy for time-domain responses
 obtained from frequency-domain computations is the selection of the required
 frequencies. The fewer frequencies required, the quicker we obtain the
-time-domain result. We decided to use a regular spacing of frequencies on a
+time-domain result. \added{The same applies for the reverse operation, the
+fewer times required, the quicker we obtain frequency-domain results. Even
+though we limit our analysis here to frequency-to-time transformation, most of
+the arguments are reversible and applicable to time-to-frequency
+transformations.} We decided to use a regular spacing of frequencies on a
 log-scale, rather than an adaptive scheme. This approach is favourable if a
 wide range of offsets is needed, as the required frequencies change with offset
 and an adaptive frequency selection is therefore often tailored to a single
@@ -387,12 +510,13 @@ responses, e.g., \cite{INT.14.Werthmuller}. In our tests they are both about
 equal in speed and accuracy. DLF requires a wider range and many more
 frequencies than the FFTLog. Both methods share some important characteristics
 in comparison with the standard FFT: the required input frequencies are equally
-spaced on a logarithmic scale, and they only require either the real or the
-imaginary part of the frequency-domain response. We can take advantage of that
-by using only the imaginary part of the frequency-domain response. The
-imaginary part goes to zero when the frequency goes to zero or to infinity,
-with the advantage that knowing the endpoints makes it possible to convert the
-extrapolation of missing frequencies into interpolation.
+spaced on a logarithmic scale\added{ (natural logarithm in the case of the DLF
+and decimal logarithm in the case of the FFTLog)}, and they only require either
+the real or the imaginary part of the frequency-domain response. We can take
+advantage of that by using only the imaginary part of the frequency-domain
+response. The imaginary part goes to zero when the frequency goes to zero or to
+infinity, with the advantage that knowing the endpoints makes it possible to
+convert the extrapolation of missing frequencies into \added{an }interpolation.
 
 There are three key-parameters that have to be defined: Minimum and maximum
 frequency ($f_\mr{min}, f_\mr{max}$) and the number of frequencies per decade
@@ -404,7 +528,7 @@ Figure~\ref{fig:GUI-FFTLog-lin}.
 %
 \begin{figure}
   \centering
-  \includegraphics[width=\cwidth]{GUI-FFTLog-lin}
+  \includegraphics[width=\cwidth]{01-GUI-FFTLog-lin}
   \caption{Interactive frequency selection for a user-provided layered model
     (the shown model parameters are described in the text). This example shows
     the impulse response at an offset of 5\,km, for which it uses FFTLog from
@@ -415,17 +539,16 @@ Figure~\ref{fig:GUI-FFTLog-lin}.
 %
 
 The example model is a marine scenario with 1\,km water depth of resistivity
-$\rho=0.3\,\Omega$\,m ($\rho = \sigma^{-1}$) and a 100\,m thick target of
-100\,$\Omega$\,m at 1\,km below the seafloor in a background of 1\,$\Omega$\,m.
-The source is 50\,m above the seafloor, the receiver is on the seafloor, and
-the response is the inline $x$-directed $E$-field. The left subplot shows the
-imaginary part in the frequency domain and the right plot the corresponding
-impulse response in the time domain. The red lines are the
-\replaced{semi-analytical responses}{precise results obtained from \empymod}.
-The blue circles indicate the actually computed responses and the black dots
-the frequencies which are interpolated or set to zero. The resulting
-time-domain response has a relative error of less than 1\,\% everywhere except
-for very early times.
+$\rho=0.3\,\ohmm$ ($\rho = \sigma^{-1}$) and a 100\,m thick target of
+100\,\ohmm at 1\,km below the seafloor in a background of 1\,\ohmm. The source
+is 50\,m above the seafloor, the receiver is on the seafloor, and the response
+is the inline $x$-directed $E$-field. The left subplot shows the imaginary part
+in the frequency domain and the right plot the corresponding impulse response
+in the time domain. The red lines are the \replaced{semi-analytical
+responses}{precise results obtained from \empymod}. The blue circles indicate
+the actually computed responses and the black dots the frequencies which are
+interpolated or set to zero. The resulting time-domain response has a relative
+error of less than 1\,\% everywhere except for very early times.
 
 Figure \ref{fig:GUI-FFTLog-log} shows exactly the same on a logarithmic scale,
 without the interactive GUI-related elements. It can be seen that with the
@@ -440,9 +563,9 @@ can be used.
 %
 \begin{figure*}
   \centering
-  \subfloat[]{{\includegraphics[width=\cwidth]{GUI-FFTLog-log}}%
+  \subfloat[]{{\includegraphics[width=0.5\fwidth]{02a-GUI-FFTLog-log}}%
   \label{fig:GUI-FFTLog-log}}\hfill
-  \subfloat[]{{\includegraphics[width=\cwidth]{GUI-DLF-lin}}%
+  \subfloat[]{{\includegraphics[width=0.5\fwidth]{02b-GUI-DLF-lin}}%
   \label{fig:GUI-DLF-lin}}\\
   \caption{(a) Same as Figure \ref{fig:GUI-FFTLog-lin}, but on a logarithmic
   scale. (b) Using DLF instead of FFTLog, but computing the same
@@ -454,21 +577,24 @@ can be used.
 %
 In the above example we used 20 frequencies, but that many would not be
 required for the shown offset of 5\,km, a few of the lower and higher
-frequencies could be left out. However, with this frequency-selection we can
-model a wide range of offsets. This is shown in Figure \ref{fig:multi-offset},
-where the above parameters were used to model the responses at offsets
-$r=1.5,3,6$, and 12\,km.
+frequencies could be left out. \added{But even so we only need to compute
+50\,\% of the required frequencies in the case of the FFTLog, and only 14\,\%
+in the case of the DLF.} \replaced{W}{However, w}ith this frequency-selection
+we can model a wide range of offsets. This is shown in Figure
+\ref{fig:multi-offset}, where the above parameters were used to model the
+responses at offsets $r=1.5,3,6$, and 12\,km.
 %
-\begin{figure}
+\begin{figure*}
   \centering
-  \includegraphics[width=\cwidth]{multi-offset}
+  \includegraphics[width=0.75\fwidth]{03-multi-offset}
   \caption{Normalized (a) frequency- and (b) time-domain responses for offsets
     $r=1.5,3,6$, and 12\,km using the parameters defined in Figure
     \ref{fig:GUI-FFTLog-lin}. The coloured circles are the actually computed
     responses, the black dots are the responses which are set to zero or
-    interpolated. The black curves are the analytical responses.}
+    interpolated. The \replaced{grey}{black} curves are the analytical
+    responses.}
   \label{fig:multi-offset}
-\end{figure}
+\end{figure*}
 %
 
 The shortest offset defines the highest required frequency, and the largest
@@ -484,12 +610,12 @@ frequencies for the Fourier transform can be neglected and we can set those
 responses to zero. The extrapolation of frequencies $f<f_\mathrm{min}$ can be
 changed to an interpolation by assuming a zero imaginary response at zero
 frequency, and we then use PCHIP to interpolate the missing frequencies (as we
-work on a logarithmic scale we cannot choose 0\,Hz, but instead take
-$10^{-100}$\,Hz). In the case of the DLF method we also have to interpolate in
-between the computed frequencies, for which we found it better to use a cubic
-spline. As can be seen from Figures \ref{fig:GUI-FFTLog-lin} and
-\ref{fig:GUI-DLF-lin}, using the FFTLog or the DLF with the same actually
-computed frequencies results in very similar responses.
+work on a logarithmic scale we cannot choose 0\,Hz \added{nor 0\,V/m}, but
+instead take $10^{-100}$\,Hz \added{and $10^{-100}$\,V/m}). In the case of the
+DLF method we also have to interpolate in between the computed frequencies, for
+which we found it better to use a cubic spline. As can be seen from Figures
+\ref{fig:GUI-FFTLog-lin} and \ref{fig:GUI-DLF-lin}, using the FFTLog or the DLF
+with the same actually computed frequencies results in very similar responses.
 
 The changes to the Fourier transform in comparison with \cite{GEO.08.Mulder}
 can be summarized in three points: (1) regular log-scale spacing for the
@@ -517,15 +643,16 @@ resides, and $n_\delta$ is a positive number that defines how many cells there
 should be per skin depth. The actual computation domain $D_\mr{c}$ is usually
 much bigger than $D_\mr{s}$ in order to avoid artefacts from the perfectly
 electrically conducting boundary condition. It can also have a much higher
-stretching $\alpha_\mr{c}$. In our scheme we have chosen $D_\mr{c}$ such that
-the distance for the signal diffusing from the source to the boundary and back
-to the receiver closest to the boundary is at least two wavelengths, after
-which the initial signal is reduced to a millionth of its strength. The
-wavelength to compute $D_\mr{c}$ is given by
+stretching $\alpha_\mr{c}$. In \replaced{the presented examples}{our scheme} we
+have chosen $D_\mr{c}$ such that the distance for the signal diffusing from the
+source to the boundary and back to the receiver closest to the boundary is at
+least two wavelengths, after which the initial signal is reduced to a millionth
+of its strength. The wavelength \added{$\lambda$} to compute $D_\mr{c}$ is
+given by
 %
 \begin{equation}
-  2\lambda = 4\pi\delta(f, \sigma_\mr{ave})
-  \ \approx \ 6324.7/\sqrt{f\sigma_\mr{ave}}\, ,
+  \deleted{2}\lambda = \replaced{2}{4}\pi\delta(f, \sigma_\mr{ave})
+  \ \approx \ \replaced{3162}{6324.7}/\sqrt{f\sigma_\mr{ave}}\, ,
  \label{eq:lambda}
 \end{equation}
 %
@@ -558,12 +685,17 @@ searches for the optimal stretching factor $\alpha$ fulfilling certain
 criteria, for a fixed number of cells. Our adaptive gridding, on the other
 hand, searches for the smallest number of cells that still fulfil the given
 criteria. The number of cells becomes therefore also a function of frequency.
-To go from the model grid to the computational grid, we use the
-volume-averaging technique on logarithmic resistivities, as used in
-\cite{GEO.07.Plessix}. While this technique ensures that the total resistivity
-in the subsurface remains the same, it does not consider effective-medium
-theory \citep{GEO.03.Davydycheva}, for instance, the apparent anisotropy from a
-stack of finely layered formations of varying resistivity.
+\added{It is important to note that this is our implementation of an adaptive
+grid, but there are certainly other possibilities. The relevant point for fast
+computations is that the adaptive gridding tries to minimize the number of
+required cells while being fine enough and at the same time large enough to
+give accurate results. This is generally best done in a frequency and
+conductivity dependent manner.} To go from the model grid to the computational
+grid, we use the volume-averaging technique on logarithmic resistivities, as
+used in \cite{GEO.07.Plessix}. While this technique ensures that the total
+resistivity in the subsurface remains the same, it does not consider
+effective-medium theory \citep{GEO.03.Davydycheva}, for instance, the apparent
+anisotropy from a stack of finely layered formations of varying resistivity.
 
 
 \section{Numerical examples}  % % % % % % % % % % % % % % % % % % % % % % % % %
@@ -573,14 +705,14 @@ stack of finely layered formations of varying resistivity.
 
 The first example is the inline electric field from a source at the origin
 measured by an inline receiver with an offset of 900\,m in a homogeneous space
-of $1\,\Omega\,$m. We chose this simple example to compare it with the
-analytical solution and with previously published results. We used the
-following values to define the required frequencies: $f_\mr{min}=0.05\,$Hz,
-$f_\mr{max}=21\,$Hz, using FFTLog with 5 frequencies per decade. This results
-in 14 frequencies to compute from 0.05\,Hz to 20.0\,Hz. The complete frequency
-range for the transform includes 30 frequencies from 0.0002\,Hz to 126.4\,Hz.
-For the adaptive gridding the following inputs were used: $n_\delta=12$,
-minimum cell width must be between 20 and 40\,m, and $\alpha_\mr{s}=1$,
+of 1\,\ohmm. We chose this simple example to compare it with the analytical
+solution and with previously published results. We used the following values to
+define the required frequencies: $f_\mr{min}=0.05\,$Hz, $f_\mr{max}=21\,$Hz,
+using FFTLog with 5 frequencies per decade. This results in 14 frequencies to
+compute from 0.05\,Hz to 20.0\,Hz. The complete frequency range for the
+transform includes 30 frequencies from 0.0002\,Hz to 126.4\,Hz. For the
+adaptive gridding the following inputs were used: $n_\delta=12$, minimum cell
+width must be between 20 and 40\,m, and $\alpha_\mr{s}=1$,
 $\alpha_\mr{c}=[1,1.3]$. This created grids with cell numbers between
 \num{46080} ($80\times24\times24$, for 20.0\,Hz) and \num{128000}
 ($80\times40\times40$, for 0.05\,Hz) cells. The run times for each frequency,
@@ -602,20 +734,20 @@ compute this model was less than two minutes.
     {(Hz)}  & (s) &  & (m) & \\
     \midrule
     %
-    20.0    &  3 & 80$\times$24$\times$24 & 20 & 1.26 \\
-    12.6    &  6 & 96$\times$32$\times$32 & 20 & 1.17 \\
-     7.98   &  8 & 96$\times$32$\times$32 & 20 & 1.20 \\
-     5.03   &  7 & 96$\times$32$\times$32 & 20 & 1.23 \\
-     3.18   &  7 & 80$\times$32$\times$32 & 24 & 1.25 \\
-     2.00   &  5 & 80$\times$32$\times$32 & 30 & 1.21 \\
-     1.26   &  4 & 64$\times$32$\times$32 & 37 & 1.21 \\
-     0.798  &  5 & 64$\times$32$\times$32 & 40 & 1.23 \\
-     0.503  &  5 & 64$\times$32$\times$32 & 40 & 1.26 \\
-     0.318  &  5 & 64$\times$32$\times$32 & 40 & 1.28 \\
-     0.200  & 10 & 64$\times$40$\times$40 & 40 & 1.27 \\
-     0.126  & 10 & 64$\times$40$\times$40 & 40 & 1.30 \\
-     0.0798 & 14 & 80$\times$40$\times$40 & 40 & 1.26 \\
-     0.0503 & 15 & 80$\times$40$\times$40 & 40 & 1.28 \\
+    20.0    &\replaced{ 4}{ 3} & 80$\times$24$\times$24 & 20 & 1.26 \\
+    12.6    &\replaced{ 8}{ 6} & 96$\times$32$\times$32 & 20 & 1.17 \\
+     7.98   &\replaced{ 8}{ 8} & 96$\times$32$\times$32 & 20 & 1.20 \\
+     5.03   &\replaced{ 8}{ 7} & 96$\times$32$\times$32 & 20 & 1.23 \\
+     3.18   &\replaced{ 7}{ 7} & 80$\times$32$\times$32 & 24 & 1.23 \\
+     2.00   &\replaced{ 7}{ 5} & 80$\times$32$\times$32 & 30 & 1.21 \\
+     1.26   &\replaced{ 5}{ 4} & 64$\times$32$\times$32 & 37 & 1.21 \\
+     0.798  &\replaced{ 5}{ 5} & 64$\times$32$\times$32 & 40 & 1.23 \\
+     0.503  &\replaced{ 5}{ 5} & 64$\times$32$\times$32 & 40 & 1.26 \\
+     0.318  &\replaced{ 5}{ 5} & 64$\times$32$\times$32 & 40 & 1.28 \\
+     0.200  &\replaced{ 8}{10} & 64$\times$40$\times$40 & 40 & 1.27 \\
+     0.126  &\replaced{ 8}{10} & 64$\times$40$\times$40 & 40 & 1.30 \\
+     0.0798 &\replaced{10}{14} & 80$\times$40$\times$40 & 40 & 1.26 \\
+     0.0503 &\replaced{11}{15} & 80$\times$40$\times$40 & 40 & 1.28 \\
     %
     \bottomrule
   \end{tabular}
@@ -629,7 +761,7 @@ interpolated values or the values set to zero.
 %
 \begin{figure*}
   \centering
-  \includegraphics[width=\fwidth]{fullspace}
+  \includegraphics[width=\fwidth]{04-fullspace}
   \caption{(a) Frequency- and (b) time-domain results for the homogeneous space
     model. The red lines are the analytical solutions, the blue circles are the
     actually computed responses\deleted{ with \emg3d}, the black dots are the
@@ -652,7 +784,7 @@ times are required, we would need to adjust our Fourier transform parameters.
 %
 \begin{figure}
   \centering
-  \includegraphics[width=\cwidth]{fullspace-log}
+  \includegraphics[width=\cwidth]{05-fullspace-log}
   \caption{Same as in Figure~\ref{fig:fullspace} (b), but on a logarithmic
     scale. To improve later times we would have to compute lower frequencies;
     to improve earlier times we would have to compute more frequencies per
@@ -674,7 +806,7 @@ different frequencies of the original figure comes to a total computation time
 of 3\,h 47\,min 12\,s; 0.01\,Hz was the slowest run with 31\,min 19\,s, and
 2.37\,Hz was the fastest run with 2\,min 54\,s. Our example, on the other hand,
 took less than two minutes in total, where the individual frequencies took
-between 3 and 15\,s to run.
+between \replaced{4}{3} and \replaced{11}{15}\,s to run.
 
 This massive speed-up has a couple of reasons. Computers have become more
 powerful in the last twelve years, and the codes were run on different
@@ -722,25 +854,25 @@ their corresponding parameters are listed in Table~\ref{tbl:timemarine}.
     {(Hz)}  & (s) &  & (m) & \\
     \midrule
     %
-    31.8     & 10 & 128$\times$40$\times$40 & 100 & 1.36 \\
-    20.0     &  9 & 128$\times$40$\times$40 & 100 & 1.36 \\
-    12.6     &  9 & 128$\times$40$\times$40 & 100 & 1.36 \\
-     7.98    & 17 & 128$\times$40$\times$40 & 100 & 1.36 \\
-     5.03    & 21 & 128$\times$40$\times$40 & 100 & 1.44 \\
-     3.18    & 20 & 128$\times$40$\times$40 & 100 & 1.48 \\
-     2.00    & 18 & 128$\times$40$\times$40 & 100 & 1.49 \\
-     1.26    & 22 & 128$\times$40$\times$48 & 100 & 1.36 \\
-     0.798   & 26 & 128$\times$40$\times$48 & 100 & 1.36 \\
-     0.503   & 29 & 128$\times$40$\times$48 & 100 & 1.36 \\
-     0.318   & 42 & 128$\times$40$\times$48 & 100 & 1.36 \\
-     0.200   & 41 & 128$\times$40$\times$48 & 100 & 1.38 \\
-     0.126   & 48 & 128$\times$40$\times$48 & 100 & 1.40 \\
-     0.0798  & 54 & 128$\times$40$\times$48 & 100 & 1.41 \\
-     0.0503  & 59 & 128$\times$40$\times$48 & 100 & 1.44 \\
-     0.0318  & 74 & 128$\times$40$\times$48 & 100 & 1.44 \\
-     0.0200  & 81 & 128$\times$40$\times$48 & 100 & 1.47 \\
-     0.0126  & 96 & 128$\times$40$\times$48 & 100 & 1.48 \\
-     0.00798 & 93 & 128$\times$40$\times$48 & 100 & 1.49 \\
+    31.8     & \replaced{16}{10} & 128$\times$40$\times$40 & 100 & 1.36 \\
+    20.0     & \replaced{17}{ 9} & 128$\times$40$\times$40 & 100 & 1.36 \\
+    12.6     & \replaced{17}{ 9} & 128$\times$40$\times$40 & 100 & 1.36 \\
+     7.98    & \replaced{17}{17} & 128$\times$40$\times$40 & 100 & 1.36 \\
+     5.03    & \replaced{17}{21} & 128$\times$40$\times$40 & 100 & 1.44 \\
+     3.18    & \replaced{17}{20} & 128$\times$40$\times$40 & 100 & 1.48 \\
+     2.00    & \replaced{17}{18} & 128$\times$40$\times$40 & 100 & 1.49 \\
+     1.26    & \replaced{20}{22} & 128$\times$40$\times$48 & 100 & 1.36 \\
+     0.798   & \replaced{24}{26} & 128$\times$40$\times$48 & 100 & 1.36 \\
+     0.503   & \replaced{27}{29} & 128$\times$40$\times$48 & 100 & 1.36 \\
+     0.318   & \replaced{27}{42} & 128$\times$40$\times$48 & 100 & 1.36 \\
+     0.200   & \replaced{34}{41} & 128$\times$40$\times$48 & 100 & 1.38 \\
+     0.126   & \replaced{34}{48} & 128$\times$40$\times$48 & 100 & 1.40 \\
+     0.0798  & \replaced{37}{54} & 128$\times$40$\times$48 & 100 & 1.41 \\
+     0.0503  & \replaced{37}{59} & 128$\times$40$\times$48 & 100 & 1.44 \\
+     0.0318  & \replaced{44}{74} & 128$\times$40$\times$48 & 100 & 1.44 \\
+     0.0200  & \replaced{44}{81} & 128$\times$40$\times$48 & 100 & 1.47 \\
+     0.0126  & \replaced{37}{96} & 128$\times$40$\times$48 & 100 & 1.48 \\
+     0.00798 & \replaced{43}{93} & 128$\times$40$\times$48 & 100 & 1.49 \\
     %
     \bottomrule
   \end{tabular}
@@ -756,7 +888,7 @@ compute a few additional lower frequencies if we want to improve it.
 %
 \begin{figure*}
   \centering
-  \includegraphics[width=\fwidth]{marine}
+  \includegraphics[width=\fwidth]{06-marine}
   \caption{Electric inline response at an offset of 5\,km for a shallow marine,
     layered scenario. (a) Frequency-domain, where the blue circles are computed
     responses and the black dots are interpolated responses or responses set to
@@ -780,7 +912,7 @@ frequencies could be added to improve late-time values.
 %
 \begin{figure}
   \centering
-  \includegraphics[width=\cwidth]{marine-multioffset}
+  \includegraphics[width=\cwidth]{07-marine-multioffset}
   \caption{Time-domain responses for offsets of 3, 5, and 7\,km for the same
     model as shown in Figure~\ref{fig:marine}.}
   \label{fig:marine-multioffset}
@@ -804,15 +936,15 @@ resistive basements, this can even apply to deep marine scenarios.
 
 Figure~\ref{fig:marine-wrong-x-y} shows this effect. It is the same model as in
 the previous section; however, for the adaptive gridding in the horizontal
-directions $\rho_\mr{ave}=1\,\Omega\,$m was used instead of
-$\rho_\mr{ave}=\num{10000}\,\Omega\,$m. Having the boundaries too near in the
+directions $\rho_\mr{ave}=1\,\ohmm$ was used instead of
+$\rho_\mr{ave}=\num{10000}\,\ohmm$. Having the boundaries too near in the
 horizontal directions leads to worse results for most frequencies and entirely
 wrong results for high frequencies. Comparison with the 1D result in the time
 domain shows that it is the airwave whose amplitude is heavily overestimated.
 %
 \begin{figure*}
   \centering
-  \includegraphics[width=\fwidth]{marine-wrong-x-y}
+  \includegraphics[width=\fwidth]{08-marine-wrong-x-y}
   \caption{Same model as used for Figure~\ref{fig:marine}, but with the
     horizontal boundaries not far enough. Although the resulting time-domain
     result looks plausible, the comparison with the 1D result shows that it
@@ -833,13 +965,13 @@ the amplitudes close to the boundaries and ensure that they are small enough.
 
 The final example consists of a resistive, three-dimensional block embedded in
 the lower of two halfspaces, as depicted in Figure~\ref{fig:3d-model}. The
-target has resistivity $\rho_\mr{tg}=100\,\Omega\,$m, the upper halfspace
-corresponds to seawater with $\rho_\mr{sea}=0.3\,\Omega\,$m, and the lower
-halfspace is the background with $\rho_\mr{bg}=1\,\Omega\,$m.
+target has resistivity $\rho_\mr{tg}=100\,\ohmm$, the upper halfspace
+corresponds to seawater with $\rho_\mr{sea}=0.3\,\ohmm$, and the lower
+halfspace is the background with $\rho_\mr{bg}=1\,\ohmm$.
 %
 \begin{figure}
   \centering
-  \includegraphics[width=\cwidth]{3d-model}
+  \includegraphics[width=\cwidth]{09-3d-model}
   \caption{Three-dimensional block embedded in the lower of two halfspaces. The
     100-m long, $x$-directed dipole source is located 50\,m above the seafloor
     at the origin, and the receiver is on the seafloor at an offset of 2\,km.}
@@ -890,7 +1022,7 @@ target.
 %
 \begin{figure*}
   \centering
-  \includegraphics[width=\fwidth]{3d-result}
+  \includegraphics[width=\fwidth]{10-3d-result}
   \caption{Responses for the model outlined in Figure~\ref{fig:3d-model} using
     \replaced{time-domain}{\simpeg} and \replaced{frequency-domain
     computations}{\emg3d}, and for the layered background also \replaced{the
@@ -915,6 +1047,7 @@ R_2|/(|R_1| + |R_2|)$.}{$\mr{ND}= 50|(\simpeg-\emg3d)/(\simpeg+\emg3d)|$.} The
 \replaced{NRMSD}{ND} between the two codes is below 1\,\% everywhere except for
 early times.
 
+\added{¡TODO CHANGE THIS LAST PARAGRAPH!}
 Both codes took a little over 7 minutes to compute the two models (single
 thread). However, in this particular comparison, the main difference in runtime
 is not frequency-domain computation vs. time-domain computation, but iterative
