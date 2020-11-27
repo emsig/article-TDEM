@@ -1,6 +1,8 @@
-\documentclass[onecolumn,extra,referee,camera]{gji}
-% \documentclass[onecolumn,extra,camera]{gji}
-% \documentclass[twocolumn,extra,camera]{gji}
+\documentclass[extra, camera,%
+    % onecolumn,   % comment for two columns
+    referee,     % uncomment for double lines
+    % final,       % uncomment for changes
+]{gji}
 \usepackage{timet}
 
 % Additional packages
@@ -11,10 +13,10 @@
 \usepackage{amssymb, amsmath, amsfonts}
 \usepackage{booktabs}
 \usepackage{xspace}
-\usepackage{graphicx}
+\usepackage[final]{graphicx}
 \usepackage[position=top]{subfig}
 \usepackage{ifthen}
-\usepackage[draft, addedmarkup=bf]{changes}
+\usepackage[addedmarkup=bf]{changes}
 % \usepackage[final]{changes}
 \usepackage[pdftex, final, allcolors=blue, colorlinks=true]{hyperref}
 
@@ -90,8 +92,10 @@
 \newcommand{\rmk}[1]{{\color{red}{#1}}}
 \newcommand{\ohmm}{\ensuremath{\Omega\,}\text{m}\xspace}
 
-\title[\replaced{Transform for expensive EM kernels}{Time-domain CSEM}]{
-  \replaced{Fast Fourier transformation of electromagnetic data for expensive kernels}{Fast time-domain electromagnetic modelling in the frequency domain}}
+\title[\replaced{Transforming expensive EM kernels}{Time-domain CSEM}]{
+  \replaced{Fast Fourier transformation of electromagnetic data for
+  computationally expensive kernels}{Fast time-domain electromagnetic modelling
+  in the frequency domain}}
 
 \author[D. Werthmüller \emph{et al.}]
   {\Large
@@ -122,7 +126,6 @@
 \newtheorem{theorem}{Theorem}[section]
 
 \begin{document}
-\large %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TODO %%%
 
 \label{firstpage}
 
@@ -141,37 +144,48 @@
 
 \begin{summary}
 %
-Modelling three-dimensional time-domain controlled-source electromagnetic data
-with frequency-domain solvers is an alternative to time-domain solvers. It
-requires the computation of many frequencies if standard Fourier transforms are
-used, which can make it prohibitively expensive in comparison with a
-time-domain computation. The speed of time-domain modelling with
-frequency-domain computation is defined by three key points: solver, method and
-implementation of the Fourier transformation, and gridding.
+\deleted{Modelling three-dimensional time-domain controlled-source
+electromagnetic data with frequen\-cy-domain solvers is an alternative to
+time-domain solvers.} \added{Three-dimensional controlled-source
+electromagnetic data is often computed directly in the domain of interest,
+either in the frequency domain or in the time domain. Computing it in one
+domain and transforming it via a Fourier transform to the other domain is a
+viable alternative.} It requires the \replaced{evaluation}{computation} of many
+\replaced{responses in the computational domain}{frequencies} if standard
+Fourier transforms are used, which can make it prohibitively expensive\deleted{
+in comparison with a time-domain computation}. The speed of
+\replaced{such}{time-domain} modelling \replaced{which is followed by a
+transform}{with frequency-domain computation} is defined by three key points:
+solver, method and implementation of the Fourier transformation, and gridding.
 %
-The faster the frequency-domain solver, the faster time-domain modelling will
-be. It is important that the solver is robust over a wide range of frequencies.
-A three-dimensional, iterative, frequency-domain multigrid solver satisfies
-this requirement, but any other robust solver will do.
+The faster the \deleted{frequency-domain} solver, the faster
+\deleted{time-domain} modelling will be. It is important that the solver is
+robust over a wide range of \added{values (}frequencies\added{ or times)}.
+\deleted{A three-dimensional, iterative, frequency-domain multigrid solver
+satisfies this re\-quirement, but any other robust solver will do.}
 %
-The method should require as few frequencies as possible while remaining
-robust. As the frequency range spans many orders of magnitude, the required
-frequencies are ideally equally spaced on a logarithmic scale. The fast
-frequency-to-time domain method uses either the digital linear filter method
-or the logarithmic fast Fourier transform together with a careful selection of
-frequencies and interpolation. This methodology requires typically 15 to 20
-frequencies to cover a wide range of offsets\deleted{in one-dimensional test
-models}.
+The method should require as few \replaced{kernel evaluations}{frequencies} as
+possible while remaining robust. As the frequency \added{and time}
+range\added{s} span\deleted{s} many orders of magnitude, the required
+\replaced{values}{frequencies} are ideally equally spaced on a logarithmic
+scale. The \added{proposed} fast \deleted{frequency-to-time domain} method uses
+either the digital linear filter method or the logarithmic fast Fourier
+transform together with a careful selection of \replaced{evaluation
+points}{frequencies} and interpolation. \replaced{In frequency-to-time domain
+tests t}{T}his methodology requires typically 15 to 20 frequencies to cover a
+wide range of offsets\deleted{in one-dimensional test models}.
 %
-The gridding should be frequency-dependent, which is accomplished by making it
-a function of skin depth. Optimising for the least number of required cells for
-a given frequency should be combined with optimising for computational speed.
+The gridding should be frequency-\added{ or time-}dependent, which is
+accomplished by making it a function of skin depth. Optimising for the least
+number of required cells \deleted{for a given frequency} should be combined
+with optimising for computational speed.
 %
 Looking carefully at these \deleted{three} points results in much smaller
 computation times with speedup factors of ten or more over previous results. A
-frequency-domain computation of time-domain data can therefore be competitive
-to time-domain solvers if the required frequencies and the corresponding grids
-are carefully chosen.
+\deleted{frequency-domain} computation \replaced{followed by transformation}{of
+time-domain data} can therefore be competitive to \replaced{computation in the
+required }{time-}domain \deleted{solvers} if the required \replaced{evaluation
+points}{frequencies} and the corresponding grids are carefully chosen.
 %
 \end{summary}
 
