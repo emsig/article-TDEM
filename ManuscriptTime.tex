@@ -253,7 +253,31 @@ the approach with some numerical results.
   \item Too generic; more references
   \item what are the methodological advantages with respect to other
     approaches.
+  \item wants: TEM can be accelerated using similar coarse-gridding
+    considerations as mentioned in your manuscript. In Commer \& Newman (2005),
+    the FDTD method could be accelerated through grid-coarsening during
+    runtime, using the fact that the transient field-decay filters out
+    high-frequency components.
+  \item I do believe the subspace-projection method should definitely be
+    discussed in a pro/con manner.
+  \item \ldots
 \end{itemize}
+
+
+Dieter: One one hand we agree that the introduction could be expanded, on the
+other hand we are not fond of repeating everything again. The introduction
+contains quite some extensive, good review papers (Oristaglio and Spies, 1999;
+Avdeev, 2005; Börner, 2010; Constable, 2010). The comparison between different
+approaches for time-domain computation was done in quite some detail in Mulder
+(2008)
+
+
+TODO: We think that there is a misunderstanding here. First we mention Avdeev
+(2005) and Börner (2010), and say that these are very good review papers up to
+2005 and 2010, respectively. Recent publications then means publications since
+these two review papers were published. We do not want to repeat again all the
+pioneering publications, that has been done, but highlight a few recent ones.
+We changed the wording in the introduction to make this clear.
 
 Redo intro: Focus on transform, not on frequency- or time-domain EM.
 
@@ -351,6 +375,7 @@ Redo intro: Focus on transform, not on frequency- or time-domain EM.
 {\color{alizarin}
 \verb!^ ^ ^ REMOVE COMMENTS ^ ^ ^ REMOVE COMMENTS ^ ^ ^ REMOVE COMMENTS ^ ^ ^!
 }
+
 
 
 \section{Motivation}  % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
@@ -734,20 +759,20 @@ compute this model was less than two minutes.
     {(Hz)}  & (s) &  & (m) & \\
     \midrule
     %
-    20.0    &\replaced{ 4}{ 3} & 80$\times$24$\times$24 & 20 & 1.26 \\
-    12.6    &\replaced{ 8}{ 6} & 96$\times$32$\times$32 & 20 & 1.17 \\
-     7.98   &\replaced{ 8}{ 8} & 96$\times$32$\times$32 & 20 & 1.20 \\
-     5.03   &\replaced{ 8}{ 7} & 96$\times$32$\times$32 & 20 & 1.23 \\
-     3.18   &\replaced{ 7}{ 7} & 80$\times$32$\times$32 & 24 & 1.23 \\
-     2.00   &\replaced{ 7}{ 5} & 80$\times$32$\times$32 & 30 & 1.21 \\
-     1.26   &\replaced{ 5}{ 4} & 64$\times$32$\times$32 & 37 & 1.21 \\
-     0.798  &\replaced{ 5}{ 5} & 64$\times$32$\times$32 & 40 & 1.23 \\
-     0.503  &\replaced{ 5}{ 5} & 64$\times$32$\times$32 & 40 & 1.26 \\
-     0.318  &\replaced{ 5}{ 5} & 64$\times$32$\times$32 & 40 & 1.28 \\
-     0.200  &\replaced{ 8}{10} & 64$\times$40$\times$40 & 40 & 1.27 \\
-     0.126  &\replaced{ 8}{10} & 64$\times$40$\times$40 & 40 & 1.30 \\
-     0.0798 &\replaced{10}{14} & 80$\times$40$\times$40 & 40 & 1.26 \\
-     0.0503 &\replaced{11}{15} & 80$\times$40$\times$40 & 40 & 1.28 \\
+    20.0    &  4 & 80$\times$24$\times$24 & 20 & 1.26 \\
+    12.6    &  8 & 96$\times$32$\times$32 & 20 & 1.17 \\
+     7.98   &  8 & 96$\times$32$\times$32 & 20 & 1.20 \\
+     5.03   &  8 & 96$\times$32$\times$32 & 20 & 1.23 \\
+     3.18   &  7 & 80$\times$32$\times$32 & 24 & 1.23 \\
+     2.00   &  7 & 80$\times$32$\times$32 & 30 & 1.21 \\
+     1.26   &  5 & 64$\times$32$\times$32 & 37 & 1.21 \\
+     0.798  &  5 & 64$\times$32$\times$32 & 40 & 1.23 \\
+     0.503  &  5 & 64$\times$32$\times$32 & 40 & 1.26 \\
+     0.318  &  5 & 64$\times$32$\times$32 & 40 & 1.28 \\
+     0.200  &  8 & 64$\times$40$\times$40 & 40 & 1.27 \\
+     0.126  &  8 & 64$\times$40$\times$40 & 40 & 1.30 \\
+     0.0798 & 10 & 80$\times$40$\times$40 & 40 & 1.26 \\
+     0.0503 & 11 & 80$\times$40$\times$40 & 40 & 1.28 \\
     %
     \bottomrule
   \end{tabular}
@@ -854,25 +879,25 @@ their corresponding parameters are listed in Table~\ref{tbl:timemarine}.
     {(Hz)}  & (s) &  & (m) & \\
     \midrule
     %
-    31.8     & \replaced{16}{10} & 128$\times$40$\times$40 & 100 & 1.36 \\
-    20.0     & \replaced{17}{ 9} & 128$\times$40$\times$40 & 100 & 1.36 \\
-    12.6     & \replaced{17}{ 9} & 128$\times$40$\times$40 & 100 & 1.36 \\
-     7.98    & \replaced{17}{17} & 128$\times$40$\times$40 & 100 & 1.36 \\
-     5.03    & \replaced{17}{21} & 128$\times$40$\times$40 & 100 & 1.44 \\
-     3.18    & \replaced{17}{20} & 128$\times$40$\times$40 & 100 & 1.48 \\
-     2.00    & \replaced{17}{18} & 128$\times$40$\times$40 & 100 & 1.49 \\
-     1.26    & \replaced{20}{22} & 128$\times$40$\times$48 & 100 & 1.36 \\
-     0.798   & \replaced{24}{26} & 128$\times$40$\times$48 & 100 & 1.36 \\
-     0.503   & \replaced{27}{29} & 128$\times$40$\times$48 & 100 & 1.36 \\
-     0.318   & \replaced{27}{42} & 128$\times$40$\times$48 & 100 & 1.36 \\
-     0.200   & \replaced{34}{41} & 128$\times$40$\times$48 & 100 & 1.38 \\
-     0.126   & \replaced{34}{48} & 128$\times$40$\times$48 & 100 & 1.40 \\
-     0.0798  & \replaced{37}{54} & 128$\times$40$\times$48 & 100 & 1.41 \\
-     0.0503  & \replaced{37}{59} & 128$\times$40$\times$48 & 100 & 1.44 \\
-     0.0318  & \replaced{44}{74} & 128$\times$40$\times$48 & 100 & 1.44 \\
-     0.0200  & \replaced{44}{81} & 128$\times$40$\times$48 & 100 & 1.47 \\
-     0.0126  & \replaced{37}{96} & 128$\times$40$\times$48 & 100 & 1.48 \\
-     0.00798 & \replaced{43}{93} & 128$\times$40$\times$48 & 100 & 1.49 \\
+    31.8     & 16 & 128$\times$40$\times$40 & 100 & 1.36 \\
+    20.0     & 17 & 128$\times$40$\times$40 & 100 & 1.36 \\
+    12.6     & 17 & 128$\times$40$\times$40 & 100 & 1.36 \\
+     7.98    & 17 & 128$\times$40$\times$40 & 100 & 1.36 \\
+     5.03    & 17 & 128$\times$40$\times$40 & 100 & 1.44 \\
+     3.18    & 17 & 128$\times$40$\times$40 & 100 & 1.48 \\
+     2.00    & 17 & 128$\times$40$\times$40 & 100 & 1.49 \\
+     1.26    & 20 & 128$\times$40$\times$48 & 100 & 1.36 \\
+     0.798   & 24 & 128$\times$40$\times$48 & 100 & 1.36 \\
+     0.503   & 27 & 128$\times$40$\times$48 & 100 & 1.36 \\
+     0.318   & 27 & 128$\times$40$\times$48 & 100 & 1.36 \\
+     0.200   & 34 & 128$\times$40$\times$48 & 100 & 1.38 \\
+     0.126   & 34 & 128$\times$40$\times$48 & 100 & 1.40 \\
+     0.0798  & 37 & 128$\times$40$\times$48 & 100 & 1.41 \\
+     0.0503  & 37 & 128$\times$40$\times$48 & 100 & 1.44 \\
+     0.0318  & 44 & 128$\times$40$\times$48 & 100 & 1.44 \\
+     0.0200  & 44 & 128$\times$40$\times$48 & 100 & 1.47 \\
+     0.0126  & 37 & 128$\times$40$\times$48 & 100 & 1.48 \\
+     0.00798 & 43 & 128$\times$40$\times$48 & 100 & 1.49 \\
     %
     \bottomrule
   \end{tabular}
@@ -1036,29 +1061,30 @@ target.
 %
 The background comparison shows that both 3D codes do an acceptable job having
 a relative error of a few percents at most; the result \replaced{obtained
-through transformation}{for \emg3d} seems to be better at early times. We
-cannot compare the errors for the response that includes the target for lack of
-an analytical solution. The \added{semi-analytical} background model
-\deleted{from \empymod }is only included to show that there is a significant
-response from the target. We therefore show the normalized difference
-(\replaced{NRMSD}{ND}) between the two \replaced{responses $R_1$ and $R_2$}{3D
-codes} as a percentage, where \replaced{$\mr{NRMSD~(\%)} = 200|R_1 -
-R_2|/(|R_1| + |R_2|)$.}{$\mr{ND}= 50|(\simpeg-\emg3d)/(\simpeg+\emg3d)|$.} The
-\replaced{NRMSD}{ND} between the two codes is below 1\,\% everywhere except for
-early times.
+through transformation}{for \emg3d} seems to be better at early times.
+\added{The reason is probably the implemented backward Euler in the time-domain
+code which has an error of order one in time.} We cannot compare the errors for
+the response that includes the target for lack of an analytical solution. The
+\added{1D} background model \deleted{from \empymod }is only included to show
+that there is a significant response from the target. We therefore show the
+normalized difference (\replaced{NRMSD}{ND}) between the two
+\replaced{responses $R_1$ and $R_2$}{3D codes} as a percentage, where
+\replaced{$\mr{NRMSD~(\%)} = 200|R_1 - R_2|/(|R_1| + |R_2|)$.}{$\mr{ND}=
+50|(\simpeg-\emg3d)/(\simpeg+\emg3d)|$.} The \replaced{NRMSD}{ND} between the
+two codes is below 1\,\% everywhere except for early times. Both codes took
+\replaced{roughly 4--5}{a little over 7} minutes to compute the two models
+(single thread). However, in this particular comparison, the main difference in
+runtime is not frequency-domain computation vs. time-domain computation, but
+iterative solver vs. direct solver.
 
-\added{¡TODO CHANGE THIS LAST PARAGRAPH!}
-Both codes took a little over 7 minutes to compute the two models (single
-thread). However, in this particular comparison, the main difference in runtime
-is not frequency-domain computation vs. time-domain computation, but iterative
-solver vs. direct solver. For a test we doubled the number of cells in each
-direction by using 50\,m for the minimum cell width instead of 100\,m, and
-taking also half of the stretching, which results then in a mesh of
-\num{466752} cells \replaced{in the time domain}{for \simpeg} and meshes
-between \num{102400} and \num{614400} \replaced{in the frequency domain}{for
-\emg3d}. Because the memory of our test machine was not large enough for the
-direct solver of \simpeg, the last model had to be run on a cluster. In this
-scenario, \emg3d was about eight times faster (single thread).
+\deleted{\emph{(Deleted last three sentences, as they do not add a lot.)}For a
+test we doubled the number of cells in each direction by using 50\,m for the
+minimum cell width instead of 100\,m, and taking also half of the stretching,
+which results then in a mesh of \num{466752} cells for \simpeg and meshes
+between \num{102400} and \num{614400} for \emg3d. Because the memory of our
+test machine was not large enough for the direct solver of \simpeg, the last
+model had to be run on a cluster. In this scenario, \emg3d was about eight
+times faster (single thread).}
 
 
 \section{Conclusions} % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
