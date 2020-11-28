@@ -84,9 +84,9 @@
 \newcommand{\custem}{\texttt{custEM}\xspace}
 
 % Remove once done
-\newcommand{\itodo}[1]{\todo[color=blue!40!white, inline]{\sffamily #1}}
-\newcommand{\mtodo}[1]{\todo[inline]{\sffamily #1}}
-\newcommand{\etodo}[1]{\todo[color=blue!40!white]{#1}}
+% \newcommand{\itodo}[1]{\todo[color=blue!40!white, inline]{\sffamily #1}}
+% \newcommand{\mtodo}[1]{\todo[inline]{\sffamily #1}}
+% \newcommand{\etodo}[1]{\todo[color=blue!40!white]{#1}}
 \newcommand{\dul}[1]{\underline{\underline{#1}}}
 \newcommand{\ul}[1]{\underline{#1}}
 \newcommand{\rmk}[1]{{\color{red}{#1}}}
@@ -152,11 +152,13 @@ either in the frequency domain or in the time domain. Computing it in one
 domain and transforming it via a Fourier transform to the other domain is a
 viable alternative.} It requires the \replaced{evaluation}{computation} of many
 \replaced{responses in the computational domain}{frequencies} if standard
-Fourier transforms are used, which can make it prohibitively expensive\deleted{
-in comparison with a time-domain computation}. The speed of
-\replaced{such}{time-domain} modelling \replaced{which is followed by a
-transform}{with frequency-domain computation} is defined by three key points:
-solver, method and implementation of the Fourier transformation, and gridding.
+Fourier transforms are used\replaced{. This}{, which} can make it prohibitively
+expensive \replaced{if the kernel is time-consuming as is the case in
+three-dimensional electromagnetic modelling}{in comparison with a time-domain
+computation}. The speed of \replaced{such}{time-domain} modelling
+\replaced{that is obtained through a transform}{with frequency-domain
+computation} is defined by three key points: solver, method and implementation
+of the Fourier transformation, and gridding.
 %
 The faster the \deleted{frequency-domain} solver, the faster
 \deleted{time-domain} modelling will be. It is important that the solver is
@@ -224,23 +226,34 @@ wealth of 3D electromagnetic codes, with a first boom in the 1990's, with a
 good state of the art provided by \cite{B.SEG.99.Oristaglio}. A second wave
 occurred during the CSEM boom in the hydrocarbon industry in the early 21th
 century, see, e.g., \cite{SG.05.Avdeev} and \cite{SG.10.Borner} for
-comprehensive overviews. Recent publications span the width of numerical
+comprehensive overviews. \replaced{Focusing on r}{R}ecent publications
+\added{after these review articles} span\added{s} the width of numerical
 methods from integral equation codes \citep{MGS.17.Kruglyakov} and differential
-equation methods such as finite differences \citep{CAG.13.Sommer}, finite
-elements \citep{GJI.13.Grayver}, and finite volumes \citep{GEO.14.Jahandari}.
-Besides the different methods there are also many different types of
-discretisation. Commonly used, besides rectilinear Yee grids
-\citep{IEEE.66.Yee} as used by our code, are Lebedev grids
-\citep{CMMP.64.Lebedev} but also unstructured grids using, for instance,
+equation methods such as finite differences
+\replaced{\mbox{\citep{GEO.10.Mittet, GEO.11.Zaslavsky, CAG.13.Sommer}}}
+{\mbox{\citep{CAG.13.Sommer}}}, finite elements \citep{GJI.13.Grayver}, and
+finite volumes \citep{GEO.14.Jahandari}. Besides the different methods there
+are also many different types of discretisation. Commonly used, besides
+rectilinear Yee grids \citep{IEEE.66.Yee} as used by our code, are Lebedev
+grids \citep{CMMP.64.Lebedev} but also unstructured grids using, for instance,
 tetrahedral \citep{CAG.17.Cai}. The computational requirement to model CSEM
 data also depends heavily on the technique which is used to solve the system,
 where there are direct solvers \citep{GEO.15.Grayver}, indirect solvers
 \citep{GJI.15.Jaysaval}, and more recently also hybrid solvers
 \citep{GEO.18.Liu}.
 
-Under certain conditions it can be competitive to model time-domain data with a
-frequency-domain code, as shown by \cite{GEO.08.Mulder}. The conditions are: a
-sufficiently powerful solver, appropriate frequency selection and
+Under certain conditions it can be \replaced{a viable alternative}{competitive}
+to model time-domain data with a frequency-domain code, as shown by
+\cite{GEO.08.Mulder}. \added{They compared the computational complexity of
+explicit time-stepping schemes (Du Fort-Frankel method as used in, e.g.,
+\mbox{\cite{GEO.04.Commer, GEO.07.Maao}}); implicit schemes \mbox{\citep[e.g.,
+][]{GEO.04.Haber}}, and matrix exponentials and Lanczos reduction schemes
+\mbox{\cite[e.g., ][]{RS.94.Druskin}} with the Fourier transform of
+frequency-domain solutions. Their conclusion was that the Fourier transform
+method can be favourable if the number of required frequencies is small
+relative to the number of grid points in each coordinate.} The conditions
+\added{for fast computation of time-domain data with a frequency-domain code}
+are: a sufficiently powerful solver, appropriate frequency selection and
 interpolation, and an automated gridding, for which they used the
 multi-frequency CSEM approach presented by \cite{GEO.07.Plessix}. We build upon
 these results but improve the run time from hours to minutes. The main reasons
@@ -252,144 +265,17 @@ to go from the frequency to the time domain. The latter makes it also possible
 to only use the imaginary part of the frequency-domain response, which has
 advantages when it comes to interpolation.
 
-In the next section, we briefly review the methodology as introduced by
+\added{While we use the finite-integration technique
+\mbox{\citep{AEU.77.Weiland}} in the frequency domain to show our method it is
+important to note that our ideas can be used with any solver, it is not bound
+to one or another frequency- or time-domain solver. The ideas for the frequency
+selection can be applied to time selection, and time-dependent, adaptive
+gridding exists as well \mbox{\citep[e.g., ][]{RS.06.Commer}}.} In the next
+section, we briefly review the methodology as introduced by
 \cite{GEO.07.Plessix} and \cite{GEO.08.Mulder} and highlight their advantages
 and shortcomings. This is followed by an outline of our changes to the Fourier
 transform and the adaptive gridding. Finally, we demonstrate the efficiency of
 the approach with some numerical results.
-
-
-{\color{alizarin}
-\verb!v v v REMOVE COMMENTS v v v REMOVE COMMENTS v v v REMOVE COMMENTS v v v!
-}
-{\color{mygreen}
-\begin{itemize}
-  \item Too generic; more references
-  \item what are the methodological advantages with respect to other
-    approaches.
-  \item wants: TEM can be accelerated using similar coarse-gridding
-    considerations as mentioned in your manuscript. In Commer \& Newman (2005),
-    the FDTD method could be accelerated through grid-coarsening during
-    runtime, using the fact that the transient field-decay filters out
-    high-frequency components.
-  \item I do believe the subspace-projection method should definitely be
-    discussed in a pro/con manner.
-  \item \ldots
-\end{itemize}
-
-
-Dieter: One one hand we agree that the introduction could be expanded, on the
-other hand we are not fond of repeating everything again. The introduction
-contains quite some extensive, good review papers (Oristaglio and Spies, 1999;
-Avdeev, 2005; Börner, 2010; Constable, 2010). The comparison between different
-approaches for time-domain computation was done in quite some detail in Mulder
-(2008)
-
-
-TODO: We think that there is a misunderstanding here. First we mention Avdeev
-(2005) and Börner (2010), and say that these are very good review papers up to
-2005 and 2010, respectively. Recent publications then means publications since
-these two review papers were published. We do not want to repeat again all the
-pioneering publications, that has been done, but highlight a few recent ones.
-We changed the wording in the introduction to make this clear.
-
-Redo intro: Focus on transform, not on frequency- or time-domain EM.
-
-\begin{itemize}
-  \item Wim: Include perhaps (one of) explicitly, instead of implicitly:
-    Druskin, V. L., and L. A. Knizhnerman, 1994, Spectral approach to solving
-    three-dimensional Maxwell’s diffusion equations in the time and frequency
-    domains, Radio Science, 29, 937--953. doi: 10.1029/94RS00747 Druskin, V.
-    L., L. A. Knizhnerman, and P. Lee, 1999, New spectral Lanczos decomposition
-    method for induction modeling in arbitrary 3D geometry, Geophysics, 64,
-    701--706. doi: 10.1190/1.1444579.
-  \item Evert: I also think we should respond a bit more accommodating the
-    reviewer's request. Mulder 2008 is quite old now and papers were published
-    after that dealing with solutions directly in time domain. We can write
-    that in this paper we include only papers that were not reference in Mulder
-    et al. (2008) and refer to that for earlier papers. New are Mittet 2010
-    (FDTD of waves and correspondence principle, GPY), Um et al. 2010 (Finite
-    element, SEG abstract) and Zhou et al. 2020 TGRS
-    (10.1109/TGRS.2020.2979798). In terms of number of references, you can
-    decide to not worry to much about that, or remove some others. You have
-    several references to works on the differences between measuring/analysing
-    data in time or frequency domain. That could go out, e.g.
-  \item Evert: i think you can group separate points under the recommendation
-    that comes from his first concern. I understand his recommendation as:
-    "Write an introduction that is more focused on time domain CSEM modeling."
-    That should be done in a comprehensive way and include direct time domain
-    methods such as Krylov subspace, Simpeg, FDTD of waves and use
-    correspondence principle. It can be interesting to also include more
-    arbitrary source time functions and not only step switch on or off and
-    impulse response. For the filter approach, in principle, all FD codes are
-    suitable to be used. His second concern phrased as a recommendation: "Show
-    results from a more complex model." after that the specific points come.
-  \item Evert: I think that Commer wanted to refer to Druskin and Knihznerman
-    (i am sure spelling is not correct) in radio science 1994, which is most
-    likely the older version of the code he mentions. We refer to that 1994
-    paper in Mulder 2008.
-  \item Evert: The main issue is that the Druskin work it is what Commer uses.
-    This is the principal issue. This comes back at point 9. Perhaps now you
-    can include it in the introduction as a motivation to work on this topic.
-  \item Evert: So let us make an explicit sentence in the introduction to
-    clarify this. We also may need to change the text in the introduction to
-    avoid making our life difficult by selecting some papers while not
-    selecting others. This can be done by only selecting review papers on the
-    topic and write that that is our choice here.
-  \item Wim: Is that different from doi 10.1190/1.1801936 (mentioned in
-    Mulder,Wirianto,Slob)? Then also include Haber from that paper, or just all
-    references of section 2 (complexity) in that paper?
-  \item Evert: This all belongs to one concern: The introduction is too general
-    and insufficiently addresses the actual topic of obtaining time domain data
-    by CSEM modeling. That does not mean you need to repeat everything. You
-    could start by writing that we will only discuss new developments since
-    2008, and refer to Mulder 2008 for older works that relate to the topic of
-    time domain CSEM data modeling. I don't think Commer actually wants an
-    extensive review of the literature and include his work. He writes that the
-    introduction should be more focused on the topic of the paper.
-  \item Evert: i have no problem with mentioning in the paper that our idea
-    grid coarsening can be used in the method of Commer and Newman (2005). In
-    that case no further response is necessary, we tick it off by saying, we
-    refer to Commer and Newman (2005) on grid-coarsening. i would limit
-    references to Commer to this paper then. I don't think we say anywhere that
-    our method is the best in any sense. It seems this reviewer is in
-    competition. I don't think we should be in competition. We work for the
-    public domain. We put forward our ideas. We leave to the readers to decide
-    which options they prefer. We should not be forced need to sell our method.
-    Of course, my personal opinion does not change the reality that the AE has
-    written that he wants to see the majority of the reviewers comments
-    implemented in our revision. We should accept that.
-  \item Evert: If we judge this is part of the majorty to be implemented as the
-    Associate Editor says, it means the AE agrees with Commer and we should do
-    it. No need to add references. In the introduction, just add a summary of
-    the order analysis given in Mulder 2008 where some order analysis was
-    done.
-  \item References provided by Commer:
-    \begin{itemize}
-      \item Commer \& Newman, 2005, An accelerated time domain finite
-        difference simulation scheme for three-dimensional transient
-        electromagnetic modeling using geometric multigrid concepts, Radio
-        Science, 41, RS3007.
-      \item Commer et al., 2006, New results on the resistivity structure of
-        Merapi Volcano(Indonesia), derived from three-dimensional restricted
-        inversion of long-offset transient electromagnetic data, GJI.
-      \item Druskin \& Zaslavsky, 2011, Solution of 3D time-domain
-        electromagnetic problems using optimal subspace projection,
-        Geophysics.
-      \item Weiland, T., 1996, Time domain EM field computation with finite
-        difference methods, Int. J. Num. Mod., 9, 295-319.
-      \item Yuji Mitsuhata, Toshihiro Uchida, Yutaka Murakami, Hiroshi Amano,
-        The Fourier transform of controlled-source time-domain electromagnetic
-        data by smooth spectrum inversion, Geophysical Journal International,
-        144, January 2001, 123-135.
-    \end{itemize}
-\end{itemize}
-
-}
-{\color{alizarin}
-\verb!^ ^ ^ REMOVE COMMENTS ^ ^ ^ REMOVE COMMENTS ^ ^ ^ REMOVE COMMENTS ^ ^ ^!
-}
-
 
 
 \section{Motivation}  % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
@@ -456,7 +342,6 @@ frequency-domain with a subsequent Fourier transform. They conclude the review
 by stating \emph{\guillemotleft Although it remains to be seen which of the
 four methods requires the least computer time for a given accuracy, the
 frequency-domain approach appears to be attractive.\guillemotright} Their
-\todo{mention the four methods}
 approach is to minimize the computation time by having, in addition to the just
 introduced adaptive gridding, an adaptive frequency selection scheme. This
 scheme starts with computing the responses for a set of just five frequencies,
@@ -515,9 +400,9 @@ models on standard computers, without the need for big clusters. All the
 examples in this article are run on a laptop with an i7-6600U\,CPU\,@\,2.6\,GHz
 (x4) and 16\,GB of memory, using Ubuntu \replaced{20.04}{18.04} and Python
 \replaced{3.8}{3.7}. \added{All examples were run using a single thread, but
-parallelization over frequencies is straight forward.} For the semi-analytical
-computations of layered models we use the open-source (Apache License 2.0) code
-\empymod \citep{GEO.17.Werthmuller}.
+parallelization over frequencies is straight forward, as the computations are
+independent.} For the semi-analytical computations of layered models we use the
+open-source (Apache License 2.0) code \empymod \citep{GEO.17.Werthmuller}.
 
 \section{Frequency selection} % % % % % % % % % % % % % % % % % % % % % % % % %
 
@@ -553,9 +438,10 @@ spaced on a logarithmic scale\added{ (natural logarithm in the case of the DLF
 and decimal logarithm in the case of the FFTLog)}, and they only require either
 the real or the imaginary part of the frequency-domain response. We can take
 advantage of that by using only the imaginary part of the frequency-domain
-response. The imaginary part goes to zero when the frequency goes to zero or to
-infinity, with the advantage that knowing the endpoints makes it possible to
-convert the extrapolation of missing frequencies into \added{an }interpolation.
+response. The imaginary part goes to zero when the frequency goes
+\added{either} to zero or to infinity, with the advantage that knowing the
+endpoints makes it possible to convert the extrapolation of missing frequencies
+into \added{an }interpolation.
 
 There are three key-parameters that have to be defined: Minimum and maximum
 frequency ($f_\mr{min}, f_\mr{max}$) and the number of frequencies per decade
@@ -577,28 +463,29 @@ Figure~\ref{fig:GUI-FFTLog-lin}.
 \end{figure}
 %
 
-The example model is a marine scenario with 1\,km water depth of resistivity
-$\rho=0.3\,\ohmm$ ($\rho = \sigma^{-1}$) and a 100\,m thick target of
-100\,\ohmm at 1\,km below the seafloor in a background of 1\,\ohmm. The source
-is 50\,m above the seafloor, the receiver is on the seafloor, and the response
-is the inline $x$-directed $E$-field. The left subplot shows the imaginary part
-in the frequency domain and the right plot the corresponding impulse response
-in the time domain. The red lines are the \replaced{semi-analytical
-responses}{precise results obtained from \empymod}. The blue circles indicate
-the actually computed responses and the black dots the frequencies which are
-interpolated or set to zero. The resulting time-domain response has a relative
-error of less than 1\,\% everywhere except for very early times.
+The \added{shown} example model is a marine scenario with 1\,km water depth of
+resistivity $\rho=0.3\,\ohmm$ ($\rho = \sigma^{-1}$) and a 100\,m thick target
+of 100\,\ohmm at 1\,km below the seafloor in a background of 1\,\ohmm. The
+source is 50\,m above the seafloor, the receiver is on the seafloor, and the
+response is the inline $x$-directed $E$-field. The left subplot shows the
+imaginary part in the frequency domain and the right plot the corresponding
+impulse response in the time domain. The red lines are the
+\replaced{semi-analytical responses}{precise results obtained from \empymod}.
+The blue circles indicate the actually computed responses and the black dots
+the frequencies which are interpolated or set to zero. The resulting
+time-domain response has a relative error of less than 1\,\% everywhere except
+for very early times.
 
 Figure \ref{fig:GUI-FFTLog-log} shows exactly the same on a logarithmic scale,
 without the interactive GUI-related elements. It can be seen that with the
 chosen frequencies the time-domain response starts to divert above about 100\,s
 and below 0.3\,s. It also shows the oscillating high-frequency part, which is
-hard to interpolate. Figure \ref{fig:GUI-DLF-lin} is the same as
-\ref{fig:GUI-FFTLog-lin}, but transformed with the DLF method applying the
-81-point sine-cosine filter from \cite{GEO.09.Key}. The same frequencies were
-computed as in the FFTLog case and the missing ones interpolated. The error of
-the corresponding time-domain response is comparable, so either FFTLog or DLF
-can be used.
+hard to interpolate\added{ and we therefore set to zero}. Figure
+\ref{fig:GUI-DLF-lin} is the same as \ref{fig:GUI-FFTLog-lin}, but transformed
+with the DLF method applying the 81-point sine-cosine filter from
+\cite{GEO.09.Key}. The same frequencies were computed as in the FFTLog case and
+the missing ones interpolated. The error of the corresponding time-domain
+response is comparable, so either FFTLog or DLF can be used.
 %
 \begin{figure*}
   \centering
@@ -616,21 +503,21 @@ can be used.
 %
 In the above example we used 20 frequencies, but that many would not be
 required for the shown offset of 5\,km, a few of the lower and higher
-frequencies could be left out. \added{But even so we only need to compute
-50\,\% of the required frequencies in the case of the FFTLog, and only 14\,\%
-in the case of the DLF.} \replaced{W}{However, w}ith this frequency-selection
-we can model a wide range of offsets. This is shown in Figure
-\ref{fig:multi-offset}, where the above parameters were used to model the
-responses at offsets $r=1.5,3,6$, and 12\,km.
+frequencies could be left out. With this frequency-selection we can model a
+wide range of offsets. This is shown in Figure \ref{fig:multi-offset}, where
+the above parameters were used to model the responses at offsets $r=1.5,3,6$,
+and 12\,km. \added{We only need to compute 50\,\% of the required frequencies
+in the case of the FFTLog, and only 14\,\% in the case of the DLF.}
 %
 \begin{figure*}
   \centering
   \includegraphics[width=0.75\fwidth]{03-multi-offset}
   \caption{Normalized (a) frequency- and (b) time-domain responses for offsets
     $r=1.5,3,6$, and 12\,km using the parameters defined in Figure
-    \ref{fig:GUI-FFTLog-lin}. The coloured circles are the actually computed
-    responses, the black dots are the responses which are set to zero or
-    interpolated. The \replaced{grey}{black} curves are the analytical
+    \ref{fig:GUI-FFTLog-lin}. The coloured \replaced{symbols}{circles} are the
+    actually computed responses, the black dots are the responses which are set
+    to zero \added{(high frequencies)} or interpolated \added{(low
+    frequencies)}. The \replaced{grey}{black} curves are the analytical
     responses.}
   \label{fig:multi-offset}
 \end{figure*}
@@ -727,14 +614,13 @@ criteria. The number of cells becomes therefore also a function of frequency.
 \added{It is important to note that this is our implementation of an adaptive
 grid, but there are certainly other possibilities. The relevant point for fast
 computations is that the adaptive gridding tries to minimize the number of
-required cells while being fine enough and at the same time large enough to
-give accurate results. This is generally best done in a frequency and
-conductivity dependent manner.} To go from the model grid to the computational
-grid, we use the volume-averaging technique on logarithmic resistivities, as
-used in \cite{GEO.07.Plessix}. While this technique ensures that the total
-resistivity in the subsurface remains the same, it does not consider
-effective-medium theory \citep{GEO.03.Davydycheva}, for instance, the apparent
-anisotropy from a stack of finely layered formations of varying resistivity.
+required cells. This is generally best done in a frequency and conductivity
+dependent manner.} To go from the model grid to the computational grid, we use
+the volume-averaging technique on logarithmic resistivities, as used in
+\cite{GEO.07.Plessix}. While this technique ensures that the total resistivity
+in the subsurface remains the same, it does not consider effective-medium
+theory \citep{GEO.03.Davydycheva}, for instance, the apparent anisotropy from a
+stack of finely layered formations of varying resistivity.
 
 
 \section{Numerical examples}  % % % % % % % % % % % % % % % % % % % % % % % % %
@@ -1036,7 +922,7 @@ our test machine, as the memory requirement by the direct solver would
 otherwise be too high. There are not many options out there of open-source
 time-domain 3D codes, \simpeg being the one we found to be suitable. A step-off
 response was chosen as this is the response currently implemented in
-\replaced{the framework}{\simpeg}.
+\replaced{it}{\simpeg}.
 
 The model was discretised with $100\times100\times100\,$m cells in the survey
 domain $D_\mr{s}$. For the \replaced{time-domain}{\simpeg} model, 14 cells in
@@ -1118,14 +1004,17 @@ frequencies can be set to zero, as we can neglect their influence. And values
 for frequencies in-between the computed ones are best obtained with a spline
 interpolation. The actual transform can be made with either the DLF method or
 FFTLog, where the latter one requires usually much fewer frequencies to be
-interpolated.} We believe that our proposed improvements to the previously
-published methods make time-domain CSEM modelling with a frequency-domain code
-even more attractive than it was already before. We have demonstrated the idea
-of our Fourier transform method on CSEM data transformed from the frequency to
-the time domain. However, it could equally be applied to the transform from the
-time to the frequency domain and to other methods with similar
-characteristics.
-
+interpolated.} \deleted{We believe that our proposed improvements to the
+previously published methods make time-domain CSEM modelling with a
+frequency-domain code even more attractive than it was already before.} We have
+demonstrated the idea of our Fourier transform method on CSEM data transformed
+from the frequency to the time domain. However, it could equally be applied to
+the transform from the time to the frequency domain and to other methods with
+similar characteristics. \added{We believe that our proposed improvements to
+the previously published methods makes simulating results in one domain
+obtained through computations in the other domain followed by a transformation
+a viable alternative. The methodology is relatively simple to implement in any
+code.}
 
 \section{Data Availability Statement} % % % % % % % % % % % % % % % % % % % % %
 
