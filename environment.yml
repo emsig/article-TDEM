@@ -4,7 +4,9 @@ channels:
   - conda-forge
   - defaults
 dependencies:
+  - "libblas=*=*mkl"
   - emg3d
+  - empymod
   - simpeg
   - matplotlib
   - jupyter
@@ -12,3 +14,4 @@ dependencies:
   - scooby
   - ipykernel
   - h5py
+  - mkl-service

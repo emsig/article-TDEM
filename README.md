@@ -1,8 +1,8 @@
-# Fast time-domain electromagnetic modelling in the frequency domain
+# Fast Fourier transformation of electromagnetic data for computationally expensive kernels
 
-> Werthmüller, D., W.A. Mulder, and E.C. Slob, 2020, Fast time-domain
-> electromagnetic modelling in the frequency domain: Submitted to Geophysical
-> Journal International.
+> Werthmüller, D., W.A. Mulder, and E.C. Slob, 2020, Fast Fourier
+> transformation of electromagnetic data for computationally expensive kernels:
+> Submitted to Geophysical Journal International.
 
 
 ## Manuscript for Geophysical Journal International paper
@@ -14,6 +14,7 @@ to reproduce all the figures.
 ## History
 
 1. Submitted 2020-06-30 to Geophysical Journal International.
+2. Revision I submitted 2020-12-01.
 
 
 ## Requirements and Environment
@@ -57,13 +58,12 @@ conda remove --name article-tdem --all
 Start `Jupyter` and navigate to the notebooks-folder. The notebooks to
 reproduce the figures in the article are:
 
-- **Frequency-Selection.ipynb**: Figures 1, 2, and 3.
-- **Fullspace.ipynb**: Figures 4 and 5.
-- **1D-Model.ipynb**: Figures 6 and 7.
-- **1D-Model-wrong-x-y.ipynb**: Figure 8.
-- **3D-Model.ipynb**: Figures 9 and 10.
-- **3D-Model-double.ipynb**: As `3D-Model.ipynb`, but doubled cells in each
-  direction.
+- ``01-02-03_Figures_Frequency-Selection.ipynb``: Figures 1, 2, and 3.
+- ``04-05_Figures_Fullspace.ipynb``: Figures 4 and 5.
+- ``06-07_Figures_1D-Model.ipynb``: Figures 6 and 7.
+- ``08_Figures_1D-Model-wrong-x-y.ipynb``: Figure 8.
+- ``09-10_Figures_3D-Model.ipynb``: Figures 9 and 10.
+
 
 ## Note
 
