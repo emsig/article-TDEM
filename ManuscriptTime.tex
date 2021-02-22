@@ -1,6 +1,6 @@
 \documentclass[extra, camera,%
-    % onecolumn,   % comment for two columns
-    % referee,     % uncomment for double lines
+    onecolumn,   % comment for two columns
+    referee,     % uncomment for double lines
     % final,       % uncomment for changes
 ]{gji}
 \usepackage{timet}
@@ -91,6 +91,7 @@
 \newcommand{\ul}[1]{\underline{#1}}
 \newcommand{\rmk}[1]{{\color{red}{#1}}}
 \newcommand{\ohmm}{\ensuremath{\Omega\,}\text{m}\xspace}
+\newcommand{\rtodo}{{\color{red}\texttt{TODO:}}\xspace}
 
 \title[Transforming expensive EM kernels]{Fast Fourier transformation of
 electromagnetic data for computationally expensive kernels}
@@ -258,10 +259,10 @@ highlight their advantages and shortcomings. This is followed by an outline of
 our changes to the Fourier transform and the adaptive gridding. Finally, we
 demonstrate the efficiency of the approach with some numerical results.
 
-\added{TODO: Add citation to R.R. (2021) regarding RA and speed-up; limitation
+\rtodo \added{Add citation to R.R. (2021) regarding RA and speed-up; limitation
 to switch-on/-off.}
 
-\added{TODO: Add notion about preference for f-domain for IP problems}
+\rtodo \added{Add notion about preference for f-domain for IP problems}
 
 \section{Motivation}  % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
@@ -389,16 +390,19 @@ open-source (Apache License 2.0) code \empymod \citep{GEO.17.Werthmuller}.
 An important factor in terms of speed and accuracy for time-domain responses
 obtained from frequency-domain computations is the selection of the required
 frequencies. The fewer frequencies required, the quicker we obtain the
-time-domain result. The same applies for the reverse operation, the fewer times
-required, the quicker we obtain frequency-domain results. Even though we limit
-our analysis here to frequency-to-time transformations, most of the arguments
-are reversible and applicable to time-to-frequency transformations. We decided
-to use a regular spacing of frequencies on a log-scale, rather than an adaptive
-scheme. This approach is favourable if a wide range of offsets is needed, as
-the required frequencies change with offset and an adaptive frequency selection
-is therefore often tailored to a single offset. Also, it allows for
-straightforward parallelization over frequencies, which is not completely
-possible with an adaptive scheme.
+time-domain result. \added{This applies primarily for expensive kernels such
+as used in 3D modelling where the computation of the response of a single
+frequency takes much longer than the transformation itself.} The same applies
+for the reverse operation, the fewer times required, the quicker we obtain
+frequency-domain results. Even though we limit our analysis here to
+frequency-to-time transformations, most of the arguments are reversible and
+applicable to time-to-frequency transformations. We decided to use a regular
+spacing of frequencies on a log-scale, rather than an adaptive scheme. This
+approach is favourable if a wide range of offsets is needed, as the required
+frequencies change with offset and an adaptive frequency selection is therefore
+often tailored to a single offset\added{ or a limited range of offset}. Also,
+it allows for straightforward parallelization over frequencies, which is not
+completely possible with an adaptive scheme.
 
 For the actual transform we use either the digital linear filter (DLF) method
 or the logarithmic fast Fourier transform (FFTLog). The DLF method was
@@ -423,44 +427,52 @@ zero or to infinity, with the advantage that knowing the endpoints makes it
 possible to convert the extrapolation of missing frequencies into an
 interpolation.
 
-There are three key-parameters that have to be defined: Minimum and maximum
-frequency ($f_\mr{min}, f_\mr{max}$) and the number of frequencies per decade
-($n_\mr{dec}^f$). Trial-and-error with a 3D code is very time-intensive.
-However, a simplified, layered model for the required survey setup and a fast
-1D modeller makes it possible to estimate these parameters easily. To this end,
-we created a graphical, interactive tool using \empymod, as shown in
-Figure~\ref{fig:GUI-FFTLog-lin}.
+\rtodo \added{Start this section with the method; fmin, fmax, ndec; below we
+interpolate with PCHIP, above we set to zero, in-between we interpolate with
+cubic spline.}
+\replaced{The actually computed frequencies in our approach are defined by
+three key-parameters}{There are three key-parameters that have to be defined}:
+\replaced{The m}{M}inimum and maximum frequency ($f_\mr{min}, f_\mr{max}$) and
+the number of frequencies per decade ($n_\mr{dec}^f$). \added{This creates a
+frequency range which is much smaller than the frequency range required for the
+transform.} \replaced{A t}{T}rial-and-error \added{approach} with a 3D code is
+very time-intensive. However, a simplified, layered model for the required
+survey setup and a fast 1D modeller makes it possible to estimate these
+parameters easily. \replaced{An example of this is shown in
+Figure~\ref{fig:FFTLog-log}.}{To this end, we created a graphical, interactive
+tool using \empymod, as shown in Figure~\ref{fig:FFTLog-log}.}
 %
 \begin{figure}
   \centering
-  \includegraphics[width=\cwidth]{01-GUI-FFTLog-lin}
-  \caption{Interactive frequency selection for a user-provided layered model
-    (the shown model parameters are described in the text). This example shows
-    the impulse response at an offset of 5\,km, for which it uses FFTLog from
-    0.001\,Hz to 10\,Hz with five frequencies per decade. Note that the error
-    is clipped for values smaller than 0.01\,\% and bigger than 100\,\%.}
-  \label{fig:GUI-FFTLog-lin}
+  \includegraphics[width=\cwidth]{01-FFTLog-log}
+  \caption{\replaced{Example}{Interactive} frequency selection for a
+    \replaced{simple}{user-provided} layered model (the shown model parameters
+    are described in the text). This example shows the impulse response at an
+    offset of 5\,km, for which it uses FFTLog from 0.001\,Hz to 10\,Hz with
+    five frequencies per decade. \deleted{Note that the error is clipped for
+    values smaller than 0.01\,\% and bigger than 100\,\%.}}
+  \label{fig:FFTLog-log}
 \end{figure}
 %
+\replaced{It }{The shown example model} is a marine scenario with 1\,km water
+depth of resistivity $\rho=0.3\,\ohmm$ ($\rho = \sigma^{-1}$) and a 100\,m
+thick target of 100\,\ohmm at 1\,km below the seafloor in a background of
+1\,\ohmm. The source is 50\,m above the seafloor, the receiver is on the
+seafloor, and the response is the inline $x$-directed $E$-field. The left
+subplot shows the imaginary part in the frequency domain and the right plot the
+corresponding impulse response in the time domain. The red lines are the
+semi-analytical responses. The blue circles indicate the actually computed
+responses and the black dots the frequencies which are interpolated or set to
+zero. The resulting time-domain response has a relative error of less than
+1\,\% everywhere except for very early times.
 
-The shown example model is a marine scenario with 1\,km water depth of
-resistivity $\rho=0.3\,\ohmm$ ($\rho = \sigma^{-1}$) and a 100\,m thick target
-of 100\,\ohmm at 1\,km below the seafloor in a background of 1\,\ohmm. The
-source is 50\,m above the seafloor, the receiver is on the seafloor, and the
-response is the inline $x$-directed $E$-field. The left subplot shows the
-imaginary part in the frequency domain and the right plot the corresponding
-impulse response in the time domain. The red lines are the semi-analytical
-responses. The blue circles indicate the actually computed responses and the
-black dots the frequencies which are interpolated or set to zero. The resulting
-time-domain response has a relative error of less than 1\,\% everywhere except
-for very early times.
-
-Figure \ref{fig:GUI-FFTLog-log} shows exactly the same on a logarithmic scale,
-without the interactive GUI-related elements. It can be seen that with the
-chosen frequencies the time-domain response starts to divert above about 100\,s
-and below 0.3\,s. It also shows the oscillating high-frequency part, which is
-hard to interpolate and we therefore set it to zero. Figure
-\ref{fig:GUI-DLF-lin} is the same as Figure \ref{fig:GUI-FFTLog-lin}, but
+Figure \ref{fig:FFTLog-lin} shows exactly the same on a
+\replaced{linear}{logarithmic} scale\replaced{for the time and amplitude
+axes}{, without the interactive GUI-related elements}. It can be seen that with
+the chosen frequencies the time-domain response starts to divert above about
+100\,s and below 0.3\,s. It also shows the oscillating high-frequency part,
+which is hard to interpolate and we therefore set it to zero.
+Figure~\ref{fig:DLF-lin} is the same as Figure \ref{fig:FFTLog-lin}, but
 transformed with the DLF method applying the 81-point sine-cosine filter from
 \cite{GEO.09.Key}. The same frequencies were computed as in the FFTLog case and
 the missing ones interpolated. The error of the corresponding time-domain
@@ -468,16 +480,16 @@ response is comparable, so either FFTLog or DLF can be used.
 %
 \begin{figure*}
   \centering
-  \subfloat[]{{\includegraphics[width=0.5\fwidth]{02a-GUI-FFTLog-log}}%
-  \label{fig:GUI-FFTLog-log}}\hfill
-  \subfloat[]{{\includegraphics[width=0.5\fwidth]{02b-GUI-DLF-lin}}%
-  \label{fig:GUI-DLF-lin}}\\
-  \caption{(a) Same as Figure \ref{fig:GUI-FFTLog-lin}, but on a logarithmic
+  \subfloat[]{{\includegraphics[width=0.5\fwidth]{02a-FFTLog-lin}}%
+  \label{fig:FFTLog-lin}}\hfill
+  \subfloat[]{{\includegraphics[width=0.5\fwidth]{02b-DLF-lin}}%
+  \label{fig:DLF-lin}}\\
+  \caption{(a) Same as Figure \ref{fig:FFTLog-log}, but on a logarithmic
   scale. (b) Using DLF instead of FFTLog, but computing the same frequency
   range as for the FFTLog. The resulting time-domain response has comparable
-  accuracy (compare the error to the error in Figure
-  \ref{fig:GUI-FFTLog-lin}).}
-  \label{fig:GUI-log-lin}
+  accuracy\deleted{ (compare the error to the error in Figure
+    \ref{fig:FFTLog-log})}.}
+  \label{fig:lin-lin}
 \end{figure*}
 %
 In the above example we used 20 frequencies, but that many would not be
@@ -493,7 +505,7 @@ of the FFTLog, and only 14\,\% in the case of the DLF.
   \includegraphics[width=0.75\fwidth]{03-multi-offset}
   \caption{Normalized (a) frequency- and (b) time-domain responses for offsets
     $r=1.5,3,6$, and 12\,km using the parameters defined in Figure
-    \ref{fig:GUI-FFTLog-lin}. The coloured symbols are the actually computed
+    \ref{fig:FFTLog-lin}. The coloured symbols are the actually computed
     responses, the black dots are the responses which are set to zero (high
     frequencies) or interpolated (low frequencies). The grey curves are the
     analytical responses.}
@@ -518,7 +530,7 @@ logarithmic scale we cannot choose 0\,Hz nor 0\,V/m, but instead take
 $10^{-100}$\,Hz and $10^{-100}$\,V/m). In the case of the DLF method we also
 have to interpolate in between the computed frequencies, for which we found it
 better to use a cubic spline. As can be seen by comparing Figure
-\ref{fig:GUI-FFTLog-lin} with Figure \ref{fig:GUI-DLF-lin}, using the FFTLog or
+\ref{fig:FFTLog-lin} with Figure \ref{fig:DLF-lin}, using the FFTLog or
 the DLF with the same actually computed frequencies results in very similar
 responses.
 
@@ -532,6 +544,9 @@ frequencies are required by it to achieve the desired precision, and how long
 it takes to compute the responses for these frequencies.
 
 \subsection{Gridding}   % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\rtodo \added{Mention again that important for the transform are accurate
+results; these gridding as what we implemented in the 3D code.}
 
 The computation grid consists of a core or survey domain $D_\mr{s}$ that should
 contain all source and receiver positions. The survey domain usually has no or
@@ -669,8 +684,9 @@ interpolated values or the values set to zero.
   \caption{(a) Frequency- and (b) time-domain results for the homogeneous space
     model. The red lines are the analytical solutions, the blue circles are the
     actually computed responses, the black dots are the interpolated responses,
-    and the dashed black line the obtained time-domain response. The errors are
-    clipped for values smaller than 0.1\,\% and bigger than 100\,\%.}
+    and the dashed black line the obtained time-domain response. \deleted{The
+    errors are clipped for values smaller than 0.1\,\% and bigger than
+    100\,\%.}}
   \label{fig:fullspace}
 \end{figure*}
 %
@@ -927,9 +943,9 @@ the responses including the target.
     time-domain and frequency-domain computations, and for the layered
     background also the semi-analytical result. In the lower plot of (a) the
     relative error (\%) is shown in comparison to the semi-analytical result,
-    and in (b) the normalized difference (\%) between the two 3D codes. The
-    results of these plots are clipped for values smaller than 0.1\,\% and
-    bigger than 10\,\%.}
+    and in (b) the normalized difference (\%) between the two 3D codes.
+    \deleted{The results of these plots are clipped for values smaller than
+    0.1\,\% and bigger than 10\,\%.}}
   \label{fig:3d-result}
 \end{figure*}
 %
@@ -948,6 +964,8 @@ early times. Both codes took roughly 4--5 minutes to compute the two models
 runtime is not frequency-domain computation vs. time-domain computation, but
 iterative solver vs. direct solver.
 
+
+\subsection{\added{Induced Polarization}} % % % % % % % % % % % % % % % % % % %
 
 \section{Conclusions} % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
