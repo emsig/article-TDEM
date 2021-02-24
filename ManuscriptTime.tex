@@ -264,6 +264,8 @@ to switch-on/-off.}
 
 \rtodo \added{Add notion about preference for f-domain for IP problems}
 
+\rtodo \added{Extra example: No-IP vs IP; land, 1D}
+
 \section{Motivation}  % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
 Being able to model CSEM data both in the frequency domain and in the time
@@ -274,22 +276,23 @@ and use Fourier transforms to go to the other. However, this approach can be
 costly, as many frequencies over a wide range are required to go from the
 frequency domain to the time domain, or many times over a wide range for the
 opposite direction. We present a methodology which significantly reduces the
-amount and range of the required frequencies, translating into a significant
-reduction in computation time. The required computation grids for low
-frequencies (in our case in the order of 0.001\,Hz) and high frequencies
+amount and range of the required frequencies \added{or times}, translating into
+a significant reduction in computation time. The required computation grids for
+low frequencies (in our case in the order of 0.001\,Hz) and high frequencies
 (around 100\,Hz) are hugely different. Low frequencies can be computed on a
 coarser grid, but they require a much larger domain in order to avoid boundary
 effects. High frequencies, on the other hand, require denser gridding, but they
 are much more limited in reach. An adaptive gridding scheme is therefore
-required. We build our approach upon \cite{GEO.07.Plessix}, who presented such
-an adaptive gridding for multi-frequency (and multi-source) CSEM modelling.
+required\replaced{, which}{. We build our approach upon
+\mbox{\cite{GEO.07.Plessix}}, who presented such an adaptive gridding for
+multi-frequency (and multi-source) CSEM modelling.
 
-An adaptive grid in the frequency domain is naturally based on the skin depth,
-which is the distance after which the amplitude of the electromagnetic field is
-decayed by $1/e\approx 37\,\%$. The skin depth $\delta$ is a function of
-conductivity and frequency, and for the diffusive approximation of Maxwell's
-equations in an isotropic, homogeneous medium is given by \citep[e.g.,][
-equation~1.53]{B.SEG.88.Ward}
+An adaptive grid in the frequency domain} is naturally based on the skin depth,
+\deleted{which is} the distance after which the amplitude of the
+electromagnetic field is decayed by $1/e\approx 37\,\%$. The skin depth
+$\delta$ is a function of conductivity and frequency, and for the diffusive
+approximation of Maxwell's equations in an isotropic, homogeneous medium is
+given by \citep[e.g.,][ equation~1.53]{B.SEG.88.Ward}
 %
 \begin{equation}
   \delta = \sqrt{\frac{2}{\omega\mu\sigma}}
@@ -302,8 +305,10 @@ frequency $f$ (Hz), and $\mu$ is magnetic permeability (H/m). The approximation
 is obtained by using the free-space value of magnetic permeability,
 $\mu_0=4\pi\times10^{-7}\,$H/m.
 
-\cite{GEO.07.Plessix} define the minimum cell width $\Delta_\mathrm{min}$ as a
-fraction of the minimum skin depth $\delta_\mathrm{min}$, where
+\added{We build our approach upon} \cite{GEO.07.Plessix}\added{, who presented
+such an adaptive gridding for multi-frequency (and multi-source) CSEM
+modelling. They} define the minimum cell width $\Delta_\mathrm{min}$ as
+a fraction of the minimum skin depth $\delta_\mathrm{min}$, where
 $\delta_\mathrm{min}$ should be 2--3 times bigger than $\Delta_\mathrm{min}$.
 The cells have to be smallest around the source; in the marine case, the
 minimum skin depth is therefore defined by the conductivity of seawater.
@@ -345,19 +350,23 @@ frequency-domain code viable in comparison with time-domain codes. It is
 important to note that while we show the transform from frequency to time
 domain, the conclusions regarding the Fourier transform can equally well be
 applied to the transform from time-domain to frequency-domain data for a code
-that solves Maxwell's equations in the time domain. A variation of our method
-was implemented, for instance, by \custem \citep{GEO.19.Rochlitz} to obtain
-frequency-domain data from time-domain computations (Rochlitz, private
-communication, 2020).
+that solves Maxwell's equations in the time domain. \deleted{A variation of our
+method was implemented, for instance, by \custem \mbox{\citep{GEO.19.Rochlitz}}
+to obtain frequency-domain data from time-domain computations (Rochlitz,
+private communication, 2020).}
 
 
 \section{Methodology} % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
-For the numerical computations we use the open-source (Apache License 2.0) code
-\emg3d \citep{JOSS.19.Werthmuller}, a multigrid solver based on
-\cite{GP.06.Mulder}, which can be used as a preconditioner for Krylov subspace
-solvers or as a solver on its own. The multigrid approach works fine for the
-diffusive approximation of Maxwell's equations, which assumes that
+\added{The requirement for any transform is a robust solver of sufficient
+precision.} \replaced{We use f}{F}or the numerical computations \deleted{we
+use} the open-source (Apache License 2.0) code\added{s \empymod
+\mbox{\citep{GEO.17.Werthmuller}} and} \emg3d
+\citep{JOSS.19.Werthmuller}\replaced{.}{,} \added{The former computes
+semi-analytical responses of layered models, the latter is} a multigrid solver
+based on \cite{GP.06.Mulder}, which can be used as a preconditioner for Krylov
+subspace solvers or as a solver on its own. The multigrid approach works fine
+for the diffusive approximation of Maxwell's equations, which assumes that
 $\omega\varepsilon \ll \sigma$, where $\varepsilon$ is electric permittivity
 (F/m). The remaining system to solve in the frequency domain is then given by
 the second-order differential equation of the electric field,
@@ -382,8 +391,9 @@ need for big clusters. All the examples in this article are run on a laptop
 with an i7-6600U\,CPU\,@\,2.6\,GHz (x4) and 16\,GB of memory, using Ubuntu
 20.04 and Python 3.8. All examples were run using a single thread, but
 parallelization over frequencies is straight forward, as the computations are
-independent. For the semi-analytical computations of layered models we use the
-open-source (Apache License 2.0) code \empymod \citep{GEO.17.Werthmuller}.
+independent. \deleted{For the semi-analytical computations of layered models we
+use the open-source (Apache License 2.0) code \empymod
+\mbox{\citep{GEO.17.Werthmuller}}.}
 
 \subsection{Frequency selection}  % % % % % % % % % % % % % % % % % % % % % % %
 
@@ -545,8 +555,13 @@ it takes to compute the responses for these frequencies.
 
 \subsection{Gridding}   % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
-\rtodo \added{Mention again that important for the transform are accurate
-results; these gridding as what we implemented in the 3D code.}
+\added{The proposed Fourier transformation requires a robust solver that can
+compute precise results over a wide range of frequencies (times) to obtain
+time-domain (frequency-domain) responses. In our case the solver uses a
+stretched, regular grid and computes the electric fields in the frequency
+domain. This setup is the target of the following gridding recommendations.
+Whilst they will look differently for other mesh types or a time-domain code,
+some conclusion will still hold.}
 
 The computation grid consists of a core or survey domain $D_\mr{s}$ that should
 contain all source and receiver positions. The survey domain usually has no or
@@ -587,7 +602,13 @@ dimensions, not only to the upward $z$-direction and similarly for very
 resistive basements, even in deep water. One way to circumvent this difficulty
 is the use of a primary-secondary formulation, where the primary field,
 including the air wave, is computed with a semi-analytical code for layered
-media. We do not consider this approach here.
+media. We do not consider this approach here. \added{Note that grid stretching
+for complex-valued diffusion fields is essentially what is done for wave fields
+with the perfectly matched layer (PML). PML is an absorbing layer to avoid
+scattering from the boundary by letting the field die out to zero, which is
+achieved by introducing a complex factor which causes damping. As
+electromagnetic diffusion fields are damped fields by themselves it suffices to
+stretch the grid.}
 
 In summary, the adaptive gridding takes $f$, $D_\mr{s}$, $\sigma_\mr{src}$,
 $\sigma_\mr{ave}$, $n_\delta$, and ranges for $\alpha_\mr{s}$, $\alpha_\mr{c}$,
@@ -966,6 +987,9 @@ iterative solver vs. direct solver.
 
 
 \subsection{\added{Induced Polarization}} % % % % % % % % % % % % % % % % % % %
+
+\added{mention independence of spatial complexity, why we also show 1D
+examples.}
 
 \section{Conclusions} % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
