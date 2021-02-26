@@ -988,8 +988,49 @@ iterative solver vs. direct solver.
 
 \subsection{\added{Induced Polarization}} % % % % % % % % % % % % % % % % % % %
 
+\added{Note to reviewers: This entire section is new, without being all
+marked in green.}
+
 \added{mention independence of spatial complexity, why we also show 1D
 examples.}
+
+The Cole-Cole model \citep[CCM, ][]{JCP.41.Cole}, written in terms of
+conductivities instead of electric permittivities as by the original authors,
+is given by
+%
+\begin{equation}
+  \sigma(\omega) = \sigma_\infty + \frac{\sigma_0 - \sigma_\infty}{1 +
+    (\rm{i}\omega\tau)^c}\ ,
+  \label{eq:ccm}
+\end{equation}
+%
+where $\sigma_0$ and $\sigma_\infty$ refer to the low-frequency and
+high-frequency conductivity values, respectively, $\tau$ is the central
+relaxation time, and $c$ the CCM exponent describing the broadness of the
+relaxation time distribution. Note that this model slightly differs from the
+one phrased in terms of resistivities given by \cite{GEO.78.Pelton}, see, e.g.,
+\cite{GJI.13.Tarasov}.
+%
+\begin{figure}
+  \centering
+  \includegraphics[width=\fwidth]{11-cole-cole-model}
+  \caption{}
+  \label{fig:CCM}
+\end{figure}
+%
+
+It required only 30 frequencies from 1.5e-8 to 8.3\,Hz, instead of the 244
+frequencies from 1.5e-8 to 6.8e6\,Hz required by the digital filter (201\,pt
+filter from Key, 2012). Besides the fact that the responses for the higher
+frequencies can be set to zero it is also sufficient to only compute every
+5th of the required frequencies.
+
+low frequencies cannot be 'interpolated'; however, other tricks could be
+implemented. The DC values (so low frequencies or late times) is the same
+independent of the IP effect. This makes it possible to estimate the DC value
+with the IP-free model which does not require very low frequencies, and use
+consequently this DC value to interpolate the low frequencies.
+
 
 \section{Conclusions} % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
