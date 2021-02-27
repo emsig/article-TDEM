@@ -183,6 +183,41 @@ the corresponding grids are carefully chosen.
 
 \section{Introduction}  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
+\rtodo 1 \added{\emph{The independence from spatial model complexity is in my
+  opinion debatable, because of a potential issue with the accuracy of phase
+  information. It’s my experience that a high degree of imaginary-field
+  component accuracy is needed for a proper f-t transform. --
+  I also needed a high level of numerical accuracy in the f-domain, that is,
+  very fine meshes and tight solver tolerances. An aspect which in my opinion
+  is not addressed sufficiently in the current manuscript.}: Add somewhere that
+  high accurate results are required}.
+
+\rtodo 2 \added{\emph{In my first revision, I actually did not make a request
+  for making the literature review "more extensive". Instead, I wrote that the
+  authors "should spend more time researching the EM literature that is related
+  to the actual topic." As it was and still is, half of the introduction
+  (current manuscript, page 2 to p. 3, line 46) is a rather broad/general EM
+  overview. Given the fact that the paper connects directly to Plessix et al.
+  (2007) and Mulder et al. (2008), I would have expected a more targeted
+  introduction towards the specific advances of this manuscript – instead of
+  talking about a choice of only loosely connected and more general topics like
+  Lebedev grids, tetrahedral grids, integral equation, direct solvers, etc. I
+  like that the introduction is generally concise. My impression remains that
+  the introduction can have the same length but be more targeted. Other readers
+  may also see it that way. I won’t need another explanation about your
+  potentially differing opinion. This is just a suggestion for improvement.
+  Feel free to ignore.}}
+
+
+\rtodo 3 Reply; Include comments from earlier review; papers that were
+referred; difficulties in late/early times; IP effects. Refer to steel-casing
+effects (lindsey), but state we look here at non-Debye cole models.
+Add also the papers seogi mentioned re IP effects.
+\emph{We tried to improve the introduction and focus more on the actual topic.
+  Amongst other, we address the topic of steel casing and non-Debye Cole-Cole
+models.}
+
+
 The controlled-source electromagnetic (CSEM) method is one of the common
 non-seismic tools in exploration geophysics, not only in hydrocarbon
 exploration \citep{GEO.10.Constable}, but also in the search for sulfides
@@ -1030,6 +1065,50 @@ implemented. The DC values (so low frequencies or late times) is the same
 independent of the IP effect. This makes it possible to estimate the DC value
 with the IP-free model which does not require very low frequencies, and use
 consequently this DC value to interpolate the low frequencies.
+
+for c>0.6, 17 frequencies from 1.2e-4 to 8.3\,Hz would be sufficient.
+
+
+%    'src': (0, 0, 0.01),
+%    'rec': (900, 0, 0.01),
+%    'depth': [0, 300, 400],
+%    res = 2e14, 1, 1, 1
+%    layer: cond_8 = 1.25, cond_0 = 1 => m = 0.2
+%    tau: 1
+%    fmin=1e-4,
+%    fmax=5e2,
+%    signal=1,        # <= Step-On!
+%    every_x_freq=6,  # Only every 6th value
+
+%  time        [s] :  0.01 - 10000 : 301  [min-max; #]
+%  Fourier         :  DLF (Sine-Filter)
+%    > Filter      :  Key 601 CosSin (2009)
+%    > DLF type    :  Lagged Convolution
+%  Req. freq  [Hz] :  6.67463E-18 - 4.00754E+13 : 747  [min-max; #]
+%  Calc. freq [Hz] :  0.000155601 - 424.87 : 27  [min-max; #]
+
+% Comparison: Full DLF; cosine-filter step-off, 747 frequencies
+% Our method: 27 freqs; DC(no IP) - step-on; DC at 1000 s
+%    (no more frequencies were required)
+%    important to see that the DC value (low freq, late t; is the same IP/noIP)
+
+The actual transform was carried out with the 601-point sine-cosine filter from
+\cite{GEO.09.Key}.
+
+
+Key 601\,pt filter is very long; seems to be by far the best for low c values.
+Designing a new filter specific for IP problems might be the best approach
+
+DC: 1000s; the same amount of frequencies is required to compute times up to
+10s or up to 1000s
+
+\cite{GJI.17.Commer}
+
+\begin{itemize}
+  \item Designing a DLF for IP effects
+  \item DC value is the same for the IP or non-IP model, so one could use
+    the non-IP response and do interpolation
+\end{itemize}
 
 
 \section{Conclusions} % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
