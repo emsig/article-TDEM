@@ -294,6 +294,8 @@ highlight their advantages and shortcomings. This is followed by an outline of
 our changes to the Fourier transform and the adaptive gridding. Finally, we
 demonstrate the efficiency of the approach with some numerical results.
 
+\rtodo \added{REDO and send to R.R}
+
 \rtodo \added{Add citation to R.R. (2021) regarding RA and speed-up; limitation
 to switch-on/-off.}
 
@@ -311,14 +313,16 @@ and use Fourier transforms to go to the other. However, this approach can be
 costly, as many frequencies over a wide range are required to go from the
 frequency domain to the time domain, or many times over a wide range for the
 opposite direction. We present a methodology which significantly reduces the
-amount and range of the required frequencies \added{or times}, translating into
-a significant reduction in computation time. The required computation grids for
-low frequencies (in our case in the order of 0.001\,Hz) and high frequencies
-(around 100\,Hz) are hugely different. Low frequencies can be computed on a
-coarser grid, but they require a much larger domain in order to avoid boundary
-effects. High frequencies, on the other hand, require denser gridding, but they
-are much more limited in reach. An adaptive gridding scheme is therefore
-required\replaced{, which}{. We build our approach upon
+amount and range of the required frequencies\replaced{ through a combination of
+extrapolation, interpolation, and setting the responses for high frequencies to
+zero. This translates}{, translating} into a significant reduction in
+computation time. \replaced{The number of required frequencies is the most important aspect for reducing computation time. The second most important aspect is the computation grid, as t}{T}he required \deleted{computation} grids
+for low frequencies (in our case in the order of 0.001\,Hz) and high
+frequencies (around 100\,Hz) are hugely different. Low frequencies can be
+computed on a coarser grid, but they require a much larger domain in order to
+avoid boundary effects. High frequencies, on the other hand, require denser
+gridding, but they are much more limited in reach. An adaptive gridding scheme
+is therefore required\replaced{, which}{. We build our approach upon
 \mbox{\cite{GEO.07.Plessix}}, who presented such an adaptive gridding for
 multi-frequency (and multi-source) CSEM modelling.
 
@@ -327,7 +331,7 @@ An adaptive grid in the frequency domain} is naturally based on the skin depth,
 electromagnetic field is decayed by $1/e\approx 37\,\%$. The skin depth
 $\delta$ is a function of conductivity and frequency, and for the diffusive
 approximation of Maxwell's equations in an isotropic, homogeneous medium is
-given by \citep[e.g.,][ equation~1.53]{B.SEG.88.Ward}
+given by \citep[e.g.,][\mbox{\deleted{ equation~1.53}}]{B.SEG.88.Ward}
 %
 \begin{equation}
   \delta = \sqrt{\frac{2}{\omega\mu\sigma}}
@@ -347,15 +351,15 @@ a fraction of the minimum skin depth $\delta_\mathrm{min}$, where
 $\delta_\mathrm{min}$ should be 2--3 times bigger than $\Delta_\mathrm{min}$.
 The cells have to be smallest around the source; in the marine case, the
 minimum skin depth is therefore defined by the conductivity of seawater.
-However, this yields quite large cells for low frequencies, so special care has
-to be taken around the source by defining a maximum allowed
-$\Delta_\mathrm{min}$. The grid dimension, on the other hand, is defined as a
-function of the skin depth for the average conductivity of the background,
-$\delta_\mathrm{ave}$. They use four times $\delta_\mathrm{ave}$ for the $x$-,
-$y$-, and downward $z$-directions, and a fixed 50\,km for the upward
-$z$-direction to account for the airwave. To reduce the number of cells, it is
-desirable to introduce stretching, at least in the buffer zone outside of the
-area where source and receivers are located.
+However, this \replaced{can yield}{yields} quite large cells for low
+frequencies, so special care has to be taken around the source by defining a
+maximum allowed $\Delta_\mathrm{min}$. The grid dimension, on the other hand,
+is defined as a function of \deleted{the} skin depth for the average
+conductivity of the background, $\delta_\mathrm{ave}$. They use four times
+$\delta_\mathrm{ave}$ for the $x$-, $y$-, and downward $z$-directions, and a
+fixed 50\,km for the upward $z$-direction to account for the airwave. To reduce
+the number of cells, it is desirable to introduce stretching, at least in the
+buffer zone outside of the area where source and receivers are located.
 
 \cite{GEO.08.Mulder} provide a computational complexity analysis of various
 methods to model transient electromagnetic responses directly in the time
@@ -394,17 +398,18 @@ private communication, 2020).}
 \section{Methodology} % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
 \added{The requirement for any transform is a robust solver of sufficient
-precision.} \replaced{We use f}{F}or the numerical computations \deleted{we
-use} the open-source (Apache License 2.0) code\added{s \empymod
-\mbox{\citep{GEO.17.Werthmuller}} and} \emg3d
-\citep{JOSS.19.Werthmuller}\replaced{.}{,} \added{The former computes
-semi-analytical responses of layered models, the latter is} a multigrid solver
-based on \cite{GP.06.Mulder}, which can be used as a preconditioner for Krylov
-subspace solvers or as a solver on its own. The multigrid approach works fine
-for the diffusive approximation of Maxwell's equations, which assumes that
-$\omega\varepsilon \ll \sigma$, where $\varepsilon$ is electric permittivity
-(F/m). The remaining system to solve in the frequency domain is then given by
-the second-order differential equation of the electric field,
+precision over a wide range of frequencies.} \replaced{We use f}{F}or the
+numerical computations \deleted{we use} the open-source (Apache License 2.0)
+code\added{s \empymod} \added{\mbox{\citep{GEO.17.Werthmuller}}} \added{and}
+\emg3d \citep{JOSS.19.Werthmuller}\replaced{.}{,} \added{The former computes
+semi-analytical responses of layered models, the latter is} a \added{3D}
+multigrid solver based on \cite{GP.06.Mulder}, which can be used as a
+preconditioner for Krylov subspace solvers or as a solver on its own. The
+multigrid approach works fine for the diffusive approximation of Maxwell's
+equations, which assumes that $\omega\varepsilon \ll \sigma$, where
+$\varepsilon$ is electric permittivity (F/m). The remaining system to solve in
+the frequency domain is then given by the second-order differential equation of
+the electric field,
 %
 \begin{equation}
     \mathrm{i}\omega\sigma \mathbf{E} +
@@ -422,12 +427,12 @@ decomposition to speed up the computation \citep{GEO.08.Mulder}. One of the big
 advantages of the multigrid method is that it scales linearly (optimal) with
 the grid size in both CPU and RAM usage \citep{B.Springer.20.Mulder}. This
 makes it feasible to run even big models on standard computers, without the
-need for big clusters. All the examples in this article are run on a laptop
-with an i7-6600U\,CPU\,@\,2.6\,GHz (x4) and 16\,GB of memory, using Ubuntu
-20.04 and Python 3.8. All examples were run using a single thread, but
-parallelization over frequencies is straight forward, as the computations are
-independent. \deleted{For the semi-analytical computations of layered models we
-use the open-source (Apache License 2.0) code \empymod
+need for big clusters. All \deleted{the} examples in this article are run on a
+laptop with an i7-6600U\,CPU\,@\,2.6\,GHz (x4) and 16\,GB of memory, using
+Ubuntu 20.04 and Python 3.8. \replaced{They}{All examples} were run using a
+single thread, but parallelization over frequencies is straight forward, as the
+computations are independent. \deleted{For the semi-analytical computations of
+layered models we use the open-source (Apache License 2.0) code \empymod
 \mbox{\citep{GEO.17.Werthmuller}}.}
 
 \subsection{Frequency selection}  % % % % % % % % % % % % % % % % % % % % % % %
@@ -1027,7 +1032,8 @@ iterative solver vs. direct solver.
 marked in green.}
 
 \added{mention independence of spatial complexity, why we also show 1D
-examples.}
+examples; however, sufficiently accurate 3D results are an obvious
+pre-requisite.}
 
 The Cole-Cole model \citep[CCM, ][]{JCP.41.Cole}, written in terms of
 conductivities instead of electric permittivities as by the original authors,
