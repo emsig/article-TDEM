@@ -183,30 +183,32 @@ the corresponding grids are carefully chosen.
 
 \section{Introduction}  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
-\rtodo 1 \added{\emph{The independence from spatial model complexity is in my
+\added{BEGIN TEMPORARY ADDED v v v v}
+
+\rtodo 1 \emph{The independence from spatial model complexity is in my
   opinion debatable, because of a potential issue with the accuracy of phase
   information. It’s my experience that a high degree of imaginary-field
   component accuracy is needed for a proper f-t transform. --
   I also needed a high level of numerical accuracy in the f-domain, that is,
   very fine meshes and tight solver tolerances. An aspect which in my opinion
   is not addressed sufficiently in the current manuscript.}: Add somewhere that
-  high accurate results are required}.
+  high accurate results are required.
 
-\rtodo 2 \added{\emph{In my first revision, I actually did not make a request
+\rtodo 2 \emph{In my first revision, I actually did not make a request
   for making the literature review "more extensive". Instead, I wrote that the
   authors "should spend more time researching the EM literature that is related
   to the actual topic." As it was and still is, half of the introduction
   (current manuscript, page 2 to p. 3, line 46) is a rather broad/general EM
-  overview. Given the fact that the paper connects directly to Plessix et al.
-  (2007) and Mulder et al. (2008), I would have expected a more targeted
-  introduction towards the specific advances of this manuscript – instead of
-  talking about a choice of only loosely connected and more general topics like
-  Lebedev grids, tetrahedral grids, integral equation, direct solvers, etc. I
-  like that the introduction is generally concise. My impression remains that
-  the introduction can have the same length but be more targeted. Other readers
-  may also see it that way. I won’t need another explanation about your
-  potentially differing opinion. This is just a suggestion for improvement.
-  Feel free to ignore.}}
+  overview. Given the fact that the paper \textbf{connects directly to Plessix
+  et al. (2007) and Mulder et al. (2008)}, I would have expected a \textbf{more
+  targeted introduction towards the specific advances of this manuscript} –
+  instead of talking about a choice of only loosely connected and more general
+  topics like Lebedev grids, tetrahedral grids, integral equation, direct
+  solvers, etc. I like that the introduction is generally concise. My
+  impression remains that the introduction can have the same length but be more
+  targeted. Other readers may also see it that way. I won’t need another
+  explanation about your potentially differing opinion. This is just a
+  suggestion for improvement. Feel free to ignore.}
 
 
 \rtodo 3 Reply; Include comments from earlier review; papers that were
@@ -216,6 +218,8 @@ Add also the papers seogi mentioned re IP effects. \cite{CAG.19.Heagy}
 \cite{EXP.20.Kang} \emph{We tried to improve the introduction and focus more on
   the actual topic. Amongst other, we address the topic of steel casing and
   non-Debye Cole-Cole models.}
+
+\added{END TEMPORARY ADDED n n n}
 
 
 The controlled-source electromagnetic (CSEM) method is one of the common
@@ -450,7 +454,7 @@ applicable to time-to-frequency transformations. We decided to use a regular
 spacing of frequencies on a log-scale, rather than an adaptive scheme. This
 approach is favourable if a wide range of offsets is needed, as the required
 frequencies change with offset and an adaptive frequency selection is therefore
-often tailored to a single offset\added{ or a limited range of offset}. Also,
+often tailored to a single offset\added{ or a limited range of offsets}. Also,
 it allows for straightforward parallelization over frequencies, which is not
 completely possible with an adaptive scheme.
 
@@ -477,9 +481,26 @@ zero or to infinity, with the advantage that knowing the endpoints makes it
 possible to convert the extrapolation of missing frequencies into an
 interpolation.
 
-\rtodo \added{Start this section with the method; fmin, fmax, ndec; below we
-interpolate with PCHIP, above we set to zero, in-between we interpolate with
-cubic spline.}
+\hrule
+
+\added{Any Fourier transform needs a certain range of frequencies to obtain
+time-domain results. Our approach is not to minimize the required for the
+transform, but the number of frequencies for which we actually have to compute
+responses. We do this in three zones: Above an upper threshold fmax we set the
+frequency-domain response to zero. Below a lower threshold fmin we extrapolate
+the frequency-domain response. As we know that the imaginary response goes
+towards zero for zero frequency, we can turn it into an interpolation, for
+which we use PCHIP. And in-between the thresholds we use cubic spline
+interpolation in order to only have to actually compute a few distinct
+frequencies. Using this approach we found that computing the responses for
+15--25 frequencies is usually good enough to obtain time-domain responses for a
+large range of offsets; even though the actual transform might need up to
+hundreds of frequencies. The required frequencies depend naturally on the
+conductivities and on the chosen acquisition type and layout. A trial-and-error
+\dots}
+
+\hrule
+
 \replaced{The actually computed frequencies in our approach are defined by
 three key-parameters}{There are three key-parameters that have to be defined}:
 \replaced{The m}{M}inimum and maximum frequency ($f_\mr{min}, f_\mr{max}$) and
