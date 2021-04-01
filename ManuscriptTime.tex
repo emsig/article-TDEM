@@ -320,7 +320,8 @@ opposite direction. We present a methodology which significantly reduces the
 amount and range of the required frequencies\replaced{ through a combination of
 extrapolation, interpolation, and setting the responses for high frequencies to
 zero. This translates}{, translating} into a significant reduction in
-computation time. \replaced{The number of required frequencies is the most important aspect for reducing computation time. The second most important aspect is the computation grid, as t}{T}he required \deleted{computation} grids
+computation time. \replaced{The number of required frequencies is not the only
+important point for reducing computation time. Another important aspect is the computation grid, as t}{T}he required \deleted{computation} grids
 for low frequencies (in our case in the order of 0.001\,Hz) and high
 frequencies (around 100\,Hz) are hugely different. Low frequencies can be
 computed on a coarser grid, but they require a much larger domain in order to
@@ -439,24 +440,28 @@ computations are independent. \deleted{For the semi-analytical computations of
 layered models we use the open-source (Apache License 2.0) code \empymod
 \mbox{\citep{GEO.17.Werthmuller}}.}
 
+\added{Note that while we use these two algorithms for the numerical examples
+any solver that provides sufficient accurate and precise frequency-domain
+responses could be used.}
+
 \subsection{Frequency selection}  % % % % % % % % % % % % % % % % % % % % % % %
 
 An important factor in terms of speed and accuracy for time-domain responses
 obtained from frequency-domain computations is the selection of the required
 frequencies. The fewer frequencies required, the quicker we obtain the
-time-domain result. \added{This applies primarily for expensive kernels such
-as used in 3D modelling where the computation of the response of a single
-frequency takes much longer than the transformation itself.} The same applies
-for the reverse operation, the fewer times required, the quicker we obtain
-frequency-domain results. Even though we limit our analysis here to
-frequency-to-time transformations, most of the arguments are reversible and
-applicable to time-to-frequency transformations. We decided to use a regular
-spacing of frequencies on a log-scale, rather than an adaptive scheme. This
-approach is favourable if a wide range of offsets is needed, as the required
-frequencies change with offset and an adaptive frequency selection is therefore
-often tailored to a single offset\added{ or a limited range of offsets}. Also,
-it allows for straightforward parallelization over frequencies, which is not
-completely possible with an adaptive scheme.
+time-domain result. \added{This is true in general but applies in particular
+to expensive kernels such as is the case in 3D modelling, where the computation
+of the response of a single frequency takes much longer than the transformation
+itself.} The same applies for the reverse operation, the fewer times required,
+the quicker we obtain frequency-domain results. Even though we limit our
+analysis here to frequency-to-time transformations, most of the arguments are
+reversible and applicable to time-to-frequency transformations. We decided to
+use a regular spacing of frequencies on a log-scale, rather than an adaptive
+scheme. This approach is favourable if a wide range of offsets is needed, as
+the required frequencies change with offset and an adaptive frequency selection
+is therefore often tailored to a single offset\added{ or a limited range of
+offsets}. Also, it allows for straightforward parallelization over frequencies,
+which is not completely possible with an adaptive scheme.
 
 For the actual transform we use either the digital linear filter (DLF) method
 or the logarithmic fast Fourier transform (FFTLog). The DLF method was
@@ -481,35 +486,28 @@ zero or to infinity, with the advantage that knowing the endpoints makes it
 possible to convert the extrapolation of missing frequencies into an
 interpolation.
 
-\hrule
+\replaced{Any Fourier transform needs a certain range of frequencies to obtain
+time-domain results. Our approach is not to minimize the required frequencies
+for the transform, but to minimize the number of frequencies for which we
+actually have to compute responses. We do this in three zones: Above an upper
+threshold $f_\mr{max}$ we set the frequency-domain response to zero. Below a
+lower threshold $f_\mr{min}$ we extrapolate the frequency-domain response. As
+we know that the imaginary response goes towards zero for zero frequency, we
+can turn it into an interpolation, for which we use PCHIP. And in-between the
+thresholds we use cubic spline interpolation in order to only have to actually
+compute a few distinct frequencies per decade ($n_\mr{dec}^f$). Using this
+approach we found that computing the responses for 15--25 frequencies is
+usually good enough to obtain time-domain responses for a large range of
+offsets; even though the actual transform might need up to hundreds of
+frequencies.}{There are three key-parameters that have to be defined: Minimum
+and maximum frequency ($f_\mr{min}, f_\mr{max}$) and the number of frequencies
+per decade ($n_\mr{dec}^f$).}
 
-\added{Any Fourier transform needs a certain range of frequencies to obtain
-time-domain results. Our approach is not to minimize the required for the
-transform, but the number of frequencies for which we actually have to compute
-responses. We do this in three zones: Above an upper threshold fmax we set the
-frequency-domain response to zero. Below a lower threshold fmin we extrapolate
-the frequency-domain response. As we know that the imaginary response goes
-towards zero for zero frequency, we can turn it into an interpolation, for
-which we use PCHIP. And in-between the thresholds we use cubic spline
-interpolation in order to only have to actually compute a few distinct
-frequencies. Using this approach we found that computing the responses for
-15--25 frequencies is usually good enough to obtain time-domain responses for a
-large range of offsets; even though the actual transform might need up to
-hundreds of frequencies. The required frequencies depend naturally on the
-conductivities and on the chosen acquisition type and layout. A trial-and-error
-\dots}
-
-\hrule
-
-\replaced{The actually computed frequencies in our approach are defined by
-three key-parameters}{There are three key-parameters that have to be defined}:
-\replaced{The m}{M}inimum and maximum frequency ($f_\mr{min}, f_\mr{max}$) and
-the number of frequencies per decade ($n_\mr{dec}^f$). \added{This creates a
-frequency range which is much smaller than the frequency range required for the
-transform.} \replaced{A t}{T}rial-and-error \added{approach} with a 3D code is
-very time-intensive. However, a simplified, layered model for the required
-survey setup and a fast 1D modeller makes it possible to estimate these
-parameters easily. \replaced{An example of this is shown in
+\replaced{The required frequencies depend naturally on the conductivities and
+on the chosen acquisition type and layout. A t}{T}rial-and-error approach with a
+3D code is very time-intensive. However, a simplified, layered model for the
+required survey setup and a fast 1D modeller makes it possible to estimate
+these parameters easily. \replaced{An example of this is shown in
 Figure~\ref{fig:FFTLog-log}.}{To this end, we created a graphical, interactive
 tool using \empymod, as shown in Figure~\ref{fig:FFTLog-log}.}
 %
@@ -525,29 +523,30 @@ tool using \empymod, as shown in Figure~\ref{fig:FFTLog-log}.}
   \label{fig:FFTLog-log}
 \end{figure}
 %
-\replaced{It }{The shown example model} is a marine scenario with 1\,km water
-depth of resistivity $\rho=0.3\,\ohmm$ ($\rho = \sigma^{-1}$) and a 100\,m
-thick target of 100\,\ohmm at 1\,km below the seafloor in a background of
-1\,\ohmm. The source is 50\,m above the seafloor, the receiver is on the
-seafloor, and the response is the inline $x$-directed $E$-field. The left
-subplot shows the imaginary part in the frequency domain and the right plot the
-corresponding impulse response in the time domain. The red lines are the
-semi-analytical responses. The blue circles indicate the actually computed
-responses and the black dots the frequencies which are interpolated or set to
-zero. The resulting time-domain response has a relative error of less than
-1\,\% everywhere except for very early times.
+\replaced{It shows the responses for}{The shown example model is} a
+marine scenario with 1\,km water depth of resistivity $\rho=0.3\,\ohmm$ ($\rho
+= \sigma^{-1}$) and a 100\,m thick target of 100\,\ohmm at 1\,km below the
+seafloor in a background of 1\,\ohmm. The source is 50\,m above the seafloor,
+the receiver is on the seafloor, and the response is the inline $x$-directed
+$E$-field. The left subplot shows the imaginary part in the frequency domain
+and the right plot the corresponding impulse response in the time domain. The
+red lines are the semi-analytical responses. The blue circles indicate the
+actually computed responses and the black dots the frequencies which are
+interpolated or set to zero. The resulting time-domain response has a relative
+error of less than 1\,\% everywhere except for very early times.
 
 Figure \ref{fig:FFTLog-lin} shows exactly the same on a
-\replaced{linear}{logarithmic} scale\replaced{for the time and amplitude
+\replaced{linear}{logarithmic} scale \replaced{for the time and amplitude
 axes}{, without the interactive GUI-related elements}. It can be seen that with
-the chosen frequencies the time-domain response starts to divert above about
-100\,s and below 0.3\,s. It also shows the oscillating high-frequency part,
-which is hard to interpolate and we therefore set it to zero.
-Figure~\ref{fig:DLF-lin} is the same as Figure \ref{fig:FFTLog-lin}, but
-transformed with the DLF method applying the 81-point sine-cosine filter from
-\cite{GEO.09.Key}. The same frequencies were computed as in the FFTLog case and
-the missing ones interpolated. The error of the corresponding time-domain
-response is comparable, so either FFTLog or DLF can be used.
+the chosen\added{, computed} frequencies \added{(blue dots)} the time-domain
+response starts to divert above about 100\,s and below 0.3\,s. It also shows
+the oscillating high-frequency part, which is hard to interpolate and we
+therefore set it to zero. Figure~\ref{fig:DLF-lin} is the same as Figure
+\ref{fig:FFTLog-lin}, but transformed with the DLF method applying the 81-point
+sine-cosine filter from \cite{GEO.09.Key}. The same frequencies were computed
+as in the FFTLog case and the missing ones interpolated. The error of the
+corresponding time-domain response is comparable, so either FFTLog or DLF can
+be used.
 %
 \begin{figure*}
   \centering
@@ -565,11 +564,12 @@ response is comparable, so either FFTLog or DLF can be used.
 %
 In the above example we used 20 frequencies, but that many would not be
 required for the shown offset of 5\,km, a few of the lower and higher
-frequencies could be left out. With this frequency-selection we can model a
-wide range of offsets. This is shown in Figure \ref{fig:multi-offset}, where
-the same kernels were used to yield the responses at offsets $r=1.5,3,6$, and
-12\,km. We only need to compute 50\,\% of the required frequencies in the case
-of the FFTLog, and only 14\,\% in the case of the DLF.
+frequencies could be left out. With this frequency-selection\added{, however,}
+we can model a wide range of offsets. This is shown in Figure
+\ref{fig:multi-offset}, where the same kernels were used to yield the responses
+at offsets $r=1.5,3,6$, and 12\,km. We only need to compute 50\,\% of the
+required frequencies in the case of the FFTLog, and only 14\,\% in the case of
+the DLF.
 %
 \begin{figure*}
   \centering
@@ -619,7 +619,7 @@ it takes to compute the responses for these frequencies.
 \added{The proposed Fourier transformation requires a robust solver that can
 compute precise results over a wide range of frequencies (times) to obtain
 time-domain (frequency-domain) responses. In our case the solver uses a
-stretched, regular grid and computes the electric fields in the frequency
+regular, stretched grid and computes the electric fields in the frequency
 domain. This setup is the target of the following gridding recommendations.
 Whilst they will look differently for other mesh types or a time-domain code,
 some conclusion will still hold.}
@@ -637,14 +637,14 @@ defined as
 where $\sigma_\mr{src}$ is the conductivity of the media in which the source
 resides, and $n_\delta$ is a positive number that defines how many cells there
 should be per skin depth. The actual computational domain $D_\mr{c}$ is usually
-much bigger than $D_\mr{s}$ in order to avoid artefacts from the perfectly
-electrically conducting boundary condition. It can also have a much higher
-stretching factor $\alpha_\mr{c}$. In the presented examples we have chosen
-$D_\mr{c}$ such that the distance for the signal diffusing from the source to
-the boundary and back to the receiver closest to the boundary is at least two
-wavelengths, after which the amplitude of the signal is reduced to a millionth
-of its initial strength. The wavelength $\lambda$ to compute $D_\mr{c}$ is
-given by
+much bigger than $D_\mr{s}$ in order to avoid artefacts from the
+\deleted{perfectly electrically conducting} boundary condition. It can also
+have a much higher stretching factor $\alpha_\mr{c}$. In the presented examples
+we have chosen $D_\mr{c}$ such that the distance for the signal diffusing from
+the source to the boundary and back to the receiver closest to the boundary is
+at least two wavelengths, after which the amplitude of the signal is reduced to
+a millionth of its initial strength. The wavelength $\lambda$ to compute
+$D_\mr{c}$ is given by
 %
 \begin{equation}
   \lambda = 2\pi\delta(f, \sigma_\mr{ave})
@@ -657,9 +657,10 @@ different directions. However, the skin-depth approach fails for air, in which
 the EM field propagates as a wave at the speed of light. A largest
 computational domain is therefore enforced, defining the maximum distance from
 the source to the boundary; this distance is by default set to 100\,km, but
-this can be reduced in the marine case with increasing water depth. Note that
-for shallow marine and land cases this also applies to the horizontal
-dimensions, not only to the upward $z$-direction and similarly for very
+this can be reduced in the marine case with increasing water depth.
+\deleted{Note that for shallow marine and land cases t}\added{T}his also
+applies to the horizontal dimensions, not only to the upward
+$z$-direction\added{,} and \replaced{it equally applies}{similarly} for very
 resistive basements, even in deep water. One way to circumvent this difficulty
 is the use of a primary-secondary formulation, where the primary field,
 including the air wave, is computed with a semi-analytical code for layered
@@ -701,6 +702,7 @@ anisotropy from a stack of finely layered formations of varying resistivity.
 
 \section{Numerical examples}  % % % % % % % % % % % % % % % % % % % % % % % % %
 
+\todo[inline]{HERE HERE HERE}
 
 \subsection{Homogeneous space}  % % % % % % % % % % % % % % % % % % % % % % % %
 
@@ -921,6 +923,100 @@ frequencies could be added to improve late-time values.
 %
 
 
+\subsection{\added{Induced Polarization}} % % % % % % % % % % % % % % % % % % %
+
+\added{$\Downarrow\qquad$ Note to reviewers: The entire section 4.3 below is
+new, without being all marked in green. $\qquad\Downarrow$}
+
+\added{Mention independence of spatial complexity, why we also show 1D
+examples; however, sufficiently accurate 3D results are an obvious
+pre-requisite.}
+
+The Cole-Cole model \citep[CCM, ][]{JCP.41.Cole}, written in terms of
+conductivities instead of electric permittivities as by the original authors,
+is given by
+%
+\begin{equation}
+  \sigma(\omega) = \sigma_\infty + \frac{\sigma_0 - \sigma_\infty}{1 +
+    (\rm{i}\omega\tau)^c}\ ,
+  \label{eq:ccm}
+\end{equation}
+%
+where $\sigma_0$ and $\sigma_\infty$ refer to the low-frequency and
+high-frequency conductivity values, respectively, $\tau$ is the central
+relaxation time, and $c$ the CCM exponent describing the broadness of the
+relaxation time distribution. Note that this model slightly differs from the
+one phrased in terms of resistivities given by \cite{GEO.78.Pelton}, see, e.g.,
+\cite{GJI.13.Tarasov}.
+%
+\begin{figure}
+  \centering
+  \includegraphics[width=\fwidth]{11-cole-cole-model}
+  \caption{}
+  \label{fig:CCM}
+\end{figure}
+%
+
+It required only 30 frequencies from 1.5e-8 to 8.3\,Hz, instead of the 244
+frequencies from 1.5e-8 to 6.8e6\,Hz required by the digital filter (201\,pt
+filter from Key, 2012). Besides the fact that the responses for the higher
+frequencies can be set to zero it is also sufficient to only compute every
+5th of the required frequencies.
+
+low frequencies cannot be 'interpolated'; however, other tricks could be
+implemented. The DC values (so low frequencies or late times) is the same
+independent of the IP effect. This makes it possible to estimate the DC value
+with the IP-free model which does not require very low frequencies, and use
+consequently this DC value to interpolate the low frequencies.
+
+for c>0.6, 17 frequencies from 1.2e-4 to 8.3\,Hz would be sufficient.
+
+
+%    'src': (0, 0, 0.01),
+%    'rec': (900, 0, 0.01),
+%    'depth': [0, 300, 400],
+%    res = 2e14, 1, 1, 1
+%    layer: cond_8 = 1.25, cond_0 = 1 => m = 0.2
+%    tau: 1
+%    fmin=1e-4,
+%    fmax=5e2,
+%    signal=1,        # <= Step-On!
+%    every_x_freq=6,  # Only every 6th value
+
+%  time        [s] :  0.01 - 10000 : 301  [min-max; #]
+%  Fourier         :  DLF (Sine-Filter)
+%    > Filter      :  Key 601 CosSin (2009)
+%    > DLF type    :  Lagged Convolution
+%  Req. freq  [Hz] :  6.67463E-18 - 4.00754E+13 : 747  [min-max; #]
+%  Calc. freq [Hz] :  0.000155601 - 424.87 : 27  [min-max; #]
+
+% Comparison: Full DLF; cosine-filter step-off, 747 frequencies
+% Our method: 27 freqs; DC(no IP) - step-on; DC at 1000 s
+%    (no more frequencies were required)
+%    important to see that the DC value (low freq, late t; is the same IP/noIP)
+
+The actual transform was carried out with the 601-point sine-cosine filter from
+\cite{GEO.09.Key}.
+
+
+Key 601\,pt filter is very long; seems to be by far the best for low c values.
+Designing a new filter specific for IP problems might be the best approach
+
+DC: 1000s; the same amount of frequencies is required to compute times up to
+10s or up to 1000s
+
+\cite{GJI.17.Commer}
+
+\begin{itemize}
+  \item Designing a DLF for IP effects
+  \item DC value is the same for the IP or non-IP model, so one could use
+    the non-IP response and do interpolation
+\end{itemize}
+
+
+\added{$\Uparrow\qquad$ Note to reviewers: The entire section 4.3 above is new,
+without being all marked in green. $\qquad\Uparrow$}
+
 \subsection{Horizontal extent of the computation domain}  % % % % % % % % % % %
 
 The skin-depth approach fails for the air layer, as explained in the Section
@@ -1045,97 +1141,6 @@ early times. Both codes took roughly 4--5 minutes to compute the two models
 (single thread). However, in this particular comparison, the main difference in
 runtime is not frequency-domain computation vs. time-domain computation, but
 iterative solver vs. direct solver.
-
-
-\subsection{\added{Induced Polarization}} % % % % % % % % % % % % % % % % % % %
-
-\added{Note to reviewers: This entire section is new, without being all
-marked in green.}
-
-\added{mention independence of spatial complexity, why we also show 1D
-examples; however, sufficiently accurate 3D results are an obvious
-pre-requisite.}
-
-The Cole-Cole model \citep[CCM, ][]{JCP.41.Cole}, written in terms of
-conductivities instead of electric permittivities as by the original authors,
-is given by
-%
-\begin{equation}
-  \sigma(\omega) = \sigma_\infty + \frac{\sigma_0 - \sigma_\infty}{1 +
-    (\rm{i}\omega\tau)^c}\ ,
-  \label{eq:ccm}
-\end{equation}
-%
-where $\sigma_0$ and $\sigma_\infty$ refer to the low-frequency and
-high-frequency conductivity values, respectively, $\tau$ is the central
-relaxation time, and $c$ the CCM exponent describing the broadness of the
-relaxation time distribution. Note that this model slightly differs from the
-one phrased in terms of resistivities given by \cite{GEO.78.Pelton}, see, e.g.,
-\cite{GJI.13.Tarasov}.
-%
-\begin{figure}
-  \centering
-  \includegraphics[width=\fwidth]{11-cole-cole-model}
-  \caption{}
-  \label{fig:CCM}
-\end{figure}
-%
-
-It required only 30 frequencies from 1.5e-8 to 8.3\,Hz, instead of the 244
-frequencies from 1.5e-8 to 6.8e6\,Hz required by the digital filter (201\,pt
-filter from Key, 2012). Besides the fact that the responses for the higher
-frequencies can be set to zero it is also sufficient to only compute every
-5th of the required frequencies.
-
-low frequencies cannot be 'interpolated'; however, other tricks could be
-implemented. The DC values (so low frequencies or late times) is the same
-independent of the IP effect. This makes it possible to estimate the DC value
-with the IP-free model which does not require very low frequencies, and use
-consequently this DC value to interpolate the low frequencies.
-
-for c>0.6, 17 frequencies from 1.2e-4 to 8.3\,Hz would be sufficient.
-
-
-%    'src': (0, 0, 0.01),
-%    'rec': (900, 0, 0.01),
-%    'depth': [0, 300, 400],
-%    res = 2e14, 1, 1, 1
-%    layer: cond_8 = 1.25, cond_0 = 1 => m = 0.2
-%    tau: 1
-%    fmin=1e-4,
-%    fmax=5e2,
-%    signal=1,        # <= Step-On!
-%    every_x_freq=6,  # Only every 6th value
-
-%  time        [s] :  0.01 - 10000 : 301  [min-max; #]
-%  Fourier         :  DLF (Sine-Filter)
-%    > Filter      :  Key 601 CosSin (2009)
-%    > DLF type    :  Lagged Convolution
-%  Req. freq  [Hz] :  6.67463E-18 - 4.00754E+13 : 747  [min-max; #]
-%  Calc. freq [Hz] :  0.000155601 - 424.87 : 27  [min-max; #]
-
-% Comparison: Full DLF; cosine-filter step-off, 747 frequencies
-% Our method: 27 freqs; DC(no IP) - step-on; DC at 1000 s
-%    (no more frequencies were required)
-%    important to see that the DC value (low freq, late t; is the same IP/noIP)
-
-The actual transform was carried out with the 601-point sine-cosine filter from
-\cite{GEO.09.Key}.
-
-
-Key 601\,pt filter is very long; seems to be by far the best for low c values.
-Designing a new filter specific for IP problems might be the best approach
-
-DC: 1000s; the same amount of frequencies is required to compute times up to
-10s or up to 1000s
-
-\cite{GJI.17.Commer}
-
-\begin{itemize}
-  \item Designing a DLF for IP effects
-  \item DC value is the same for the IP or non-IP model, so one could use
-    the non-IP response and do interpolation
-\end{itemize}
 
 
 \section{Conclusions} % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
