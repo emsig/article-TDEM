@@ -1,7 +1,7 @@
 \documentclass[extra, camera,%
     onecolumn,   % comment for two columns
     referee,     % uncomment for double lines
-    % final,       % uncomment for changes
+    final,       % uncomment for changes
 ]{gji}
 \usepackage{timet}
 
@@ -183,45 +183,6 @@ the corresponding grids are carefully chosen.
 
 \section{Introduction}  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
-\added{BEGIN TEMPORARY ADDED v v v v}
-
-\rtodo 1 \emph{The independence from spatial model complexity is in my
-  opinion debatable, because of a potential issue with the accuracy of phase
-  information. It’s my experience that a high degree of imaginary-field
-  component accuracy is needed for a proper f-t transform. --
-  I also needed a high level of numerical accuracy in the f-domain, that is,
-  very fine meshes and tight solver tolerances. An aspect which in my opinion
-  is not addressed sufficiently in the current manuscript.}: Add somewhere that
-  high accurate results are required.
-
-\rtodo 2 \emph{In my first revision, I actually did not make a request
-  for making the literature review "more extensive". Instead, I wrote that the
-  authors "should spend more time researching the EM literature that is related
-  to the actual topic." As it was and still is, half of the introduction
-  (current manuscript, page 2 to p. 3, line 46) is a rather broad/general EM
-  overview. Given the fact that the paper \textbf{connects directly to Plessix
-  et al. (2007) and Mulder et al. (2008)}, I would have expected a \textbf{more
-  targeted introduction towards the specific advances of this manuscript} –
-  instead of talking about a choice of only loosely connected and more general
-  topics like Lebedev grids, tetrahedral grids, integral equation, direct
-  solvers, etc. I like that the introduction is generally concise. My
-  impression remains that the introduction can have the same length but be more
-  targeted. Other readers may also see it that way. I won’t need another
-  explanation about your potentially differing opinion. This is just a
-  suggestion for improvement. Feel free to ignore.}
-
-
-\rtodo 3 Reply; Include comments from earlier review; papers that were
-referred; difficulties in late/early times; IP effects. Refer to steel-casing
-effects (lindsey), but state we look here at non-Debye cole models.
-Add also the papers seogi mentioned re IP effects. \cite{CAG.19.Heagy}
-\cite{EXP.20.Kang} \emph{We tried to improve the introduction and focus more on
-  the actual topic. Amongst other, we address the topic of steel casing and
-  non-Debye Cole-Cole models.}
-
-\added{END TEMPORARY ADDED n n n}
-
-
 The controlled-source electromagnetic (CSEM) method is one of the common
 non-seismic tools in exploration geophysics, not only in hydrocarbon
 exploration \citep{GEO.10.Constable}, but also in the search for sulfides
@@ -243,49 +204,71 @@ shift-invariance by computing the responses in the wavenumber-frequency domain
 followed by a 2D inverse spatial Fourier transform, also called Hankel
 transform, to the space-frequency domain, and a regular inverse Fourier
 transform if time-domain data are required \citep[e.g., ][]{GEO.15.Hunziker}.
-
 CSEM codes for 2D and 3D computations, on the other hand, mostly compute their
-responses directly in the required domain, either frequency or time. There is a
-wealth of 3D electromagnetic codes, with a first boom in the 1990's;
-\cite{B.SEG.99.Oristaglio} provide a good review of the state of art at that
-time. A second wave occurred during the CSEM boom in the hydrocarbon industry
-in the early 21th century, see, e.g., \cite{SG.05.Avdeev} and
-\cite{SG.10.Borner} for comprehensive overviews. Recent publications after
-these review articles span the width of numerical methods from integral
-equation codes \citep{MGS.17.Kruglyakov} and differential equation methods such
-as finite differences \citep{GEO.10.Mittet, GEO.11.Zaslavsky, CAG.13.Sommer},
-finite elements \citep{GJI.13.Grayver}, and finite volumes
-\citep{GEO.14.Jahandari}. Besides the different methods there are also many
-different types of discretisation. Commonly used, besides rectilinear Yee grids
-\citep{IEEE.66.Yee} as used by our code, are Lebedev grids
-\citep{CMMP.64.Lebedev} but also unstructured grids using, for instance,
-tetrahedra \citep{CAG.17.Cai}. The computational requirement to model CSEM data
-also depends heavily on the technique used to solve the system. There are
-direct solvers \citep{GEO.15.Grayver}, indirect solvers
-\citep{GJI.15.Jaysaval}, and more recently also hybrid solvers
-\citep{GEO.18.Liu}.
+responses directly in the required domain, either frequency or time.
+
+\added{Electromagnetic methods in geophysics span a wide range of model
+scenarios and acquisition layouts which have all different implications. A
+well-known case is for instance the land or shallow marine case versus the deep
+marine case, where in the former case a dominating airwave has to be accurately
+modelled which can can be completely ignored in the latter case. Recent areas
+of particular interest in time-domain modelling that pose numerical challenges
+are, for instance, simulating the fields through steel-cased wells
+\mbox{\citep{CAG.19.Heagy}} or the effects of induced polarization
+\mbox{\citep{EXP.20.Kang}}. The former is challenging because of the high
+conductivity contrasts requiring very detailed meshing, the latter is
+challenging for time-domain modelling because the models are frequency
+dependent.}
+
+\deleted{There is a wealth of 3D electromagnetic codes, with a first boom in the
+1990's; \mbox{\cite{B.SEG.99.Oristaglio}} provide a good review of the state of
+art at that time. A second wave occurred during the CSEM boom in the
+hydrocarbon industry in the early 21th century, see, e.g.,
+\mbox{\cite{SG.05.Avdeev}} and \mbox{\cite{SG.10.Borner}} for comprehensive
+overviews. Recent publications after these review articles span the width of
+numerical methods from integral equation codes \mbox{\citep{MGS.17.Kruglyakov}}
+and differential equation methods such as finite differences
+\mbox{\citep{GEO.10.Mittet, GEO.11.Zaslavsky, CAG.13.Sommer}}, finite elements
+\mbox{\citep{GJI.13.Grayver}}, and finite volumes
+\mbox{\citep{GEO.14.Jahandari}}. Besides the different methods there are also
+many different types of discretisation. Commonly used, besides rectilinear Yee
+grids \mbox{\citep{IEEE.66.Yee}} as used by our code, are Lebedev grids
+\mbox{\citep{CMMP.64.Lebedev}} but also unstructured grids using, for instance,
+tetrahedra \mbox{\citep{CAG.17.Cai}}. The computational requirement to model
+CSEM data also depends heavily on the technique used to solve the system. There
+are direct solvers \mbox{\citep{GEO.15.Grayver}}, indirect solvers
+\mbox{\citep{GJI.15.Jaysaval}}, and more recently also hybrid solvers
+\mbox{\citep{GEO.18.Liu}}.}
 
 Under certain conditions it can be a viable alternative to model time-domain
 data with a frequency-domain code, as shown by \cite{GEO.08.Mulder}. They
-compared the computational complexity of explicit time-stepping schemes (Du
-Fort-Frankel method as used in, e.g., \cite{GEO.04.Commer, GEO.07.Maao});
-implicit schemes \citep[e.g., ][]{GEO.04.Haber}, and matrix exponentials and
-Lanczos reduction schemes \cite[e.g., ][]{RS.94.Druskin} with the Fourier
-transform of frequency-domain solutions. Their conclusion was that the Fourier
-transform method can be favourable if the number of required frequencies is
-small relative to the number of grid points in each coordinate. The conditions
-for fast computation of time-domain data with a frequency-domain code are: a
+compared the computational complexity \added{of different time-domain methods
+with the computational complexity of frequency-domain computation followed by a
+Fourier transform:} \deleted{of} explicit time-stepping schemes (Du
+Fort-Frankel method as used in, e.g., \cite{GEO.04.Commer,
+GEO.07.Maao})\replaced{ and}{;} implicit schemes \citep[e.g.,
+][]{GEO.04.Haber}\added{ have a complexity of $O(n^4)$}, \deleted{and} matrix
+exponentials and Lanczos reduction schemes \cite[e.g., ][]{RS.94.Druskin}
+\added{have a complexity of $O(n^4\sqrt{\log n})$}\replaced{, and}{with the}
+Fourier transform of frequency-domain solutions \added{have a complexity $O(n_f
+n^3)$}; \added{$n$ is the number of grid points in each direction, and $n_f$
+the number of frequencies}. Their conclusion was that the Fourier transform
+method can be favourable if the number of required frequencies is small
+relative to the number of grid points in each coordinate. The conditions for
+fast computation of time-domain data with a frequency-domain code are: a
 sufficiently powerful solver, appropriate frequency selection and
 interpolation, and an automated gridding, for which they used the
 multi-frequency CSEM approach presented by \cite{GEO.07.Plessix}. We build upon
 these results but improve the run time from hours to minutes. The main reasons
-for this significant speed-up are an adaptive, frequency-dependent gridding
-scheme that minimizes the required cells in each dimension, and a logarithmic
-Fourier transform such as digital linear filters \citep[DLF, ][]{GP.71.Ghosh}
-or the logarithmic fast Fourier transform \citep[FFTLog, ][]{RAS.00.Hamilton}
-to go from the frequency to the time domain. The latter makes it also possible
-to only use the imaginary part of the frequency-domain response, which has
-advantages when it comes to interpolation.
+for this significant speed-up are \added{the further reduction of required
+frequencies by introducing lower and upper thresholds of numerically important
+frequencies,} an adaptive, frequency-dependent gridding scheme that minimizes
+the required cells in each dimension, and a logarithmic Fourier transform such
+as digital linear filters \citep[DLF, ][]{GP.71.Ghosh} or the logarithmic fast
+Fourier transform \citep[FFTLog, ][]{RAS.00.Hamilton} to go from the frequency
+to the time domain. The latter makes it also possible to only use the imaginary
+part of the frequency-domain response, which has advantages when it comes to
+interpolation.
 
 While we use the finite-integration technique \citep{AEU.77.Weiland} in the
 frequency domain to demonstrate our method, it is important to note that our
@@ -298,14 +281,6 @@ highlight their advantages and shortcomings. This is followed by an outline of
 our changes to the Fourier transform and the adaptive gridding. Finally, we
 demonstrate the efficiency of the approach with some numerical results.
 
-\rtodo \added{REDO and send to R.R}
-
-\rtodo \added{Add citation to R.R. (2021) regarding RA and speed-up; limitation
-to switch-on/-off.}
-
-\rtodo \added{Add notion about preference for f-domain for IP problems}
-
-\rtodo \added{Extra example: No-IP vs IP; land, 1D}
 
 \section{Motivation}  % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
@@ -394,10 +369,14 @@ frequency-domain code viable in comparison with time-domain codes. It is
 important to note that while we show the transform from frequency to time
 domain, the conclusions regarding the Fourier transform can equally well be
 applied to the transform from time-domain to frequency-domain data for a code
-that solves Maxwell's equations in the time domain. \deleted{A variation of our
-method was implemented, for instance, by \custem \mbox{\citep{GEO.19.Rochlitz}}
-to obtain frequency-domain data from time-domain computations (Rochlitz,
-private communication, 2020).}
+that solves Maxwell's equations in the time domain. \added{Our recommendations
+for speeding up the Fourier transform for expensive kernels are independent of
+spatial complexity, as diffusive EM responses are smooth functions of both
+frequency and time. However, the intrinsic requirement is an accurate solver
+over a sufficient wide range of frequencies or times.} \deleted{A variation of
+our method was implemented, for instance, by \custem
+\mbox{\citep{GEO.19.Rochlitz}} to obtain frequency-domain data from time-domain
+computations (Rochlitz, private communication, 2020).}
 
 
 \section{Methodology} % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
@@ -617,7 +596,7 @@ it takes to compute the responses for these frequencies.
 \subsection{Gridding}   % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
 \added{The proposed Fourier transformation requires a robust solver that can
-compute precise results over a wide range of frequencies (times) to obtain
+compute accurate results over a wide range of frequencies (times) to obtain
 time-domain (frequency-domain) responses. In our case the solver uses a
 regular, stretched grid and computes the electric fields in the frequency
 domain. This setup is the target of the following gridding recommendations.
@@ -701,8 +680,6 @@ anisotropy from a stack of finely layered formations of varying resistivity.
 
 
 \section{Numerical examples}  % % % % % % % % % % % % % % % % % % % % % % % % %
-
-\todo[inline]{HERE HERE HERE}
 
 \subsection{Homogeneous space}  % % % % % % % % % % % % % % % % % % % % % % % %
 
@@ -883,11 +860,12 @@ their corresponding parameters are listed in Table~\ref{tbl:timemarine}.
 \end{table}
 %
 
-Figure~\ref{fig:marine} shows the result for an offset of 5\,km, in (a) the
-frequency and (b) the time domain. The recovered response with the 3D code
-captures the airwave (first peak) and the subsurface (second peak) very
-accurately. At later times the error starts to increase. We would need to
-compute a few additional lower frequencies if we want to improve it.
+Figure~\ref{fig:marine} shows the result for an offset of 5\,km, \added{(a)} in
+\deleted{(a)} the frequency \added{domain} and (b) \added{in} the time domain.
+The recovered response with the 3D code captures the airwave (first peak) and
+the subsurface (second peak) very accurately. At later times the error starts
+to increase. We would need to compute a few additional lower frequencies if we
+want to improve it.
 %
 \begin{figure*}
   \centering
@@ -922,100 +900,6 @@ frequencies could be added to improve late-time values.
 \end{figure}
 %
 
-
-\subsection{\added{Induced Polarization}} % % % % % % % % % % % % % % % % % % %
-
-\added{$\Downarrow\qquad$ Note to reviewers: The entire section 4.3 below is
-new, without being all marked in green. $\qquad\Downarrow$}
-
-\added{Mention independence of spatial complexity, why we also show 1D
-examples; however, sufficiently accurate 3D results are an obvious
-pre-requisite.}
-
-The Cole-Cole model \citep[CCM, ][]{JCP.41.Cole}, written in terms of
-conductivities instead of electric permittivities as by the original authors,
-is given by
-%
-\begin{equation}
-  \sigma(\omega) = \sigma_\infty + \frac{\sigma_0 - \sigma_\infty}{1 +
-    (\rm{i}\omega\tau)^c}\ ,
-  \label{eq:ccm}
-\end{equation}
-%
-where $\sigma_0$ and $\sigma_\infty$ refer to the low-frequency and
-high-frequency conductivity values, respectively, $\tau$ is the central
-relaxation time, and $c$ the CCM exponent describing the broadness of the
-relaxation time distribution. Note that this model slightly differs from the
-one phrased in terms of resistivities given by \cite{GEO.78.Pelton}, see, e.g.,
-\cite{GJI.13.Tarasov}.
-%
-\begin{figure}
-  \centering
-  \includegraphics[width=\fwidth]{11-cole-cole-model}
-  \caption{}
-  \label{fig:CCM}
-\end{figure}
-%
-
-It required only 30 frequencies from 1.5e-8 to 8.3\,Hz, instead of the 244
-frequencies from 1.5e-8 to 6.8e6\,Hz required by the digital filter (201\,pt
-filter from Key, 2012). Besides the fact that the responses for the higher
-frequencies can be set to zero it is also sufficient to only compute every
-5th of the required frequencies.
-
-low frequencies cannot be 'interpolated'; however, other tricks could be
-implemented. The DC values (so low frequencies or late times) is the same
-independent of the IP effect. This makes it possible to estimate the DC value
-with the IP-free model which does not require very low frequencies, and use
-consequently this DC value to interpolate the low frequencies.
-
-for c>0.6, 17 frequencies from 1.2e-4 to 8.3\,Hz would be sufficient.
-
-
-%    'src': (0, 0, 0.01),
-%    'rec': (900, 0, 0.01),
-%    'depth': [0, 300, 400],
-%    res = 2e14, 1, 1, 1
-%    layer: cond_8 = 1.25, cond_0 = 1 => m = 0.2
-%    tau: 1
-%    fmin=1e-4,
-%    fmax=5e2,
-%    signal=1,        # <= Step-On!
-%    every_x_freq=6,  # Only every 6th value
-
-%  time        [s] :  0.01 - 10000 : 301  [min-max; #]
-%  Fourier         :  DLF (Sine-Filter)
-%    > Filter      :  Key 601 CosSin (2009)
-%    > DLF type    :  Lagged Convolution
-%  Req. freq  [Hz] :  6.67463E-18 - 4.00754E+13 : 747  [min-max; #]
-%  Calc. freq [Hz] :  0.000155601 - 424.87 : 27  [min-max; #]
-
-% Comparison: Full DLF; cosine-filter step-off, 747 frequencies
-% Our method: 27 freqs; DC(no IP) - step-on; DC at 1000 s
-%    (no more frequencies were required)
-%    important to see that the DC value (low freq, late t; is the same IP/noIP)
-
-The actual transform was carried out with the 601-point sine-cosine filter from
-\cite{GEO.09.Key}.
-
-
-Key 601\,pt filter is very long; seems to be by far the best for low c values.
-Designing a new filter specific for IP problems might be the best approach
-
-DC: 1000s; the same amount of frequencies is required to compute times up to
-10s or up to 1000s
-
-\cite{GJI.17.Commer}
-
-\begin{itemize}
-  \item Designing a DLF for IP effects
-  \item DC value is the same for the IP or non-IP model, so one could use
-    the non-IP response and do interpolation
-\end{itemize}
-
-
-\added{$\Uparrow\qquad$ Note to reviewers: The entire section 4.3 above is new,
-without being all marked in green. $\qquad\Uparrow$}
 
 \subsection{Horizontal extent of the computation domain}  % % % % % % % % % % %
 
@@ -1052,10 +936,82 @@ domain shows that it is the airwave whose amplitude is heavily overestimated.
 It can be difficult to spot these errors in the time-domain result, as the
 response looks plausible. Only a comparison with the 1D result reveals that it
 is actually wrong. A possibility to detect such problems for complicated cases,
-where there is no semi-analytical result to compare with, is to compute two or
-more models, moving the boundary. When the responses stop to change, one can
-assume that the boundary is far enough. Another possibility is to look at the
-amplitudes close to the boundaries and ensure that they are small enough.
+where there is no semi-analytical result to compare with, is to \replaced{carry
+out a mesh-convergence test by computing}{compute} two or more models, moving
+the boundary. When the responses stop to change, one can assume that the
+boundary is far enough. Another possibility is to look at the amplitudes close
+to the boundaries and ensure that they are small enough.
+
+
+\subsection{\added{Induced Polarization}} % % % % % % % % % % % % % % % % % % %
+
+\added{The proposed Fourier-transform approach works independently of spatial
+complexity, as diffusive electromagnetic fields are smooth functions of both
+frequency and time. An interesting test it to see whether this applies as
+well for dispersive media where the model parameters are frequency dependent,
+such as is the case in induced polarization. To test this we use the Cole-Cole
+model \mbox{\citep[CCM, ][]{JCP.41.Cole}} which, written in terms of
+conductivities instead of electric permittivities as by the original authors,
+is given by}
+%
+\begin{equation}
+\added{
+  \sigma(\omega) = \sigma_\infty + \frac{\sigma_0 - \sigma_\infty}{1 +
+    (\rm{i}\omega\tau)^c}\ ,
+}
+  \label{eq:ccm}
+\end{equation}
+%
+\added{where $\sigma_0$ and $\sigma_\infty$ refer to the low-frequency and
+high-frequency conductivity values, respectively, $\tau$ is the central
+relaxation time (s), and $c$ the CCM exponent describing the broadness of the
+relaxation time distribution. Note that this model slightly differs from the
+one phrased in terms of resistivities given by \mbox{\cite{GEO.78.Pelton}},
+see, e.g., \mbox{\cite{GJI.13.Tarasov}}. }
+
+\added{\mbox{\cite{GJI.17.Commer}}, have shown that time-domain IP modelling
+can be difficult, particularly for low $c$-values. Modelling
+frequency-dependent models in the frequency domain is for any given frequency
+naturally no different than modelling a non frequency-dependent model. However,
+the interesting point is to see how the Fourier transform behaves to obtain
+time-domain data from frequency-domain responses. As an example we modelled the
+response for a land case, air above a halfspace of 1\,S/m. Within the halfspace
+is a dispersive, 100\,m thick layer at a depth of 300\,m, with
+$\sigma_0=1.0\,$S/m and $\sigma_\infty=1.25\,$S/m; $\tau=1$, and we vary
+$c$ from 0 (no IP) to 1.0, 0.75, 0.5, and 0.25. The x-directed step-off source
+and the receiver at an inline offset of 900\,m are place at the surface. The
+real and imaginary frequency-domain responses for this model are shown in the
+left column of Figure~\ref{fig:CCM}. It can be seen that the effect of the
+IP layer in the frequency domain is that the real part starts to deviate from
+the DC value at lower frequencies. The imaginary part decays slower towards
+zero when decreasing the frequency, and it deviates from a linear function of 
+frequency (on log-log scale) at lower frequencies as well. This indicates that
+we need lower frequency content for the Fourier transform the smaller $c$
+becomes.}
+%
+\begin{figure}
+  \centering
+  \includegraphics[width=\fwidth]{11-cole-cole-model}
+  \caption{\added{IP example for different $c$ values, frequency-domain
+  response on the left and time-domain response on the right. The frequencies
+  indicated by the blue vertical bars in the lower-left figure were used for
+  our Fourier transform approach, requiring only the computation of 27
+  frequencies instead of the full 747 frequencies required by the digital
+linear filter method.}}
+  \label{fig:CCM}
+\end{figure}
+%
+
+\added{For the Fourier transform we used the 601-point sine-cosine filter from
+\mbox{\cite{GEO.09.Key}}. This is a very long filter, but it seemed to be by
+far the best filter for low $c$-values. However, designing a new filter
+particularly for IP problems might be a better approach. The selected frequency
+thresholds were chosen at $f_\mr{min}=10^{-4}\,$Hz and $f_\mr{max}=500\,$Hz,
+and within the thresholds we only computed every 6th frequency. Using these
+values only 27 frequencies have to be computed, instead of 747 frequencies
+required by the actual transform. To obtain the step-off response we computed
+the step-on response and subtracted it from the DC value at 1000\,s (without
+the need for any additional frequencies).}
 
 
 \subsection{3D Model} % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
