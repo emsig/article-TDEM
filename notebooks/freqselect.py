@@ -156,8 +156,8 @@ class InteractiveFrequency(emg3d.utils.Fourier):
         ax3.set_ylabel('Rel. Error (%)')
         ax3.set_xlabel('Frequency (Hz)')
         ax4.set_xlabel('Time (s)')
-        ax3.axhline(1, c='k')
-        ax4.axhline(1, c='k')
+        ax3.axhline(1, c='0.4')
+        ax4.axhline(1, c='0.4')
 
         # Add instances
         self.fig = fig
@@ -363,9 +363,9 @@ class InteractiveFrequency(emg3d.utils.Fourier):
         t_int = self.freq2time(f_calc, self.model['rec'][0])
 
         # Calculate the errors.
-        f_error = np.clip(100*abs((self.reim(f_int)-self.reim(f_req)) /
-                                  self.reim(f_req)), 0.01, 100)
-        t_error = np.clip(100*abs((t_int-self.t_base)/self.t_base), 0.01, 100)
+        f_error = 100*abs((self.reim(f_int)-self.reim(f_req)) /
+                          self.reim(f_req))
+        t_error = 100*abs((t_int-self.t_base)/self.t_base)
 
         # Clear existing handles
         self.clear_handle(['f_int', 't_int', 'f_inti', 'f_inte', 't_inte'])
@@ -375,11 +375,11 @@ class InteractiveFrequency(emg3d.utils.Fourier):
                 self.freq_req, self.reim(f_int), 'k.', ms=4)
         self.h_f_int, = self.axs[0].plot(
                 self.freq_calc, self.reim(f_calc), 'C0.', ms=8)
-        self.h_f_inte, = self.axs[2].plot(self.freq_req, f_error, 'k.')
+        self.h_f_inte, = self.axs[2].plot(self.freq_req, f_error, 'k')
 
         # Plot time-domain result
         self.h_t_int, = self.axs[1].plot(self.time, t_int, 'k--')
-        self.h_t_inte, = self.axs[3].plot(self.time, t_error, 'k.')
+        self.h_t_inte, = self.axs[3].plot(self.time, t_error, 'k')
 
         # Update legend
         self.print_legend()
