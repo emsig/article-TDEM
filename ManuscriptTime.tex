@@ -1,7 +1,7 @@
 \documentclass[extra, camera,%
     % onecolumn,   % comment for two columns
     % referee,     % uncomment for double lines
-    final,       % uncomment for changes
+    % final,       % uncomment for changes
 ]{gji}
 \usepackage{timet}
 
@@ -60,10 +60,10 @@
 \graphicspath{{./figures/}}
 
 % Change default colour of «changes» package
-\definecolor{alizarin}{rgb}{0.82, 0.1, 0.26}
-\definecolor{mygreen}{rgb}{0, .5, 0}
-\setaddedmarkup{\color{mygreen}{\uline{#1}}}
-\setdeletedmarkup{\color{alizarin}{\uwave{#1}}}
+% \definecolor{alizarin}{rgb}{0.82, 0.1, 0.26}
+% \definecolor{mygreen}{rgb}{0, .5, 0}
+% \setaddedmarkup{\color{mygreen}{\uline{#1}}}
+% \setdeletedmarkup{\color{alizarin}{\uwave{#1}}}
 
 \let\tablenum\relax
 \usepackage{siunitx}
@@ -82,16 +82,17 @@
 \newcommand{\empymod}{\texttt{empymod}\xspace}
 \newcommand{\simpeg}{\texttt{SimPEG}\xspace}
 \newcommand{\custem}{\texttt{custEM}\xspace}
+\newcommand{\ohmm}{\ensuremath{\Omega\,}\text{m}\xspace}
 
 % Remove once done
 % \newcommand{\itodo}[1]{\todo[color=blue!40!white, inline]{\sffamily #1}}
 % \newcommand{\mtodo}[1]{\todo[inline]{\sffamily #1}}
 % \newcommand{\etodo}[1]{\todo[color=blue!40!white]{#1}}
-\newcommand{\dul}[1]{\underline{\underline{#1}}}
-\newcommand{\ul}[1]{\underline{#1}}
-\newcommand{\rmk}[1]{{\color{red}{#1}}}
-\newcommand{\ohmm}{\ensuremath{\Omega\,}\text{m}\xspace}
-\newcommand{\rtodo}{{\color{red}\texttt{TODO:}}\xspace}
+% \newcommand{\dul}[1]{\underline{\underline{#1}}}
+% \newcommand{\ul}[1]{\underline{#1}}
+% \newcommand{\rmk}[1]{{\color{red}{#1}}}
+% \newcommand{\rtodo}{{\color{red}\texttt{TODO:}}\xspace}
+
 
 \title[Transforming expensive EM kernels]{Fast Fourier transformation
 of electromagnetic data for computationally expensive kernels}
@@ -115,7 +116,7 @@ of electromagnetic data for computationally expensive kernels}
 \date{Received 202Y MMMM DD; in original form 2020 June 30}
 \pagerange{\pageref{firstpage}--\pageref{lastpage}}
 \volume{VVV}
-\pubyear{202Y}
+\pubyear{2021}
 
 
 % Authors with AMS fonts and mssymb.tex can comment out the following
@@ -1069,15 +1070,9 @@ capability of any existing code to an additional dimension.
 \section{Data Availability Statement} % % % % % % % % % % % % % % % % % % % % %
 
 The data that support the findings of this study are openly available at Zenodo
-at \href{https://zenodo.org/badge/DOI/10.5281/zenodo.???????}{doi:
-10.5281/zenodo.???????}. The data includes the scripts and instructions to
-reproduce all results and figures.
-
-\emph{Note to editors and reviewers: The data are NOT YET on Zenodo, we will
-upload there the final versions and link the right DOI for the final
-manuscript. Until then everything can be found on GitHub at
-\href{https://github.com/empymod/article-TDEM}%
-{github.com/empymod/article-TDEM}.}
+at \href{https://doi.org/10.5281/zenodo.4710820}{doi: 10.5281/zenodo.4710820}.
+The data includes the scripts and instructions to reproduce all results and
+figures.
 
 
 \begin{acknowledgments} % % % % % % % % % % % % % % % % % % % % % % % % % % % %
