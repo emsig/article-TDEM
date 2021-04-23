@@ -5,14 +5,14 @@ channels:
   - defaults
 dependencies:
   - "libblas=*=*mkl"
-  - emg3d<0.17.0
-  - discretize<=0.6.2
-  - empymod>=2.0.0
-  - simpeg
-  - matplotlib
+  - emg3d==0.17.0
+  - discretize==0.6.3
+  - empymod==2.0.6
+  - simpeg==0.14.3
+  - matplotlib==3.4.1
   - jupyter
-  - pymatsolver
-  - scooby
-  - ipykernel
-  - h5py
+  - pymatsolver==0.1.2
+  - scooby==0.5.3
+  - ipykernel==5.5.3
+  - h5py==3.2.1
   - mkl-service

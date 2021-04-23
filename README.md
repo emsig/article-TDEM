@@ -57,6 +57,15 @@ conda remove --name article-tdem --all
 
 ## Reproducing
 
+Note that the versions in the environment-yaml are fixed to ensure the
+notebooks will still run in a couple of years. Particularly `emg3d<1.0` and
+`discretize<1.0`, as both packages have non-backwards compatible changes with
+their 1.0 release. For up-to-date examples on modelling time-domain data with
+emg3d consult the [documentation](https://emg3d.emsig.xyz).
+
+Each notebook has a table at the end that lists which versions were actually
+used at the time the results in the article were produced.
+
 Start `Jupyter` and navigate to the notebooks-folder. The notebooks to
 reproduce the figures in the article are:
 
