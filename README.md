@@ -1,6 +1,6 @@
 # Fast Fourier transformation of electromagnetic data for computationally expensive kernels
 
-> Werthmüller, D., W.A. Mulder, and E.C. Slob, 2020, Fast Fourier
+> Werthmüller, D., W.A. Mulder, and E.C. Slob, 2021, Fast Fourier
 > transformation of electromagnetic data for computationally expensive kernels:
 > Submitted to Geophysical Journal International.
 
@@ -13,8 +13,10 @@ to reproduce all the figures.
 
 ## History
 
-1. Submitted 2020-06-30 to Geophysical Journal International.
-2. Revision I submitted 2020-12-01.
+1. 2020-06-30: Submitted to Geophysical Journal International.
+2. 2020-12-01: Submitted revision I.
+3. 2021-04-07: Submitted revision II.
+4. 2021-04-21: Manuscript accepted
 
 
 ## Requirements and Environment
@@ -62,7 +64,8 @@ reproduce the figures in the article are:
 - ``04-05_Figures_Fullspace.ipynb``: Figures 4 and 5.
 - ``06-07_Figures_1D-Model.ipynb``: Figures 6 and 7.
 - ``08_Figures_1D-Model-wrong-x-y.ipynb``: Figure 8.
-- ``09-10_Figures_3D-Model.ipynb``: Figures 9 and 10.
+- ``09_Figures_Cole-Cole-IP.ipynb``: Figure 9.
+- ``10-11_Figures_3D-Model.ipynb``: Figures 10 and 11.
 
 
 ## Note

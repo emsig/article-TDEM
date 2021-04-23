@@ -5,8 +5,9 @@ channels:
   - defaults
 dependencies:
   - "libblas=*=*mkl"
-  - emg3d
-  - empymod
+  - emg3d<0.17.0
+  - discretize<=0.6.2
+  - empymod>=2.0.0
   - simpeg
   - matplotlib
   - jupyter
