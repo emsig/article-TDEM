@@ -94,7 +94,7 @@
 % \newcommand{\rtodo}{{\color{red}\texttt{TODO:}}\xspace}
 
 
-\title[Transforming expensive EM kernels]{Fast Fourier transformation
+\title[Transforming expensive EM kernels]{Fast Fourier transform
 of electromagnetic data for computationally expensive kernels}
 
 \author[D. Werthmüller \emph{et al.}]
@@ -144,16 +144,16 @@ of electromagnetic data for computationally expensive kernels}
 
 \begin{summary}
 %
-Three-dimensional controlled-source electromagnetic data is often computed
+Three-dimensional controlled-source electromagnetic data are often computed
 directly in the domain of interest, either in the frequency domain or in the
 time domain. Computing it in one domain and transforming it via a Fourier
 transform to the other domain is a viable alternative. It requires the
 evaluation of many responses in the computational domain if standard Fourier
 transforms are used. This can make it prohibitively expensive if the kernel is
 time-consuming as is the case in three-dimensional electromagnetic modelling.
-The speed of such modelling that is obtained through a transform is defined by
-three key points: solver, method and implementation of the Fourier transform,
-and gridding.
+The speed of modelling obtained through such a transform is defined by three
+key points: solver, method and implementation of the Fourier transform, and
+gridding.
 %
 The faster the solver, the faster modelling will be. It is important that the
 solver is robust over a wide range of values (frequencies or times). The method
@@ -168,7 +168,7 @@ typically 15 to 20 frequencies to cover a wide range of offsets.
 The gridding should be frequency- or time-dependent, which is accomplished by
 making it a function of skin depth. Optimising for the least number of required
 cells should be combined with optimising for computational speed. Looking
-carefully at these points results in much smaller computation times with
+carefully at these points resulted in much smaller computation times with
 speedup factors of ten or more over previous methods. A computation in one
 domain followed by transformation can therefore be an alternative to
 computation in the other domain domain if the required evaluation points and
@@ -205,8 +205,9 @@ shift-invariance by computing the responses in the wavenumber-frequency domain
 followed by a 2D inverse spatial Fourier transform, also called Hankel
 transform, to the space-frequency domain, and a regular inverse Fourier
 transform if time-domain data are required \citep[e.g., ][]{GEO.15.Hunziker}.
-CSEM codes for 2D and 3D computations, on the other hand, often compute their
-responses directly in the required domain, either frequency or time.
+CSEM codes for arbitrary 2D and 3D computations, on the other hand, often
+compute their responses directly in the required domain, either frequency or
+time.
 
 Electromagnetic methods in geophysics span a wide range of model scenarios and
 acquisition layouts, each with its own modelling-related implications. A
@@ -228,7 +229,7 @@ transform: explicit time-stepping schemes (Du Fort-Frankel method as used in,
 e.g., \cite{GEO.04.Commer, GEO.07.Maao}) and implicit schemes \citep[e.g.,
 ][]{GEO.04.Haber,GEO.10.Um} have a complexity of $O(n^4)$, matrix exponentials
 and Lanczos reduction schemes \cite[e.g., ][]{RS.94.Druskin} have a complexity
-of $O(n^4\sqrt{\log n})$, and Fourier transform of frequency-domain solutions
+of $O(n^4\sqrt{\log n})$, and Fourier transforms of frequency-domain solutions
 have a complexity $O(n_f n^3)$; $n$ is the number of grid points in each
 direction, and $n_f$ the number of frequencies. Their conclusion was that the
 Fourier transform method can be favourable if the number of required
@@ -253,7 +254,7 @@ In the next section, we briefly review the methodology as introduced by
 and shortcomings. This is followed by an outline of the methodology, our
 changes to the Fourier transform and the adaptive gridding. Finally, we
 demonstrate the efficiency of the approach with some numerical results. These
-compromise of a homogeneous space, a layered model, a model which includes
+comprise in of a homogeneous space, a layered model, a model which includes
 dispersive media (induced polarization), and a three-dimensional model.
 
 
@@ -552,12 +553,12 @@ accurate results over a wide range of frequencies (times) to obtain time-domain
 (frequency-domain) responses. In our case the solver uses a regular, stretched
 grid and computes the electric fields in the frequency domain. This setup is
 the target of the following gridding recommendations. Whilst they will look
-differently for other mesh types or a time-domain code, some conclusion will
+differently for other mesh types or a time-domain code, some conclusions will
 still hold.
 
 The computation grid consists of a core or survey domain $D_\mr{s}$ that should
 contain all source and receiver positions. The survey domain usually has no or
-very little cell stretching factor $\alpha_\mr{s}$. The minimum cell width is
+a very small cell stretching factor $\alpha_\mr{s}$. The minimum cell width is
 defined as
 %
 \begin{equation}
@@ -922,14 +923,14 @@ above a halfspace of 1\,S/m. Within the halfspace is a dispersive, 100\,m thick
 layer at a depth of 300\,m, with $\sigma_0=1.0\,$S/m and
 $\sigma_\infty=1.25\,$S/m; $\tau=1$, and we vary $c$ from 0 (no IP) to 1.0,
 0.75, 0.5, and 0.25. The x-directed step-off source and the receiver at an
-inline offset of 900\,m are place at the surface. The real and imaginary
+inline offset of 900\,m are placed on the surface. The real and imaginary
 frequency-domain responses for this model are shown in the left column of
 Figure~\ref{fig:CCM}. It can be seen that the effect of the IP layer in the
 frequency domain is that the real part starts to deviate from the DC value at
 lower frequencies. The imaginary part decays slower towards zero when
 decreasing the frequency, and it deviates from a power-law function at lower
 frequencies as well. This indicates that we need lower frequency content for
-the Fourier transform the smaller $c$ becomes.
+the Fourier transform, the smaller $c$ becomes.
 %
 \begin{figure*}
   \centering
