@@ -1,8 +1,9 @@
-# Fast Fourier transformation of electromagnetic data for computationally expensive kernels
+# Fast Fourier transform of electromagnetic data for computationally expensive kernels
 
-> Werthmüller, D., W.A. Mulder, and E.C. Slob, 2021, Fast Fourier
-> transformation of electromagnetic data for computationally expensive kernels:
-> Submitted to Geophysical Journal International.
+> Werthmüller, D., W.A. Mulder, and E.C. Slob, 2021, Fast Fourier transform of
+> electromagnetic data for computationally expensive kernels, Geophysical
+> Journal International, Volume 226, Issue 2, Pages 1336-1347; DOI:
+> [10.1093/gji/ggab171](https://doi.org/10.1093/gji/ggab171).
 
 
 ## Manuscript for Geophysical Journal International paper
@@ -79,4 +80,4 @@ reproduce the figures in the article are:
 
 ## Note
 
-The final edited version will be &copy; Geophysical Journal International.
+The final edited version is &copy; Geophysical Journal International.
